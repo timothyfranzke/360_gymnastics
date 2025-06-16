@@ -28,7 +28,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 text-white ${isScrolled ? 'bg-indigo-800 shadow-lg' : 'bg-indigo-700'}`}>
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-lg text-gray-800' : 'bg-white text-gray-800'}`}>
       <div className="container mx-auto py-3 px-6 flex justify-between items-center">
         <div className="logo-container flex items-center">
           <a href="/" className="flex items-center">
@@ -39,21 +39,21 @@ const Header = () => {
             />
             <div className="flex flex-col">
               <h1 className="text-xl font-bold leading-tight">360 Gymnastics</h1>
-              <span className="text-xs text-yellow-300">Olathe, KS</span>
+              <span className="text-xs text-indigo-600">Olathe, KS</span>
             </div>
           </a>
         </div>
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-6">
-          <a href="/" className="hover:text-yellow-300 transition py-2">Home</a>
-          <a href="/about" className="hover:text-yellow-300 transition py-2">About Us</a>
-          <a href="/classes" className="hover:text-yellow-300 transition py-2">Classes</a>
-          <a href="/camps-events" className="hover:text-yellow-300 transition py-2">Camps/Events</a>
-          <a href="/open-gym" className="hover:text-yellow-300 transition py-2">Open Gym</a>
-          <a href="/team" className="hover:text-yellow-300 transition py-2">Team</a>
-          <a href="/schedule-tuition" className="hover:text-yellow-300 transition py-2">Schedule & Tuition</a>
-          <a href="/contact" className="hover:text-yellow-300 transition py-2">Contact</a>
+          <a href="/" className="hover:text-indigo-600 transition py-2">Home</a>
+          <a href="/about" className="hover:text-indigo-600 transition py-2">About Us</a>
+          <a href="/classes" className="hover:text-indigo-600 transition py-2">Classes</a>
+          <a href="/camps-events" className="hover:text-indigo-600 transition py-2">Camps/Events</a>
+          <a href="/open-gym" className="hover:text-indigo-600 transition py-2">Open Gym</a>
+          <a href="/team" className="hover:text-indigo-600 transition py-2">Team</a>
+          <a href="/schedule-tuition" className="hover:text-indigo-600 transition py-2">Schedule & Tuition</a>
+          <a href="/contact" className="hover:text-indigo-600 transition py-2">Contact</a>
         </nav>
         
         {/* Mobile Menu Button */}
@@ -76,18 +76,18 @@ const Header = () => {
       
       {/* Mobile Menu */}
       <div 
-        className={`fixed inset-0 bg-indigo-900 bg-opacity-95 z-40 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}
+        className={`fixed inset-0 bg-white bg-opacity-95 z-40 transform transition-transform duration-300 ease-in-out ${isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'} md:hidden`}
         style={{ top: '60px' }}
       >
         <nav className="container mx-auto py-8 px-6 flex flex-col space-y-6">
-          <a href="/" className="text-xl font-medium hover:text-yellow-300 transition border-b border-indigo-800 pb-2" onClick={toggleMobileMenu}>Home</a>
-          <a href="/about" className="text-xl font-medium hover:text-yellow-300 transition border-b border-indigo-800 pb-2" onClick={toggleMobileMenu}>About Us</a>
-          <a href="/classes" className="text-xl font-medium hover:text-yellow-300 transition border-b border-indigo-800 pb-2" onClick={toggleMobileMenu}>Classes</a>
-          <a href="/camps-events" className="text-xl font-medium hover:text-yellow-300 transition border-b border-indigo-800 pb-2" onClick={toggleMobileMenu}>Camps/Events</a>
-          <a href="/open-gym" className="text-xl font-medium hover:text-yellow-300 transition border-b border-indigo-800 pb-2" onClick={toggleMobileMenu}>Open Gym</a>
-          <a href="/team" className="text-xl font-medium hover:text-yellow-300 transition border-b border-indigo-800 pb-2" onClick={toggleMobileMenu}>Team</a>
-          <a href="/schedule-tuition" className="text-xl font-medium hover:text-yellow-300 transition border-b border-indigo-800 pb-2" onClick={toggleMobileMenu}>Schedule & Tuition</a>
-          <a href="/contact" className="text-xl font-medium hover:text-yellow-300 transition pb-2" onClick={toggleMobileMenu}>Contact</a>
+          <a href="/" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Home</a>
+          <a href="/about" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>About Us</a>
+          <a href="/classes" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Classes</a>
+          <a href="/camps-events" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Camps/Events</a>
+          <a href="/open-gym" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Open Gym</a>
+          <a href="/team" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Team</a>
+          <a href="/schedule-tuition" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Schedule & Tuition</a>
+          <a href="/contact" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition pb-2" onClick={toggleMobileMenu}>Contact</a>
         </nav>
       </div>
     </header>
