@@ -37,10 +37,7 @@ const Header = () => {
               alt="360 Gymnastics Logo" 
               className="h-12 mr-3 rounded" 
             />
-            <div className="flex flex-col">
-              <h1 className="text-xl font-bold leading-tight">360 Gymnastics</h1>
-              <span className="text-xs text-indigo-600">Olathe, KS</span>
-            </div>
+            
           </a>
         </div>
         
