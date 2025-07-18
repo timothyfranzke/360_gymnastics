@@ -48,9 +48,11 @@ const Header = () => {
           <a href="/classes" className="hover:text-indigo-600 transition py-2">Classes</a>
           <a href="/camps-events" className="hover:text-indigo-600 transition py-2">Camps/Events</a>
           <a href="/open-gym" className="hover:text-indigo-600 transition py-2">Open Gym</a>
+          <a href="/parties" className="hover:text-indigo-600 transition py-2">Parties</a>
           <a href="/team" className="hover:text-indigo-600 transition py-2">Team</a>
           <a href="/schedule-tuition" className="hover:text-indigo-600 transition py-2">Schedule & Tuition</a>
           <a href="/contact" className="hover:text-indigo-600 transition py-2">Contact</a>
+          <a href="/parties#reserve" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">Reserve Now</a>
         </nav>
         
         {/* Mobile Menu Button */}
@@ -82,9 +84,11 @@ const Header = () => {
           <a href="/classes" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Classes</a>
           <a href="/camps-events" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Camps/Events</a>
           <a href="/open-gym" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Open Gym</a>
+          <a href="/parties" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Parties</a>
           <a href="/team" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Team</a>
           <a href="/schedule-tuition" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Schedule & Tuition</a>
-          <a href="/contact" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition pb-2" onClick={toggleMobileMenu}>Contact</a>
+          <a href="/contact" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Contact</a>
+          <a href="/parties#reserve" className="text-xl font-medium bg-indigo-600 text-white text-center py-3 rounded-md hover:bg-indigo-700 transition" onClick={toggleMobileMenu}>Reserve Now</a>
         </nav>
       </div>
     </header>

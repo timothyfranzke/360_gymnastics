@@ -51,6 +51,7 @@ const Header = () => {
           <a href="/classes" className="hover:text-yellow-300 transition py-2">Classes</a>
           <a href="/camps-events" className="hover:text-yellow-300 transition py-2">Camps/Events</a>
           <a href="/open-gym" className="hover:text-yellow-300 transition py-2">Open Gym</a>
+          <a href="/parties" className="hover:text-yellow-300 transition py-2">Parties</a>
           <a href="/team" className="hover:text-yellow-300 transition py-2">Team</a>
           <a href="/schedule-tuition" className="hover:text-yellow-300 transition py-2">Schedule & Tuition</a>
           <a href="/contact" className="hover:text-yellow-300 transition py-2">Contact</a>
