@@ -1,0 +1,71 @@
+<section class="relative text-white overflow-hidden purple-gradient">
+    <!-- Floating colorful elements -->
+    <div class="floating-element floating-element-1"></div>
+    <div class="floating-element floating-element-2"></div>
+    <div class="floating-element floating-element-3"></div>
+    <div class="floating-element floating-element-4"></div>
+  
+    <div class="container mx-auto py-20 px-6 flex flex-col md:flex-row items-center relative">
+      <div 
+        [@fadeInUp]="animationState"
+        class="md:w-1/2 md:pr-12 z-10"
+      >
+        <h2 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+          Recreational & Competitive Gymnastics
+        </h2>
+        <div class="inline-block bg-yellow-300 text-indigo-900 px-4 py-2 rounded-lg rotate-2 mb-6">
+          <h3 class="text-2xl md:text-3xl font-bold">Enrolling for 2025!</h3>
+        </div>
+        <p class="mb-8 text-lg text-white drop-shadow-md">
+          Building strength, confidence, and character through the sport of gymnastics
+        </p>
+        <div 
+          [@fadeInUpDelay]="animationState"
+          class="flex flex-wrap gap-4"
+        >
+          <a 
+            href="https://app.jackrabbitclass.com/regv2.asp?id=514082"
+            target="_blank"
+            class="bg-gradient-to-r from-orange-400 to-pink-500 hover:from-orange-500 hover:to-pink-600 transition text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:-translate-y-1 hover:scale-105"
+          >
+            Enroll Now
+          </a>
+          <a 
+            routerLink="/classes" 
+            class="bg-opacity-20 hover:bg-opacity-30 border-2 border-white hover:border-yellow-300 transition font-bold py-3 px-6 rounded-lg transform hover:-translate-y-1 hover:scale-105"
+          >
+            View Classes
+          </a>
+        </div>
+      </div>
+      
+      <div 
+        [@fadeInRight]="animationState"
+        class="md:w-1/2 mt-10 md:mt-0 relative"
+      >
+        <div class="relative z-10 transform rotate-3 hover:rotate-0 transition duration-300">
+          <img
+            src="/images/gym1.jpg"
+            alt="Child doing gymnastics"
+            class="rounded-lg shadow-xl relative"
+          />
+          <div class="absolute -top-4 -right-4 w-full h-full border-4 border-yellow-300 rounded-lg -z-10"></div>
+        </div>
+  
+        <!-- Decorative elements -->
+        <div class="decorative-blur decorative-blur-1"></div>
+        <div class="decorative-blur decorative-blur-2"></div>
+      </div>
+    </div>
+  
+    <!-- Cloud divider -->
+    <div class="absolute bottom-0 left-0 w-full">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+        <path
+          fill="#ffffff"
+          fillOpacity="1"
+          d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,82.7C1248,80,1344,64,1392,56L1440,48L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"
+        ></path>
+      </svg>
+    </div>
+  </section>

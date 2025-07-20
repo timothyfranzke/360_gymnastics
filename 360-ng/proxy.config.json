@@ -1,0 +1,11 @@
+{
+    "/jackrabbit": {
+      "target": "https://app.jackrabbitclass.com",
+      "secure": true,
+      "changeOrigin": true,
+      "logLevel": "debug",
+      "pathRewrite": {
+        "^/jackrabbit": ""
+      }
+    }
+  }

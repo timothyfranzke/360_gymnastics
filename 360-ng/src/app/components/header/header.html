@@ -1,0 +1,97 @@
+<header [ngClass]="getHeaderClasses()">
+    <div class="container mx-auto py-3 px-6 flex justify-between items-center">
+      <!-- Logo Section -->
+      <div class="logo-container flex items-center">
+        <a routerLink="/" class="flex items-center logo-link">
+          <img 
+            src="/images/logo.jpg" 
+            alt="360 Gymnastics Logo" 
+            class="h-12 mr-3 rounded transition-transform duration-300 hover:scale-105" 
+          />
+        </a>
+      </div>
+      
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex space-x-6" role="navigation" aria-label="Main navigation">
+        <a 
+          *ngFor="let item of desktopNavItems"
+          [routerLink]="item.href"
+          routerLinkActive="active-nav-link"
+          [routerLinkActiveOptions]="{ exact: item.href === '/' }"
+          class="nav-link hover:text-indigo-600 transition py-2 relative"
+          [attr.aria-label]="item.name"
+        >
+          {{ item.name }}
+        </a>
+      </nav>
+      
+      <!-- Mobile Menu Button -->
+      <button 
+        class="md:hidden text-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50 rounded-md p-1 z-50 mobile-menu-btn" 
+        (click)="toggleMobileMenu()"
+        [attr.aria-label]="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
+        [attr.aria-expanded]="isMobileMenuOpen"
+        [@rotateIcon]="isMobileMenuOpen ? 'open' : 'closed'"
+      >
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          fill="none" 
+          viewBox="0 0 24 24" 
+          stroke="currentColor" 
+          class="w-6 h-6 transition-transform duration-300"
+        >
+          <path 
+            stroke-linecap="round" 
+            stroke-linejoin="round" 
+            stroke-width="2" 
+            [attr.d]="getHamburgerIconPath()"
+          />
+        </svg>
+      </button>
+    </div>
+    
+    <!-- Mobile Menu Overlay -->
+    <div 
+      [ngClass]="getMobileMenuClasses()"
+      [@slideInFromRight]="isMobileMenuOpen ? 'open' : 'closed'"
+      style="top: 60px"
+      role="navigation"
+      aria-label="Mobile navigation"
+      [attr.aria-hidden]="!isMobileMenuOpen"
+    >
+      <nav class="container mx-auto py-8 px-6 flex flex-col space-y-6">
+        <a 
+          *ngFor="let item of mobileNavItems; let last = last"
+          [routerLink]="item.href"
+          routerLinkActive="active-mobile-nav-link"
+          [routerLinkActiveOptions]="{ exact: item.href === '/' }"
+          class="mobile-nav-link text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2"
+          [class.border-b-0]="last"
+          (click)="onMobileNavClick()"
+          [attr.aria-label]="item.name"
+        >
+          {{ item.name }}
+        </a>
+        
+        <!-- Call to Action Button -->
+        <a 
+          routerLink="/parties"
+          fragment="reserve"
+          class="cta-button text-xl font-medium bg-indigo-600 text-white text-center py-3 rounded-md hover:bg-indigo-700 transition transform hover:scale-105 shadow-lg"
+          (click)="onMobileNavClick()"
+          aria-label="Reserve a party now"
+        >
+          Reserve Now
+        </a>
+      </nav>
+    </div>
+    
+    <!-- Mobile Menu Background Overlay -->
+    <div 
+      *ngIf="isMobileMenuOpen"
+      class="fixed inset-0 bg-black bg-opacity-25 z-30 md:hidden"
+      [@fadeInOut]="isMobileMenuOpen ? 'in' : 'out'"
+      (click)="closeMobileMenu()"
+      aria-hidden="true"
+    ></div>
+  </header>

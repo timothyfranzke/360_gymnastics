@@ -1,0 +1,64 @@
+<section class="py-16 px-6 bg-indigo-800 text-white relative">
+    <div class="container mx-auto">
+      <h2 
+        [@fadeInUp]="animationState"
+        class="text-3xl font-bold text-center mb-12"
+      >
+        Featured Classes
+      </h2>
+      
+      <div 
+        [@fadeInUpDelay]="animationState"
+        class="grid md:grid-cols-4 gap-6"
+      >
+        <a 
+          *ngFor="let featuredClass of featuredClasses; let i = index"
+          [routerLink]="featuredClass.route"
+          [ngClass]="getClassesForCard(featuredClass)"
+          [@staggerClasses]="animationState"
+          [style.animation-delay]="(i * 100) + 'ms'"
+        >
+          <div class="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-4">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-8 w-8"
+              [ngClass]="featuredClass.iconColor"
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                [attr.d]="getIconPath(featuredClass.icon)"
+              />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold mb-2">{{ featuredClass.name }}</h3>
+          <p class="text-sm">{{ featuredClass.ageRange }}</p>
+        </a>
+      </div>
+      
+      <div 
+        [@fadeInUpDelay2]="animationState"
+        class="text-center mt-10"
+      >
+        <a 
+          routerLink="/classes" 
+          class="inline-block bg-white text-indigo-800 font-bold py-3 px-8 rounded-lg shadow hover:bg-gray-100 transition transform hover:-translate-y-1"
+        >
+          View All Classes
+        </a>
+      </div>
+    </div>
+    
+    <!-- Decorative elements -->
+    <div class="decorative-element">
+      <img 
+        src="/images/placeholder.svg" 
+        alt="Decorative element" 
+        class="w-32 h-32 opacity-20" 
+      />
+    </div>
+  </section>

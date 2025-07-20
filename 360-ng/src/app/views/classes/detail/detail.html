@@ -1,0 +1,247 @@
+<div class="min-h-screen bg-gray-50 pt-24 pb-12">
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="container mx-auto px-4 py-12 text-center">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Loading class details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="container mx-auto px-4 py-12 text-center">
+    <div class="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+      <p class="text-red-600">{{ error }}</p>
+      <button 
+        (click)="loadClassDetail(route.snapshot.params['id'])"
+        class="mt-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition"
+      >
+        Try Again
+      </button>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="classData && !isLoading">
+    <!-- Notification Banner -->
+    <div *ngIf="notification?.message" 
+         class="bg-gradient-to-r from-yellow-400 via-orange-400 to-red-400 text-white py-4 px-4 shadow-lg border-b-4 border-orange-500">
+      <div class="container mx-auto">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.996-.833-2.768 0L3.046 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <div>
+              <p class="font-semibold text-lg">Important Notice</p>
+              <p class="text-white/90">{{ notification.message }}</p>
+            </div>
+          </div>
+          <button 
+            (click)="dismissNotification()"
+            class="ml-4 text-white/80 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Page Header -->
+    <section class="text-white py-12 relative overflow-hidden purple-gradient">
+      <!-- Floating decorative elements -->
+      <div class="floating-element floating-element-header-1"></div>
+      <div class="floating-element floating-element-header-2"></div>
+      
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="flex items-center mb-4">
+          <a 
+            routerLink="/classes" 
+            class="text-white hover:text-yellow-300 transition flex items-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+            </svg>
+            Back to Classes
+          </a>
+        </div>
+        
+        <div 
+          [@fadeInUp]="animationState" 
+          class="text-center"
+        >
+          <h1 class="text-3xl md:text-5xl font-bold mb-2">{{ classData?.name }}</h1>
+          <div class="inline-block bg-yellow-300 text-indigo-900 px-4 py-2 rounded-lg rotate-1 mb-4">
+            <h3 class="text-xl font-bold">Ages {{ classData?.ageRange }}</h3>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Cloud divider -->
+      <div class="absolute bottom-0 left-0 w-full">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+          <path
+            fill="#f9fafb"
+            fillOpacity="1"
+            d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,82.7C1248,80,1344,64,1392,56L1440,48L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"
+          ></path>
+        </svg>
+      </div>
+    </section>
+    
+    <div class="container mx-auto px-4 py-12">
+      <div class="">
+        <!-- Left Column - Class Info -->
+        <div class="md:col-span-2 space-y-8">
+          <div
+            [@fadeInUpDelay]="animationState"
+            class="bg-white rounded-xl shadow-lg p-8 relative overflow-hidden"
+          >
+            <div class="decorative-blur decorative-blur-pink"></div>
+            
+            <h2 class="text-2xl font-bold text-purple-800 mb-4">Class Description</h2>
+            <p class="text-gray-700 mb-6">{{ classData.description }}</p>
+            
+            <h3 class="text-xl font-bold text-purple-800 mb-3">Examples of event skills that we will be working on:</h3>
+            <ul class="space-y-2 mb-6">
+              <li 
+                *ngFor="let skill of classData?.skills" 
+                class="flex items-center"
+              >
+                <span class="w-2 h-2 bg-purple-500 rounded-full mr-3"></span>
+                <span class="text-gray-700">{{ skill }}</span>
+              </li>
+            </ul>
+            
+            <h3 class="text-xl font-bold text-purple-800 mb-3">Class Structure:</h3>
+            <ul class="space-y-2 mb-6">
+              <li 
+                *ngFor="let item of classData?.structure" 
+                class="flex items-center"
+              >
+                <span class="w-2 h-2 bg-indigo-500 rounded-full mr-3"></span>
+                <span class="text-gray-700">{{ item }}</span>
+              </li>
+            </ul>
+            
+            <div *ngIf="classData?.prerequisites && classData.prerequisites.length > 0" class="mb-6">
+              <h3 class="text-xl font-bold text-purple-800 mb-3">Prerequisites:</h3>
+              <ul class="space-y-2">
+                <li 
+                  *ngFor="let prerequisite of classData.prerequisites" 
+                  class="flex items-center"
+                >
+                  <span class="w-2 h-2 bg-cyan-500 rounded-full mr-3"></span>
+                  <span class="text-gray-700">{{ prerequisite }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          
+          <!-- Class Schedule -->
+          
+          <div
+            [@fadeInUpDelay2]="animationState"
+            class="bg-white rounded-xl shadow-lg p-8 relative overflow-hidden"
+            id="class-schedule"
+          >
+            <div class="decorative-blur decorative-blur-cyan"></div>
+            
+            <h2 class="text-2xl font-bold text-purple-800 mb-6">Available Sessions</h2>
+            
+            <!-- JackRabbit Class Schedule -->
+            <div class="overflow-x-auto">
+              <div 
+                id="jackrabbit-schedule-container"
+                class="jackrabbit-schedule"
+              >
+                <p *ngIf="schedule.length === 0" class="text-gray-600">Loading schedule...</p>
+                
+                <table *ngIf="schedule.length > 0" class="min-w-full border-collapse">
+                  <thead>
+                    <tr class="bg-gray-100">
+                      <th class="py-3 px-4 text-left font-semibold text-gray-700">Class</th>
+                      <th class="py-3 px-4 text-left font-semibold text-gray-700">Day</th>
+                      <th class="py-3 px-4 text-left font-semibold text-gray-700">Time</th>
+                      <th class="py-3 px-4 text-left font-semibold text-gray-700">Ages</th>
+                      <th class="py-3 px-4 text-left font-semibold text-gray-700">Openings</th>
+                      <th class="py-3 px-4 text-left font-semibold text-gray-700">Tuition</th>
+                      <th class="py-3 px-4 text-left font-semibold text-gray-700"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of schedule" class="border-b border-gray-200 hover:bg-gray-50">
+                      <td class="py-3 px-4 text-gray-700">{{ item.className }}</td>
+                      <td class="py-3 px-4 text-gray-700">{{ item.day }}</td>
+                      <td class="py-3 px-4 text-gray-700">{{ item.time }}</td>
+                      <td class="py-3 px-4 text-gray-700">{{ item.ages }}</td>
+                      <td class="py-3 px-4 text-gray-700">{{ item.openings }}</td>
+                      <td class="py-3 px-4 text-gray-700">${{ item.tuition }}</td>
+                      <td class="py-3 px-4">
+                        <a 
+                          [href]="item.registrationButton.href" 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          [ngClass]="{
+                            'bg-purple-600 hover:bg-purple-700': item.registrationButton.text === 'Register',
+                            'bg-orange-500 hover:bg-orange-600': item.registrationButton.text === 'Wait List'
+                          }"
+                          class="text-white py-2 px-4 rounded text-sm transition"
+                        >
+                          {{ item.registrationButton.text }}
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Right Column - Image and CTA -->
+        <div class="space-y-8">
+          <div
+            [@fadeInRight]="animationState"
+            class="relative"
+          >
+            
+            <!-- Decorative elements -->
+            <div class="decorative-blur decorative-blur-image-1"></div>
+            <div class="decorative-blur decorative-blur-image-2"></div>
+          </div>
+          
+          <div
+            [@fadeInUpDelay3]="animationState"
+            class="bg-gradient-to-br from-purple-600 to-pink-500 text-white rounded-xl p-6 shadow-lg relative overflow-hidden"
+          >
+            <div class="decorative-blur decorative-blur-cta"></div>
+            
+            <h3 class="text-xl font-bold mb-4">Ready to Join?</h3>
+            <p class="mb-6">Secure your spot in our popular {{ classData.name }} class today! Limited spaces available.</p>
+            
+            <button 
+              (click)="scrollToSchedule()"
+              class="block w-full bg-white text-purple-700 text-center font-bold py-3 px-6 rounded-lg hover:bg-yellow-300 transition transform hover:-translate-y-1"
+            >
+              View Schedule & Register
+            </button>
+          </div>
+          
+          <div
+            [@fadeInUpDelay4]="animationState"
+            class="bg-white rounded-xl shadow-lg p-6"
+          >
+            <h3 class="text-xl font-bold text-purple-800 mb-4">Have Questions?</h3>
+            <p class="text-gray-700 mb-4">Contact us for more information about our {{ classData.name }} class or any other programs.</p>
+            
+            <a 
+              routerLink="/contact" 
+              class="block w-full border-2 border-purple-600 text-purple-600 text-center font-bold py-3 px-6 rounded-lg hover:bg-purple-600 hover:text-white transition"
+            >
+              Contact Us
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

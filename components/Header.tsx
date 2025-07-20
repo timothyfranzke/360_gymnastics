@@ -44,15 +44,11 @@ const Header = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-6">
           <a href="/" className="hover:text-indigo-600 transition py-2">Home</a>
-          <a href="/about" className="hover:text-indigo-600 transition py-2">About Us</a>
           <a href="/classes" className="hover:text-indigo-600 transition py-2">Classes</a>
           <a href="/camps-events" className="hover:text-indigo-600 transition py-2">Camps/Events</a>
           <a href="/open-gym" className="hover:text-indigo-600 transition py-2">Open Gym</a>
           <a href="/parties" className="hover:text-indigo-600 transition py-2">Parties</a>
-          <a href="/team" className="hover:text-indigo-600 transition py-2">Team</a>
-          <a href="/schedule-tuition" className="hover:text-indigo-600 transition py-2">Schedule & Tuition</a>
           <a href="/contact" className="hover:text-indigo-600 transition py-2">Contact</a>
-          <a href="/parties#reserve" className="bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition">Reserve Now</a>
         </nav>
         
         {/* Mobile Menu Button */}

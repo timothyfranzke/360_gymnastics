@@ -1,0 +1,174 @@
+<footer class="bg-indigo-900 text-white pt-12 pb-6 px-6">
+    <div class="container mx-auto">
+      <div 
+        [@fadeInUp]="animationState"
+        class="grid md:grid-cols-4 gap-8 mb-12"
+      >
+        <!-- Company Info Section -->
+        <div 
+          [@staggerFooter]="animationState"
+          class="footer-section"
+          style="animation-delay: 0ms"
+        >
+          <h3 class="text-xl font-bold mb-4">360 Gymnastics</h3>
+          <p class="mb-4">
+            Providing exceptional gymnastics training for all ages and abilities since 2013.
+          </p>
+          <div class="flex space-x-4">
+            <a 
+              *ngFor="let social of socialLinks"
+              [href]="social.href"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-white hover:text-yellow-300 transition social-link"
+              [attr.aria-label]="social.name"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="h-6 w-6" 
+                fill="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path [attr.d]="getSocialIconPath(social.icon)" />
+              </svg>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Quick Links Section -->
+        <div 
+          [@staggerFooter]="animationState"
+          class="footer-section"
+          style="animation-delay: 100ms"
+        >
+          <h3 class="text-xl font-bold mb-4">Quick Links</h3>
+          <ul class="space-y-2">
+            <li *ngFor="let link of quickLinks">
+              <a 
+                [routerLink]="link.href" 
+                class="hover:text-yellow-300 transition footer-link"
+              >
+                {{ link.name }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Programs Section -->
+        <div 
+          [@staggerFooter]="animationState"
+          class="footer-section"
+          style="animation-delay: 200ms"
+        >
+          <h3 class="text-xl font-bold mb-4">Programs</h3>
+          <ul class="space-y-2">
+            <li *ngFor="let program of programLinks">
+              <a 
+                [routerLink]="program.href" 
+                class="hover:text-yellow-300 transition footer-link"
+              >
+                {{ program.name }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- Contact Section -->
+        <div 
+          [@staggerFooter]="animationState"
+          class="footer-section"
+          style="animation-delay: 300ms"
+        >
+          <h3 class="text-xl font-bold mb-4">Contact Us</h3>
+          <address class="not-italic mb-4">
+            <!-- Address -->
+            <div class="flex items-start mb-2">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  [attr.d]="getContactIconPath('location')"
+                />
+              </svg>
+              <div>
+                431 N Lindenwood Dr<br />
+                Olathe, KS 66062
+              </div>
+            </div>
+            
+            <!-- Phone -->
+            <div class="flex items-center mb-2">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="h-5 w-5 mr-2 flex-shrink-0" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  [attr.d]="getContactIconPath('phone')"
+                />
+              </svg>
+              <a 
+                href="tel:9137823300" 
+                class="hover:text-yellow-300 transition"
+              >
+                (913) 782-3300
+              </a>
+            </div>
+            
+            <!-- Email -->
+            <div class="flex items-center">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                class="h-5 w-5 mr-2 flex-shrink-0" 
+                fill="none" 
+                viewBox="0 0 24 24" 
+                stroke="currentColor"
+              >
+                <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  [attr.d]="getContactIconPath('email')"
+                />
+              </svg>
+              <a 
+                href="mailto:kc360gym@gmail.com" 
+                class="hover:text-yellow-300 transition"
+              >
+                {{"kc360gym@gmail.com"}}
+              </a>
+            </div>
+          </address>
+          
+          <!-- Hours -->
+          <h4 class="font-bold mb-2">Gym Hours:</h4>
+          <p class="text-sm">
+            Monday - Thursday: 9:00AM – 9:00PM<br />
+            Friday: 9:00AM – 8:30PM<br />
+            Saturday: 9:00AM – 4:00PM<br />
+            Sunday: Parties by Request
+          </p>
+        </div>
+      </div>
+      
+      <!-- Copyright Section -->
+      <div 
+        [@fadeInUp]="animationState"
+        class="pt-6 border-t border-indigo-800 text-center text-sm"
+      >
+        <p>&copy; {{ currentYear }} 360 Gymnastics. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>

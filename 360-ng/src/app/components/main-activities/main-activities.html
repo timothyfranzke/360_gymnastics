@@ -1,0 +1,122 @@
+<section class="py-16 px-6 bg-indigo-900 text-white relative overflow-hidden">
+    <div class="container mx-auto relative z-10">
+      <!-- Header Section -->
+      <div 
+        [@fadeInUp]="animationState"
+        class="mb-10"
+      >
+        <h2 class="text-3xl md:text-4xl font-bold mb-3">Gymnastics – Olathe's Recreational Gymnast Club</h2>
+        <p class="max-w-4xl mb-8 text-lg leading-relaxed">
+          Located in a suburb of Kansas City within Olathe, KS, 360 Gymnastics is a recreational gymnastics gym that strives to provide a fun, no-pressure atmosphere while teaching the fundamentals of gymnastics, social skills, and life skills.
+        </p>
+      </div>
+      
+      <!-- Features Grid -->
+      <div 
+        [@fadeInUpDelay]="animationState"
+        class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+      >
+        <div 
+          *ngFor="let feature of features; let i = index"
+          [@staggerCards]="animationState"
+          [style.animation-delay]="(i * 150) + 'ms'"
+          class="feature-card bg-indigo-800 bg-opacity-50 p-6 rounded-xl hover:bg-opacity-70 transition-all duration-300 group relative overflow-hidden"
+        >
+          <!-- Card glow effect -->
+          <div class="card-glow absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          
+          <div class="relative z-10">
+            <!-- Icon and Title -->
+            <div class="flex items-center mb-4">
+              <div class="icon-container w-10 h-10 rounded-lg bg-white bg-opacity-10 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
+                <svg 
+                  xmlns="http://www.w3.org/2000/svg" 
+                  class="h-6 w-6 transition-colors duration-300"
+                  [ngClass]="feature.iconColor"
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path 
+                    stroke-linecap="round" 
+                    stroke-linejoin="round" 
+                    stroke-width="2" 
+                    [attr.d]="getIconPath(feature.icon)"
+                  />
+                </svg>
+              </div>
+              <h4 class="text-lg font-bold group-hover:text-cyan-300 transition-colors duration-300">
+                {{ feature.title }}
+              </h4>
+            </div>
+            
+            <!-- Description -->
+            <p class="text-gray-300 group-hover:text-white transition-colors duration-300">
+              {{ feature.description }}
+            </p>
+          </div>
+          
+          <!-- Hover indicator -->
+          <div class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 group-hover:w-full transition-all duration-500"></div>
+        </div>
+      </div>
+  
+      <!-- About Section -->
+      <div 
+        [@fadeInUpDelay2]="animationState"
+        class="bg-indigo-800 bg-opacity-30 rounded-2xl p-8 mb-10 backdrop-blur-sm border border-indigo-700 border-opacity-50"
+      >
+        <h3 class="text-2xl font-bold text-cyan-300 mb-4">How We Got Started</h3>
+        <p class="text-lg leading-relaxed mb-6">
+          360 Gymnastics is the brain child of owner Eric Smith. For years, Eric planned his ideal facility for his own gym and when the time came his wife found the current location.
+        </p>
+        <p class="text-lg leading-relaxed">
+          After months of planning and preparation, <strong class="text-cyan-300">360 Gymnastics opened its doors in January 2013.</strong>
+        </p>
+      </div>
+      
+      <!-- Call to Action Section -->
+      <div [@fadeInUpDelay2]="animationState" class="text-center">
+        <h3 class="text-2xl font-bold text-cyan-300 mb-6">Ready to Get Started?</h3>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a 
+            routerLink="/classes" 
+            class="cta-button inline-block bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 hover:shadow-xl"
+          >
+            View Classes
+          </a>
+          <a 
+            routerLink="/schedule-tuition" 
+            class="cta-button-secondary inline-block bg-white bg-opacity-10 hover:bg-opacity-20 border-2 border-cyan-400 hover:border-cyan-300 transition-all duration-300 text-white font-bold py-3 px-8 rounded-lg transform hover:scale-105"
+          >
+            Schedule & Pricing
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Background decorative elements -->
+    <div class="absolute top-0 right-0 w-1/3 h-full overflow-hidden">
+      <div class="decorative-bubbles w-full h-full opacity-10"></div>
+    </div>
+    
+    <!-- Floating decorative shapes -->
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
+    </div>
+    
+    <!-- Child image -->
+    <div 
+      [@slideInRight]="animationState"
+      class="absolute bottom-0 right-10 hidden lg:block child-image"
+    >
+      <img 
+        src="/images/gym1.jpg" 
+        alt="Child doing gymnastics" 
+        class="h-64 transition-transform duration-500 hover:scale-105" 
+      />
+    </div>
+  </section>

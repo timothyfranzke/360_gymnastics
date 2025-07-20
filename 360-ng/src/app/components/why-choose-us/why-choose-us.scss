@@ -1,0 +1,66 @@
+// Feature cards hover effects
+.feature-card {
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+  }
+  
+  // Decorative circles for image section
+  .decorative-circle {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.2;
+    
+    &.decorative-circle-1 {
+      top: -1rem;
+      right: -1rem;
+      width: 6rem;
+      height: 6rem;
+      background-color: #fde047; // yellow-300
+    }
+    
+    &.decorative-circle-2 {
+      bottom: -1rem;
+      left: -1rem;
+      width: 8rem;
+      height: 8rem;
+      background-color: #c084fc; // purple-400
+    }
+  }
+  
+  // Stagger animation for cards
+  .feature-card {
+    &:nth-child(1) {
+      animation-delay: 0ms;
+    }
+    
+    &:nth-child(2) {
+      animation-delay: 100ms;
+    }
+    
+    &:nth-child(3) {
+      animation-delay: 200ms;
+    }
+    
+    &:nth-child(4) {
+      animation-delay: 300ms;
+    }
+  }
+  
+  // Responsive adjustments
+  @media (max-width: 768px) {
+    .decorative-circle {
+      &.decorative-circle-1 {
+        width: 4rem;
+        height: 4rem;
+      }
+      
+      &.decorative-circle-2 {
+        width: 5rem;
+        height: 5rem;
+      }
+    }
+  }

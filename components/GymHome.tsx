@@ -26,7 +26,7 @@ const GymHome = () => {
       <GymHours />
       <Gallery />
       <Testimonials />
-      <LatestNews />
+      {/*<LatestNews />*/}
       <SocialFeed />
       <FAQ />
       <CallToAction />

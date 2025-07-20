@@ -1,0 +1,103 @@
+<!-- Dialog Overlay -->
+<div 
+  *ngIf="visible"
+  class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+  [@overlayAnimation]="animationState"
+  (click)="onOverlayClick($event)"
+  role="dialog"
+  aria-modal="true"
+  [attr.aria-labelledby]="config.title ? 'dialog-title' : null"
+  aria-describedby="dialog-message"
+>
+  <!-- Dialog Container -->
+  <div 
+    class="bg-white rounded-xl shadow-2xl relative overflow-hidden"
+    [@dialogAnimation]="animationState"
+    [style.max-width]="config.maxWidth"
+    [style.width]="'100%'"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Decorative gradient header -->
+    <div class="h-1 bg-gradient-to-r from-purple-600 to-indigo-600"></div>
+    
+    <!-- Close Button -->
+    <button 
+      *ngIf="config.showCloseButton"
+      class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 rounded-full hover:bg-gray-100"
+      (click)="close()"
+      aria-label="Close dialog"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Dialog Content -->
+    <div class="p-6">
+      <!-- Header Section -->
+      <div *ngIf="config.title || config.icon" class="flex items-center mb-4">
+        <!-- Icon -->
+        <div *ngIf="config.icon" class="flex-shrink-0 mr-3">
+          <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-6 w-6"
+              [ngClass]="getIconColorClass()"
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="2" 
+                [attr.d]="getIconPath()"
+              />
+            </svg>
+          </div>
+        </div>
+        
+        <!-- Title -->
+        <h3 
+          *ngIf="config.title"
+          id="dialog-title"
+          class="text-xl font-bold text-gray-900"
+        >
+          {{ config.title }}
+        </h3>
+      </div>
+
+      <!-- Message Content -->
+      <div 
+        id="dialog-message"
+        class="text-gray-700 mb-6"
+        [ngClass]="{'text-center': !config.title && !config.icon}"
+        [innerHTML]="config.message"
+      >
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-wrap gap-3 justify-end">
+        <button
+          *ngFor="let button of config.buttons; let i = index"
+          [ngClass]="getButtonClasses(button)"
+          [disabled]="button.disabled || button.loading"
+          (click)="onButtonClick(button)"
+          [attr.aria-label]="button.text"
+        >
+          <!-- Loading Spinner -->
+          <span *ngIf="button.loading" class="inline-flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Loading...
+          </span>
+          
+          <!-- Button Text -->
+          <span *ngIf="!button.loading">{{ button.text }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

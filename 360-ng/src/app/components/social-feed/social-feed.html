@@ -1,0 +1,158 @@
+<section class="py-16 px-4 bg-gradient-to-br from-gray-50 to-purple-50">
+    <div class="container mx-auto">
+      <!-- Header Section -->
+      <div 
+        [@fadeInUp]="animationState"
+        class="text-center mb-12"
+      >
+        <h2 class="text-3xl md:text-4xl font-bold mb-4 text-purple-600">
+          Follow Us On Instagram
+        </h2>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-6">
+          Stay updated with the latest events, classes, and achievements at 360 Gym.
+        </p>
+        <div 
+          [@fadeInUpDelay]="animationState"
+          class="mt-4"
+        >
+          <a 
+            href="https://www.instagram.com/kc360gym/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="instagram-button inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-full font-medium hover:from-purple-700 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+              <path [attr.d]="getInstagramIconPath()" />
+            </svg>
+            @kc360gym
+          </a>
+        </div>
+      </div>
+  
+      <!-- Scrollable Feed Container -->
+      <div 
+        [@slideInLeft]="animationState"
+        class="relative"
+      >
+        <!-- Left Scroll Button -->
+        <button
+          *ngIf="canScrollLeft"
+          (click)="scrollLeft()"
+          class="scroll-button scroll-button-left absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-300"
+          aria-label="Scroll left"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+  
+        <!-- Right Scroll Button -->
+        <button
+          *ngIf="canScrollRight"
+          (click)="scrollRight()"
+          class="scroll-button scroll-button-right absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-300"
+          aria-label="Scroll right"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+  
+        <!-- Horizontal Scroll Container -->
+        <div 
+          #scrollContainer
+          (scroll)="onScroll()"
+          class="horizontal-scroll flex gap-4 overflow-x-auto overflow-y-hidden scroll-smooth pb-4"
+        >
+          <!-- Instagram Posts -->
+          <div 
+            *ngFor="let post of instagramPosts; let i = index"
+            class="social-post flex-shrink-0 w-80 bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 group cursor-pointer"
+            (click)="openInstagramPost(post.link)"
+          >
+            <!-- Image Container -->
+            <div class="relative aspect-square overflow-hidden">
+              <!-- Post Type Icons -->
+              <div *ngIf="post.isCarousel" class="absolute top-3 right-3 text-white z-10 bg-black bg-opacity-50 rounded-full p-2">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                  <path [attr.d]="getCarouselIconPath()" />
+                </svg>
+              </div>
+              
+              <div *ngIf="post.isVideo" class="absolute inset-0 flex items-center justify-center text-white z-10">
+                <div class="bg-black bg-opacity-50 rounded-full p-3">
+                  <svg class="w-8 h-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" fill="currentColor">
+                    <path [attr.d]="getVideoIconPath()" />
+                  </svg>
+                </div>
+              </div>
+              
+              <!-- Image -->
+              <img 
+                [src]="post.imageUrl" 
+                [alt]="post.text" 
+                (error)="onImageError($event)"
+                class="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+              />
+              
+              <!-- Hover Overlay -->
+              <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </div>
+            
+            <!-- Post Content -->
+            <div class="p-4">
+              <p class="text-gray-800 text-sm line-clamp-3 group-hover:text-purple-600 transition-colors duration-300">
+                {{ post.text }}
+              </p>
+              
+              <!-- Instagram Icon -->
+              <div class="mt-3 flex items-center justify-between">
+                <div class="flex items-center text-gray-500 text-xs">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 24 24">
+                    <path [attr.d]="getInstagramIconPath()" />
+                  </svg>
+                  View on Instagram
+                </div>
+                <div class="text-purple-500 group-hover:text-purple-700 transition-colors duration-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Scroll Indicator Dots -->
+        <div class="flex justify-center mt-6 space-x-2">
+          <div 
+            *ngFor="let post of instagramPosts.slice(0, Math.ceil(instagramPosts.length / 3)); let i = index"
+            class="w-2 h-2 rounded-full transition-all duration-300"
+            [ngClass]="{
+              'bg-purple-500': i === 0,
+              'bg-gray-300': i !== 0
+            }"
+          ></div>
+        </div>
+      </div>
+  
+      <!-- Follow CTA -->
+      <div 
+        [@fadeInUpDelay]="animationState"
+        class="mt-12 text-center"
+      >
+        <div class="bg-white rounded-2xl shadow-lg p-8 max-w-md mx-auto">
+          <h3 class="text-xl font-bold text-gray-800 mb-2">Don't Miss Out!</h3>
+          <p class="text-gray-600 mb-4">Follow us for daily updates, tips, and behind-the-scenes content.</p>
+          <a 
+            href="https://www.instagram.com/kc360gym/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="inline-block bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
+          >
+            {{'Follow @kc360gym'}}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>

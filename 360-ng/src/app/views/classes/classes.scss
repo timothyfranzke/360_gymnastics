@@ -1,0 +1,308 @@
+// Purple gradient background
+.purple-gradient {
+    background: linear-gradient(135deg, #9333ea 0%, #6b21a8 100%);
+  }
+  
+  // Floating decorative elements
+  .floating-element {
+    position: absolute;
+    opacity: 0.7;
+  }
+  
+  .floating-element-1 {
+    top: 2.5rem;
+    left: 2.5rem;
+    width: 5rem;
+    height: 5rem;
+    background-color: #fb923c; // orange-400
+    border-radius: 0.5rem;
+    transform: rotate(12deg);
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .floating-element-2 {
+    top: 5rem;
+    right: 5rem;
+    width: 4rem;
+    height: 4rem;
+    background-color: #22d3ee; // cyan-400
+    border-radius: 50%;
+    animation: float-delayed 3s ease-in-out infinite;
+  }
+  
+  .floating-element-3 {
+    bottom: 10rem;
+    left: 25%;
+    width: 3rem;
+    height: 3rem;
+    background-color: #f472b6; // pink-400
+    border-radius: 0.5rem;
+    transform: rotate(45deg);
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .floating-element-4 {
+    top: 33.333333%;
+    right: 33.333333%;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #fde047; // yellow-300
+    border-radius: 50%;
+    animation: float-delayed 3s ease-in-out infinite;
+  }
+  
+  // Decorative blur elements
+  .decorative-blur {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.7;
+    filter: blur(24px);
+  }
+  
+  .decorative-blur-1 {
+    top: -1.25rem;
+    right: -1.25rem;
+    width: 6rem;
+    height: 6rem;
+    background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+  }
+  
+  .decorative-blur-2 {
+    bottom: -1.25rem;
+    left: -1.25rem;
+    width: 8rem;
+    height: 8rem;
+    background: linear-gradient(45deg, #22d3ee 0%, #3b82f6 100%);
+  }
+  
+  // Button styles
+  .btn-primary {
+    background: linear-gradient(90deg, #fb923c 0%, #ec4899 100%);
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: linear-gradient(90deg, #ea580c 0%, #db2777 100%);
+      transform: translateY(-2px) scale(1.05);
+    }
+  }
+  
+  .btn-secondary {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    font-weight: bold;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: 2px solid white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+      border-color: #fde047; // yellow-300
+      transform: translateY(-2px) scale(1.05);
+    }
+  }
+  
+  // Floating animations
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px) rotate(12deg);
+    }
+    50% {
+      transform: translateY(-10px) rotate(12deg);
+    }
+  }
+  
+  @keyframes float-delayed {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+  
+  // Apply delayed animation
+  .floating-element-2,
+  .floating-element-4 {
+    animation-delay: 1s;
+  }
+  
+  // Responsive design
+  @media (max-width: 768px) {
+    .floating-element {
+      display: none; // Hide floating elements on mobile for better performance
+    }
+    
+    .decorative-blur {
+      display: none; // Hide blur elements on mobile
+    }
+  }
+  
+  // Utility classes (if not using Tailwind in Angular)
+  .min-h-screen {
+    min-height: 100vh;
+  }
+  
+  .bg-gray-50 {
+    background-color: #f9fafb;
+  }
+  
+  .pt-24 {
+    padding-top: 6rem;
+  }
+  
+  .pb-12 {
+    padding-bottom: 3rem;
+  }
+  
+  .py-16 {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+  
+  .py-12 {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+  
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    
+    @media (min-width: 640px) {
+      max-width: 640px;
+    }
+    
+    @media (min-width: 768px) {
+      max-width: 768px;
+    }
+    
+    @media (min-width: 1024px) {
+      max-width: 1024px;
+    }
+    
+    @media (min-width: 1280px) {
+      max-width: 1280px;
+    }
+  }
+  
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+  
+  .mb-8 {
+    margin-bottom: 2rem;
+  }
+  
+  .mt-6 {
+    margin-top: 1.5rem;
+  }
+  
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-white {
+    color: white;
+  }
+  
+  .text-pink-100 {
+    color: #fce7f3;
+  }
+  
+  .text-gray-600 {
+    color: #4b5563;
+  }
+  
+  .text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+  
+  .text-3xl {
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+  }
+  
+  .text-xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+  
+  .font-bold {
+    font-weight: 700;
+  }
+  
+  .max-w-3xl {
+    max-width: 48rem;
+  }
+  
+  .relative {
+    position: relative;
+  }
+  
+  .absolute {
+    position: absolute;
+  }
+  
+  .overflow-hidden {
+    overflow: hidden;
+  }
+  
+  .z-10 {
+    z-index: 10;
+  }
+  
+  .flex {
+    display: flex;
+  }
+  
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  
+  .justify-center {
+    justify-content: center;
+  }
+  
+  .gap-4 {
+    gap: 1rem;
+  }
+  
+  .w-full {
+    width: 100%;
+  }
+  
+  .bottom-0 {
+    bottom: 0;
+  }
+  
+  .left-0 {
+    left: 0;
+  }
+  
+  @media (min-width: 768px) {
+    .md\\:text-6xl {
+      font-size: 3.75rem;
+      line-height: 1;
+    }
+  }
