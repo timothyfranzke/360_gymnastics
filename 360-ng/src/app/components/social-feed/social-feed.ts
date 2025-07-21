@@ -171,7 +171,7 @@ export class SocialFeed implements OnInit {
 
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
-    target.src = 'https://via.placeholder.com/400x400/9333ea/ffffff?text=360+Gym';
+    // target.src = 'https://via.placeholder.com/400x400/9333ea/ffffff?text=360+Gym';
   }
 
   openInstagramPost(link: string): void {
