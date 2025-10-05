@@ -14,12 +14,12 @@ const FAQItem: React.FC<FAQItemProps> = ({ question, answer, isHighlighted = fal
   };
   
   return (
-    <div className={`${isHighlighted ? 'bg-orange-400 text-white' : 'bg-gray-100'} p-6 rounded-xl shadow-md transition-all duration-300`}>
+    <div className={`${isHighlighted ? 'text-white' : 'bg-gray-100'} p-6 rounded-xl shadow-md transition-all duration-300`} style={isHighlighted ? { backgroundColor: '#fc7900' } : {}}>
       <div 
         className="flex justify-between items-center cursor-pointer" 
         onClick={toggleOpen}
       >
-        <h3 className={`text-xl font-bold ${isHighlighted ? '' : 'text-purple-800'} mb-2`}>{question}</h3>
+        <h3 className={`text-xl font-bold mb-2`} style={!isHighlighted ? { color: '#0119b3' } : {}}>{question}</h3>
         <button className="focus:outline-none">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -72,7 +72,7 @@ const FAQ = () => {
       <div className="container mx-auto flex flex-col md:flex-row">
         <div className="md:w-1/3 mb-8 md:mb-0">
           <div className="sticky top-20">
-            <h2 className="text-3xl font-bold text-purple-800 mb-4">Ask About Kids Activities</h2>
+            <h2 className="text-3xl font-bold mb-4" style={{ color: '#0119b3' }}>Ask About Kids Activities</h2>
             <p className="text-gray-600 mb-6">Find answers to commonly asked questions about our programs and policies.</p>
             <img src="/images/placeholder.svg" alt="Child with megaphone" className="w-3/4" />
           </div>
@@ -89,7 +89,7 @@ const FAQ = () => {
             ))}
           </div>
           <div className="mt-8">
-            <a href="/faq" className="inline-block bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 px-8 rounded-lg shadow transition">
+            <a href="/faq" className="inline-block text-white font-bold py-3 px-8 rounded-lg shadow transition" style={{ backgroundColor: '#0226ff' }} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0119b3'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0226ff'}>
               View All FAQs
             </a>
           </div>
@@ -98,7 +98,7 @@ const FAQ = () => {
       
       {/* Decorative elements */}
       <div className="absolute bottom-0 left-0 w-full">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" className="text-indigo-900">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" style={{ color: '#0119b3' }}>
           <path fill="currentColor" fillOpacity="1" d="M0,288L48,272C96,256,192,224,288,197.3C384,171,480,149,576,165.3C672,181,768,235,864,250.7C960,267,1056,245,1152,224C1248,203,1344,181,1392,170.7L1440,160L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path>
         </svg>
       </div>

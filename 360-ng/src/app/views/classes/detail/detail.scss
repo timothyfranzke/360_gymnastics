@@ -1,6 +1,6 @@
-// Purple gradient background
+// Blue gradient background
 .purple-gradient {
-    background: linear-gradient(135deg, #9333ea 0%, #6b21a8 100%);
+    background: linear-gradient(135deg, #0226ff 0%, #0119b3 100%);
   }
   
   // Floating decorative elements for header
@@ -10,7 +10,7 @@
     left: 2.5rem;
     width: 4rem;
     height: 4rem;
-    background-color: #fb923c; // orange-400
+    background-color: #fc7900; // brand orange
     border-radius: 0.5rem;
     transform: rotate(12deg);
     opacity: 0.7;
@@ -23,7 +23,7 @@
     right: 5rem;
     width: 3rem;
     height: 3rem;
-    background-color: #22d3ee; // cyan-400
+    background-color: #0226ff; // brand blue
     border-radius: 50%;
     opacity: 0.7;
     animation: float-delayed 3s ease-in-out infinite;
@@ -42,7 +42,7 @@
     right: -1.25rem;
     width: 6rem;
     height: 6rem;
-    background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+    background: linear-gradient(135deg, #fc7900 0%, #0226ff 100%);
   }
   
   .decorative-blur-cyan {
@@ -50,7 +50,7 @@
     left: -1.25rem;
     width: 8rem;
     height: 8rem;
-    background: linear-gradient(45deg, #22d3ee 0%, #3b82f6 100%);
+    background: linear-gradient(45deg, #0226ff 0%, #0119b3 100%);
   }
   
   .decorative-blur-image-1 {
@@ -58,7 +58,7 @@
     right: -1.25rem;
     width: 6rem;
     height: 6rem;
-    background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+    background: linear-gradient(135deg, #fc7900 0%, #0226ff 100%);
     opacity: 0.3;
   }
   
@@ -67,7 +67,7 @@
     left: -1.25rem;
     width: 8rem;
     height: 8rem;
-    background: linear-gradient(45deg, #22d3ee 0%, #3b82f6 100%);
+    background: linear-gradient(45deg, #0226ff 0%, #0119b3 100%);
     opacity: 0.3;
   }
   
@@ -76,7 +76,7 @@
     right: -1rem;
     width: 6rem;
     height: 6rem;
-    background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+    background: linear-gradient(135deg, #fc7900 0%, #0226ff 100%);
     opacity: 0.3;
   }
   
@@ -98,7 +98,7 @@
     right: -1rem;
     width: 100%;
     height: 100%;
-    border: 4px solid #fde047; // yellow-300
+    border: 4px solid #fc7900; // brand orange
     border-radius: 0.5rem;
     z-index: -1;
   }
@@ -135,13 +135,13 @@
     
     :global(table.openings tr:first-child) {
       background-color: #f3e8ff;
-      color: #6b21a8;
+      color: #0119b3;
       font-weight: bold;
     }
     
     :global(table.openings a) {
       display: inline-block;
-      background: linear-gradient(to right, #f97316, #ec4899);
+      background: linear-gradient(to right, #fc7900, #0226ff);
       color: white;
       padding: 0.5rem 1rem;
       border-radius: 0.375rem;

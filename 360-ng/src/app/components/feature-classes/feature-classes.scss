@@ -1,22 +1,133 @@
-// Class card hover effects
-.class-card {
+// Base card styles
+.card-base {
+  border-radius: 0.75rem; // rounded-xl
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+// Tertiary Card implementation (Navigation Cards)
+.card-tertiary {
+  @extend .card-base;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  min-height: 120px; // Adequate touch area for primary actions
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+  
+  &:focus {
+    outline: 2px solid #0226ff;
+    outline-offset: 2px;
+    transform: translateY(-2px);
+  }
+  
+  &:focus:not(:focus-visible) {
+    outline: none;
+  }
+  
+  &:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  // Icon container hover effect
+  .bg-white {
     transition: all 0.3s ease;
+  }
+  
+  &:hover .bg-white {
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Interactive card support
+.card-interactive {
+  touch-action: manipulation;
+}
+
+// Grid layouts
+.cards-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Card typography
+.card-title-tertiary {
+  font-size: 1rem;     // text-base
+  font-weight: 600;    // font-semibold
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.card-description-light {
+  color: #9ca3af;      // text-gray-400 (for dark backgrounds)
+}
+
+// Entrance animations
+.card-entrance {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: cardFadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes cardFadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Stagger delays
+.card-entrance:nth-child(1) { animation-delay: 0ms; }
+.card-entrance:nth-child(2) { animation-delay: 100ms; }
+.card-entrance:nth-child(3) { animation-delay: 200ms; }
+.card-entrance:nth-child(4) { animation-delay: 300ms; }
+
+// Mobile optimization
+@media (max-width: 768px) {
+  .card-tertiary {
+    padding: 1.5rem; // Reduced padding on mobile
     
     &:hover {
-      transform: translateY(-4px) scale(1.02);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    }
-    
-    // Icon container hover effect
-    .bg-white {
-      transition: all 0.3s ease;
-    }
-    
-    &:hover .bg-white {
-      transform: scale(1.1);
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px); // Reduced hover lift
     }
   }
+  
+  .cards-grid-4 {
+    grid-template-columns: 1fr; // Single column on mobile
+    gap: 1rem;
+  }
+  
+  .decorative-element {
+    display: none; // Hide decorative element on mobile for cleaner look
+  }
+}
+
+// Reduced motion support
+@media (prefers-reduced-motion: reduce) {
+  .card-tertiary,
+  .card-entrance {
+    transition: none;
+    animation: none;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+}
   
   // Decorative element positioning
   .decorative-element {
@@ -34,24 +145,7 @@
     }
   }
   
-  // Stagger animation delays for cards
-  .class-card {
-    &:nth-child(1) {
-      animation-delay: 0ms;
-    }
-    
-    &:nth-child(2) {
-      animation-delay: 100ms;
-    }
-    
-    &:nth-child(3) {
-      animation-delay: 200ms;
-    }
-    
-    &:nth-child(4) {
-      animation-delay: 300ms;
-    }
-  }
+  // Legacy styles cleaned up - animation delays now handled by .card-entrance
   
   // Enhanced "View All Classes" button
   a[routerLink="/classes"] {
@@ -68,32 +162,26 @@
       display: none; // Hide decorative element on mobile for cleaner look
     }
     
-    .class-card {
-      // Reduce hover effects on mobile
-      &:hover {
-        transform: translateY(-2px) scale(1.01);
-      }
-    }
+    // Mobile hover effects already handled in .card-tertiary
   }
   
-  // Additional hover states for better UX
-  .class-card {
-    // Add a subtle glow effect on hover
+  // Enhanced color-specific glow effects for blue color system
+  .card-tertiary {
     &:hover {
-      &.bg-pink-500 {
-        box-shadow: 0 25px 50px -12px rgba(236, 72, 153, 0.3);
-      }
-      
-      &.bg-purple-500 {
-        box-shadow: 0 25px 50px -12px rgba(147, 51, 234, 0.3);
-      }
-      
       &.bg-blue-500 {
         box-shadow: 0 25px 50px -12px rgba(59, 130, 246, 0.3);
       }
       
       &.bg-cyan-500 {
         box-shadow: 0 25px 50px -12px rgba(6, 182, 212, 0.3);
+      }
+      
+      &.bg-blue-600 {
+        box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.3);
+      }
+      
+      &.bg-cyan-600 {
+        box-shadow: 0 25px 50px -12px rgba(8, 145, 178, 0.3);
       }
     }
   }

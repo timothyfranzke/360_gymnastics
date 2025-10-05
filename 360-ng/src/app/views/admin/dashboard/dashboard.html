@@ -1,0 +1,251 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+      <p class="mt-1 text-sm text-gray-500">
+        Welcome back, {{ currentUser?.first_name }}! Here's what's happening at 360 Gym.
+      </p>
+    </div>
+    <button (click)="refreshData()" 
+            [disabled]="isLoading"
+            class="btn-primary btn-sm">
+      <svg class="h-4 w-4 mr-2" [class.animate-spin]="isLoading" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+      </svg>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="flex items-center justify-center py-12">
+    <div class="flex items-center space-x-2">
+      <svg class="animate-spin h-5 w-5 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span class="text-gray-600">Loading dashboard...</span>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div class="flex items-center">
+      <svg class="h-5 w-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+      </svg>
+      <p class="text-red-700">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!isLoading && !error" class="space-y-6">
+    <!-- Gym Status Card -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div [class]="'h-12 w-12 rounded-lg flex items-center justify-center ' + 
+                      (getGymStatusColor() === 'green' ? 'bg-green-100' : 'bg-red-100')">
+            <svg
+                 [class]="'h-6 w-6 ' + (getGymStatusColor() === 'green' ? 'text-green-600' : 'text-red-600')"
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="getGymStatusIcon()"></path>
+            </svg>
+          </div>
+          <div class="ml-4">
+            <h3 class="text-lg font-medium text-gray-900">Gym Status</h3>
+            <p class="text-sm text-gray-500">{{ gymStatus?.message }}</p>
+          </div>
+        </div>
+        <div class="text-right">
+          <p [class]="'text-sm font-medium ' + (getGymStatusColor() === 'green' ? 'text-green-600' : 'text-red-600')">
+            {{ gymStatus?.status | titlecase }}
+          </p>
+          <p class="text-xs text-gray-500">{{ gymStatus?.current_time }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Cards (Admin Only) -->
+    <div *ngIf="currentUser?.role === 'admin'" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div *ngFor="let card of getStatCards()" 
+           class="bg-white rounded-lg shadow p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center">
+          <div [class]="'h-12 w-12 rounded-lg flex items-center justify-center ' + 
+                      (card.color === 'blue' ? 'bg-blue-100' : card.color === 'green' ? 'bg-green-100' : 'bg-red-100')">
+            <svg
+                 [class]="'h-6 w-6 ' + 
+                         (card.color === 'blue' ? 'text-blue-600' : card.color === 'green' ? 'text-green-600' : 'text-red-600')"
+                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="card.icon"></path>
+            </svg>
+          </div>
+          <div class="ml-4 flex-1">
+            <p class="text-sm font-medium text-gray-600">{{ card.title }}</p>
+            <p class="text-2xl font-bold text-gray-900">{{ card.value }}</p>
+          </div>
+          <a *ngIf="card.link" 
+             [routerLink]="card.link"
+             class="text-gray-400 hover:text-gray-600 transition-colors">
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity Grid -->
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-6">
+      <!-- Recent Announcements -->
+      <div class="bg-white rounded-lg shadow">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium text-gray-900">Recent Announcements</h3>
+            <a routerLink="/admin/announcements" 
+               class="text-sm text-orange-600 hover:text-orange-500 font-medium">
+              View all
+            </a>
+          </div>
+        </div>
+        <div class="p-6">
+          <div *ngIf="recentAnnouncements.length === 0" class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2 2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-4.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 009.586 13H7"/>
+            </svg>
+            <p class="mt-2 text-sm text-gray-500">No announcements found</p>
+          </div>
+          <div *ngIf="recentAnnouncements.length > 0" class="space-y-4">
+            <div *ngFor="let announcement of recentAnnouncements" 
+                 class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <h4 class="text-sm font-medium text-gray-900">{{ announcement.title }}</h4>
+                  <p class="mt-1 text-sm text-gray-600 line-clamp-2">{{ announcement.content }}</p>
+                  <div class="mt-2 flex items-center space-x-4">
+                    <span [class]="'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' +
+                                  (getPriorityColor(announcement.priority) === 'red' ? 'bg-red-100 text-red-800' :
+                                   getPriorityColor(announcement.priority) === 'orange' ? 'bg-orange-100 text-orange-800' :
+                                   getPriorityColor(announcement.priority) === 'yellow' ? 'bg-yellow-100 text-yellow-800' :
+                                   'bg-gray-100 text-gray-800')">
+                      {{ announcement.priority | titlecase }}
+                    </span>
+                    <span class="text-xs text-gray-500">{{ announcement.type | titlecase }}</span>
+                  </div>
+                </div>
+                <div class="ml-4 text-right">
+                  <p class="text-xs text-gray-500">{{ formatDate(announcement.start_date) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upcoming Closures -->
+      <div class="bg-white rounded-lg shadow">
+        <div class="p-6 border-b border-gray-200">
+          <div class="flex items-center justify-between">
+            <h3 class="text-lg font-medium text-gray-900">Upcoming Closures</h3>
+            <a routerLink="/admin/closures" 
+               class="text-sm text-orange-600 hover:text-orange-500 font-medium">
+              View all
+            </a>
+          </div>
+        </div>
+        <div class="p-6">
+          <div *ngIf="upcomingClosures.length === 0" class="text-center py-8">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="mt-2 text-sm text-gray-500">No upcoming closures</p>
+          </div>
+          <div *ngIf="upcomingClosures.length > 0" class="space-y-4">
+            <div *ngFor="let closure of upcomingClosures" 
+                 class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors">
+              <div class="flex items-start justify-between">
+                <div class="flex-1">
+                  <h4 class="text-sm font-medium text-gray-900">{{ closure.reason }}</h4>
+                  <p class="mt-1 text-sm text-gray-600">{{ closure.description }}</p>
+                  <div class="mt-2 flex items-center space-x-4">
+                    <span [class]="'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ' +
+                                  (closure.is_emergency ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800')">
+                      {{ closure.is_emergency ? 'Emergency' : 'Scheduled' }}
+                    </span>
+                    <span class="text-xs text-gray-500">
+                      {{ closure.is_all_day ? 'All Day' : formatTime(closure.start_time!) + ' - ' + formatTime(closure.end_time!) }}
+                    </span>
+                  </div>
+                </div>
+                <div class="ml-4 text-right">
+                  <p class="text-xs text-gray-500">{{ formatDate(closure.closure_date) }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-medium text-gray-900 mb-4">Quick Actions</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a routerLink="/admin/announcements/create" 
+           class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <div class="h-10 w-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-900">New Announcement</p>
+            <p class="text-xs text-gray-500">Create announcement</p>
+          </div>
+        </a>
+
+        <a *ngIf="currentUser?.role === 'admin'" 
+           routerLink="/admin/staff/create" 
+           class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <div class="h-10 w-10 bg-green-100 rounded-lg flex items-center justify-center">
+            <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-900">Add Staff</p>
+            <p class="text-xs text-gray-500">Register new staff</p>
+          </div>
+        </a>
+
+        <a routerLink="/admin/closures/create" 
+           class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <div class="h-10 w-10 bg-red-100 rounded-lg flex items-center justify-center">
+            <svg class="h-5 w-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-900">Schedule Closure</p>
+            <p class="text-xs text-gray-500">Plan closure</p>
+          </div>
+        </a>
+
+        <a routerLink="/admin/hours" 
+           class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          <div class="h-10 w-10 bg-orange-100 rounded-lg flex items-center justify-center">
+            <svg class="h-5 w-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-900">Update Hours</p>
+            <p class="text-xs text-gray-500">Manage schedule</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+# Cache files
+*.cache
+
+# Keep the directory but ignore cache files
+!.gitignore

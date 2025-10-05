@@ -1,0 +1,148 @@
+<div class="image-upload-container">
+  <!-- Label -->
+  <label class="block text-sm font-medium text-gray-700 mb-2">
+    {{ label }}
+  </label>
+
+  <!-- Upload Area -->
+  <div class="space-y-4">
+    <!-- Current Image Preview -->
+    <div *ngIf="currentValue && showPreview" class="relative">
+      <div class="aspect-square w-32 h-32 mx-auto bg-gray-100 rounded-lg overflow-hidden border-2 border-gray-200">
+        <img 
+          *ngIf="previewUrl" 
+          [src]="previewUrl" 
+          [alt]="'Preview of ' + (currentValue.filename || 'uploaded image')"
+          class="w-full h-full object-cover"
+          loading="lazy">
+        <div *ngIf="!previewUrl" class="w-full h-full flex items-center justify-center text-gray-400">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+      </div>
+      
+      <!-- Image Info -->
+      <div class="mt-2 text-center">
+        <p class="text-sm text-gray-600">
+          <span *ngIf="currentValue.filename">{{ currentValue.filename }}</span>
+          <span *ngIf="!currentValue.filename && isExternalUrl" class="text-blue-600">External URL</span>
+          <span *ngIf="!currentValue.filename && !isExternalUrl">Uploaded Image</span>
+        </p>
+        <p *ngIf="isExternalUrl" class="text-xs text-gray-500 mt-1">
+          This image is hosted externally
+        </p>
+      </div>
+
+      <!-- Delete Button -->
+      <button
+        *ngIf="showDeleteButton"
+        type="button"
+        (click)="onDeletePhoto()"
+        [disabled]="isDeleting"
+        class="absolute -top-2 -right-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white rounded-full p-1 shadow-md transition-colors duration-200"
+        [attr.aria-label]="'Delete ' + (currentValue.filename || 'image')">
+        <svg *ngIf="!isDeleting" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+        <svg *ngIf="isDeleting" class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Drop Zone -->
+    <div 
+      class="relative border-2 border-dashed rounded-lg p-6 text-center transition-colors duration-200"
+      [class.border-orange-300]="!isDragOver && !error"
+      [class.bg-orange-50]="!isDragOver && !error"
+      [class.border-orange-500]="isDragOver"
+      [class.bg-orange-100]="isDragOver"
+      [class.border-red-300]="error"
+      [class.bg-red-50]="error"
+      (dragover)="onDragOver($event)"
+      (dragleave)="onDragLeave($event)"
+      (drop)="onDrop($event)">
+      
+      <!-- Upload Content -->
+      <div *ngIf="!isUploading" class="space-y-3">
+        <!-- Upload Icon -->
+        <div class="mx-auto w-12 h-12 text-gray-400">
+          <svg *ngIf="!error" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+          </svg>
+          <svg *ngIf="error" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-full h-full text-red-400">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.084 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+        </div>
+
+        <!-- Upload Text -->
+        <div>
+          <p class="text-sm font-medium" [class.text-gray-900]="!error" [class.text-red-600]="error">
+            <span *ngIf="!error">Drag and drop your image here, or </span>
+            <span *ngIf="error">Upload failed. Please try again or </span>
+            <label for="file-upload" class="cursor-pointer text-orange-600 hover:text-orange-500 underline">
+              click to browse
+            </label>
+          </p>
+          <p *ngIf="hint && !error" class="text-xs text-gray-500 mt-1">
+            {{ hint }}
+          </p>
+        </div>
+
+        <!-- Hidden File Input -->
+        <input
+          id="file-upload"
+          type="file"
+          class="sr-only"
+          [accept]="accept"
+          (change)="onFileSelected($event)">
+      </div>
+
+      <!-- Upload Progress -->
+      <div *ngIf="isUploading" class="space-y-3">
+        <div class="mx-auto w-12 h-12 text-orange-500">
+          <svg class="w-full h-full animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-900">Uploading...</p>
+          <div class="mt-2 bg-gray-200 rounded-full h-2">
+            <div 
+              class="bg-orange-500 h-2 rounded-full transition-all duration-300"
+              [style.width.%]="uploadProgress">
+            </div>
+          </div>
+          <p class="text-xs text-gray-500 mt-1">{{ uploadProgress }}% complete</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Message -->
+    <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-3">
+      <div class="flex items-start">
+        <svg class="h-5 w-5 text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <div class="text-sm text-red-700">
+          <p class="font-medium">Upload Error</p>
+          <p class="mt-1">{{ error }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Validation Help -->
+    <div *ngIf="!error && !currentValue" class="text-xs text-gray-500 space-y-1">
+      <p><strong>Requirements:</strong></p>
+      <ul class="list-disc list-inside space-y-0.5 ml-2">
+        <li>File types: JPG, PNG, WebP</li>
+        <li>Maximum size: {{ formatFileSize(maxSizeBytes) }}</li>
+        <li>Minimum dimensions: {{ minWidth }}x{{ minHeight }}px</li>
+        <li>Maximum dimensions: {{ maxWidth }}x{{ maxHeight }}px</li>
+      </ul>
+    </div>
+  </div>
+</div>

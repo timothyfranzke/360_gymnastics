@@ -6,10 +6,11 @@ import { Announcement } from '../../components/announcement/announcement';
 import { HoursQuickLinks } from '../../components/hours-quick-links/hours-quick-links';
 import { MainActivities } from '../../components/main-activities/main-activities';
 import { SocialFeed } from '../../components/social-feed/social-feed';
+import { StaffDisplay } from '../../components/staff-display/staff-display';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, Announcement, HoursQuickLinks, WhyChooseUs, FeaturedClasses, MainActivities, SocialFeed],
+  imports: [Hero, Announcement, HoursQuickLinks, WhyChooseUs, FeaturedClasses, MainActivities, StaffDisplay, SocialFeed],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })

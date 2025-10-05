@@ -1,0 +1,175 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Staff Member Details</h1>
+      <p class="mt-1 text-sm text-gray-500">View staff member information</p>
+    </div>
+    <nav class="flex" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-4">
+        <li>
+          <a routerLink="/admin/staff" class="text-gray-400 hover:text-gray-500">
+            Staff
+          </a>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="flex-shrink-0 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+            </svg>
+            <span class="ml-4 text-sm font-medium text-gray-500">
+              {{ staff ? staff.first_name + ' ' + staff.last_name : 'Staff Member' }}
+            </span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="bg-white rounded-lg shadow p-8">
+    <div class="flex items-center justify-center">
+      <svg class="animate-spin h-8 w-8 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span class="ml-2 text-gray-600">Loading staff member...</span>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div class="flex items-center">
+      <svg class="h-5 w-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+      </svg>
+      <p class="text-red-700">{{ error }}</p>
+    </div>
+    <div class="mt-4">
+      <button (click)="goBack()" class="btn-secondary">
+        Back to Staff List
+      </button>
+    </div>
+  </div>
+
+  <!-- Staff Details -->
+  <div *ngIf="!isLoading && !error && staff" class="space-y-6">
+    <!-- Staff Profile Header -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-8">
+        <div class="flex items-center">
+          <div class="flex-shrink-0 relative">
+            <!-- Avatar Image -->
+            <img 
+              *ngIf="hasValidAvatar()"
+              [src]="getAvatarUrl()" 
+              [alt]="staff.first_name + ' ' + staff.last_name"
+              class="h-20 w-20 rounded-full object-cover border-4 border-white border-opacity-30"
+              (error)="onImageError($event)">
+            
+            <!-- Fallback Avatar -->
+            <div 
+              *ngIf="!hasValidAvatar()"
+              class="h-20 w-20 rounded-full bg-white bg-opacity-20 backdrop-blur-sm flex items-center justify-center border-4 border-white border-opacity-30">
+              <span class="text-2xl font-bold text-white">
+                {{ getAvatarFallback() }}
+              </span>
+            </div>
+          </div>
+          <div class="ml-6">
+            <h2 class="text-2xl font-bold text-white">
+              {{ staff.first_name }} {{ staff.last_name }}
+            </h2>
+            <p class="text-orange-100">Staff Member</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="px-6 py-4 bg-gray-50 border-t border-gray-200">
+        <div class="flex justify-between items-center">
+          <div class="text-sm text-gray-600">
+            <strong>Employee since:</strong> {{ formatDate(staff.hire_date) }} ({{ getYearsOfService() }})
+          </div>
+          <div class="flex space-x-3">
+            <button (click)="goBack()" class="btn-secondary">
+              Back to List
+            </button>
+            <button *ngIf="canEditStaff()" (click)="editStaff()" class="btn-primary">
+              Edit Staff Member
+            </button>
+            <button *ngIf="canDeleteStaff()" 
+                    (click)="deleteStaff()" 
+                    class="btn-danger">
+              Delete Staff
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Staff Information -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Staff Information</h3>
+      </div>
+      <div class="px-6 py-4">
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Full Name</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ staff.first_name }} {{ staff.last_name }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Hire Date</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ formatDate(staff.hire_date) }}</dd>
+          </div>
+          <div class="md:col-span-2">
+            <dt class="text-sm font-medium text-gray-500">Description</dt>
+            <dd class="mt-1 text-sm text-gray-900">
+              {{ staff.description || 'No description provided' }}
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Service Information -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Service Information</h3>
+      </div>
+      <div class="px-6 py-4">
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Years of Service</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ getYearsOfService() }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Staff ID</dt>
+            <dd class="mt-1 text-sm text-gray-900">#{{ staff.id }}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+
+
+    <!-- Record Information -->
+    <div class="bg-white rounded-lg shadow">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-medium text-gray-900">Record Information</h3>
+      </div>
+      <div class="px-6 py-4">
+        <dl class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Record Created</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ formatDateTime(staff.created_at) }}</dd>
+          </div>
+          <div>
+            <dt class="text-sm font-medium text-gray-500">Last Updated</dt>
+            <dd class="mt-1 text-sm text-gray-900">{{ formatDateTime(staff.updated_at) }}</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </div>
+</div>

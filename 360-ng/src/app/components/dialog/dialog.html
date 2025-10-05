@@ -23,7 +23,7 @@
     <!-- Close Button -->
     <button 
       *ngIf="config.showCloseButton"
-      class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 rounded-full hover:bg-gray-100"
+      class="btn-icon btn-icon-sm absolute top-4 right-4 !bg-gray-100 !text-gray-600 hover:!bg-gray-200"
       (click)="close()"
       aria-label="Close dialog"
     >
@@ -85,17 +85,11 @@
           (click)="onButtonClick(button)"
           [attr.aria-label]="button.text"
         >
-          <!-- Loading Spinner -->
-          <span *ngIf="button.loading" class="inline-flex items-center">
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Loading...
-          </span>
+          <!-- Loading Spinner (positioned absolutely by CSS) -->
+          <div *ngIf="button.loading" class="btn-spinner"></div>
           
           <!-- Button Text -->
-          <span *ngIf="!button.loading">{{ button.text }}</span>
+          <span class="btn-text">{{ button.text }}</span>
         </button>
       </div>
     </div>

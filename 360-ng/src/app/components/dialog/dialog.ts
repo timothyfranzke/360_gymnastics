@@ -112,31 +112,29 @@ export class Dialog implements OnInit {
   }
 
   getButtonClasses(button: DialogButton): string {
-    const baseClasses = 'px-4 py-2 rounded-lg font-medium transition-all duration-200 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-opacity-50';
+    let baseClasses = '';
     
-    let typeClasses = '';
     switch (button.type) {
       case 'primary':
-        typeClasses = 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500';
+        baseClasses = 'btn-primary';
         break;
       case 'secondary':
-        typeClasses = 'bg-gray-200 text-gray-800 hover:bg-gray-300 focus:ring-gray-500';
+        baseClasses = 'btn-secondary btn-secondary-dark';
         break;
       case 'danger':
-        typeClasses = 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500';
+        baseClasses = 'btn-danger';
         break;
       case 'success':
-        typeClasses = 'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500';
+        baseClasses = 'btn-success';
         break;
       default:
-        typeClasses = 'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500';
+        baseClasses = 'btn-primary';
     }
 
-    const disabledClasses = button.disabled || button.loading 
-      ? 'opacity-50 cursor-not-allowed hover:scale-100' 
-      : '';
+    const loadingClasses = button.loading ? 'loading' : '';
+    const disabledClasses = button.disabled ? 'disabled' : '';
 
-    return `${baseClasses} ${typeClasses} ${disabledClasses}`;
+    return `${baseClasses} ${loadingClasses} ${disabledClasses}`.trim();
   }
 
   getIconPath(): string {

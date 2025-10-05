@@ -7,7 +7,6 @@ interface Feature {
   title: string;
   description: string;
   icon: string;
-  iconColor: string;
 }
 
 @Component({
@@ -60,26 +59,22 @@ export class MainActivities implements OnInit {
     {
       title: 'Large Open Facility',
       description: 'Spacious gym designed for beginners to expert gymnasts with professional equipment.',
-      icon: 'facility',
-      iconColor: 'text-yellow-300'
+      icon: 'facility'
     },
     {
       title: 'Recreational & Competitive',
       description: 'Gymnastics programs for all ages and skill levels, from recreational fun to competitive teams.',
-      icon: 'gymnastics',
-      iconColor: 'text-pink-400'
+      icon: 'gymnastics'
     },
     {
       title: 'Experienced Staff',
       description: 'Fun and friendly coaches with decades of experience in gymnastics training.',
-      icon: 'staff',
-      iconColor: 'text-green-400'
+      icon: 'staff'
     },
     {
       title: 'Open Gym & Parties',
       description: 'Open gym sessions to burn off energy plus birthday parties hosted by our staff.',
-      icon: 'events',
-      iconColor: 'text-blue-400'
+      icon: 'events'
     }
   ];
 

@@ -1,0 +1,15 @@
+# Security rules for staff photo thumbnails directory
+# All file access must go through the API endpoints
+
+# Deny all direct access
+Order Deny,Allow
+Deny from all
+
+# Additional protection against script execution
+<FilesMatch "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|aspx|cgi|fcgi)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+Options -Indexes -ExecCGI
+ServerSignature Off

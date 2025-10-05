@@ -1,0 +1,97 @@
+<section class="py-16 bg-gradient-to-b from-white to-gray-50" [@fadeInUp]="animationState">
+  <div class="container mx-auto px-6 lg:px-8">
+    <!-- Section Header -->
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold text-gray-900 mb-4">
+        Meet Our Team
+      </h2>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        Our experienced and passionate staff members are dedicated to helping every gymnast reach their full potential in a safe and supportive environment.
+      </p>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      <span class="ml-3 text-gray-600">Loading our amazing team...</span>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !loading" class="text-center py-12">
+      <div class="bg-red-50 border border-red-200 rounded-lg p-6 max-w-md mx-auto">
+        <div class="flex items-center justify-center w-12 h-12 mx-auto mb-4 bg-red-100 rounded-full">
+          <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+        </div>
+        <h3 class="text-lg font-medium text-red-800 mb-2">Unable to Load Team</h3>
+        <p class="text-red-600 mb-4">{{ error }}</p>
+        <button 
+          (click)="retryLoad()" 
+          class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200">
+          Try Again
+        </button>
+      </div>
+    </div>
+
+    <!-- Staff Grid -->
+    <div *ngIf="!loading && !error && staff.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div 
+        *ngFor="let member of staff; let i = index; trackBy: trackByStaffId" 
+        [@staggerCards]="animationState"
+        class="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden group">
+        
+        <!-- Avatar Section -->
+        <div class="relative p-6 pb-0">
+          <div class="w-24 h-24 mx-auto mb-4 relative">
+            <!-- Avatar Image -->
+            <img 
+              *ngIf="hasValidAvatar(member)"
+              [src]="getAvatarThumbnailUrl(member)" 
+              [alt]="getStaffFullName(member)"
+              class="w-full h-full rounded-full object-cover border-4 border-blue-100 group-hover:border-blue-200 transition-colors duration-300"
+              loading="lazy"
+              (error)="onImageError($event)">
+            
+            <!-- Fallback Avatar -->
+            <div 
+              *ngIf="!hasValidAvatar(member)"
+              class="w-full h-full rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center text-white text-xl font-bold border-4 border-blue-100 group-hover:border-blue-200 transition-colors duration-300">
+              {{ getAvatarFallback(member) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Section -->
+        <div class="px-6 pb-6">
+          <!-- Name and Position -->
+          <div class="text-center mb-4">
+            <h3 class="text-xl font-bold text-gray-900 mb-1">
+              {{ getStaffFullName(member) }}
+            </h3>
+            <p class="text-sm text-gray-500 mt-1">
+              {{ getYearsText(member.years_at_gym) }}
+            </p>
+          </div>
+
+          <!-- Description -->
+          <div class="text-gray-600 text-sm leading-relaxed" [innerHTML]="member.description"></div>
+        </div>
+
+        <!-- Hover Effect Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-t from-blue-50/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading && !error && staff.length === 0" class="text-center py-12">
+      <div class="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
+        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-medium text-gray-900 mb-2">No Team Members</h3>
+      <p class="text-gray-500">Check back soon to meet our amazing team!</p>
+    </div>
+  </div>
+</section>

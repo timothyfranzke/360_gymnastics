@@ -1,6 +1,6 @@
-// Purple gradient background
+// Blue gradient background
 .purple-gradient {
-    background: linear-gradient(135deg, #9333ea 0%, #6b21a8 100%);
+    background: linear-gradient(135deg, #0226ff 0%, #0119b3 100%);
   }
   
   // Floating decorative elements
@@ -14,7 +14,7 @@
     left: 2.5rem;
     width: 5rem;
     height: 5rem;
-    background-color: #fb923c; // orange-400
+    background-color: #fc7900; // brand orange
     border-radius: 0.5rem;
     transform: rotate(12deg);
     animation: float 3s ease-in-out infinite;
@@ -25,7 +25,7 @@
     right: 5rem;
     width: 4rem;
     height: 4rem;
-    background-color: #22d3ee; // cyan-400
+    background-color: #0226ff; // brand blue
     border-radius: 50%;
     animation: float-delayed 3s ease-in-out infinite;
   }
@@ -35,7 +35,7 @@
     left: 25%;
     width: 3rem;
     height: 3rem;
-    background-color: #f472b6; // pink-400
+    background-color: #fc7900; // brand orange
     border-radius: 0.5rem;
     transform: rotate(45deg);
     animation: float 3s ease-in-out infinite;
@@ -46,7 +46,7 @@
     right: 33.333333%;
     width: 2.5rem;
     height: 2.5rem;
-    background-color: #fde047; // yellow-300
+    background-color: #0226ff; // brand blue
     border-radius: 50%;
     animation: float-delayed 3s ease-in-out infinite;
   }
@@ -64,7 +64,7 @@
     right: -1.25rem;
     width: 6rem;
     height: 6rem;
-    background: linear-gradient(135deg, #ec4899 0%, #9333ea 100%);
+    background: linear-gradient(135deg, #fc7900 0%, #0226ff 100%);
   }
   
   .decorative-blur-2 {
@@ -72,43 +72,9 @@
     left: -1.25rem;
     width: 8rem;
     height: 8rem;
-    background: linear-gradient(45deg, #22d3ee 0%, #3b82f6 100%);
+    background: linear-gradient(45deg, #0226ff 0%, #0119b3 100%);
   }
   
-  // Button styles
-  .btn-primary {
-    background: linear-gradient(90deg, #fb923c 0%, #ec4899 100%);
-    color: white;
-    font-weight: bold;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background: linear-gradient(90deg, #ea580c 0%, #db2777 100%);
-      transform: translateY(-2px) scale(1.05);
-    }
-  }
-  
-  .btn-secondary {
-    background-color: rgba(255, 255, 255, 0.2);
-    color: white;
-    font-weight: bold;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    border: 2px solid white;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.3);
-      border-color: #fde047; // yellow-300
-      transform: translateY(-2px) scale(1.05);
-    }
-  }
   
   // Floating animations
   @keyframes float {

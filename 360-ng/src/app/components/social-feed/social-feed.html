@@ -19,12 +19,14 @@
             href="https://www.instagram.com/kc360gym/" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="instagram-button inline-flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-full font-medium hover:from-purple-700 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
+            class="btn-primary-blue btn-lg"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path [attr.d]="getInstagramIconPath()" />
-            </svg>
-            {{ '@kc360gym' }}
+            <span class="btn-text flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
+                <path [attr.d]="getInstagramIconPath()" />
+              </svg>
+              {{ '@kc360gym' }}
+            </span>
           </a>
         </div>
       </div>
@@ -38,10 +40,10 @@
         <button
           *ngIf="canScrollLeft"
           (click)="scrollLeft()"
-          class="scroll-button scroll-button-left absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-300"
+          class="btn-icon absolute left-0 top-1/2 transform -translate-y-1/2 z-10 !bg-white !text-gray-600 shadow-lg"
           aria-label="Scroll left"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
           </svg>
         </button>
@@ -50,10 +52,10 @@
         <button
           *ngIf="canScrollRight"
           (click)="scrollRight()"
-          class="scroll-button scroll-button-right absolute right-0 top-1/2 transform -translate-y-1/2 z-10 bg-white shadow-lg rounded-full p-3 hover:bg-gray-50 transition-all duration-300"
+          class="btn-icon absolute right-0 top-1/2 transform -translate-y-1/2 z-10 !bg-white !text-gray-600 shadow-lg"
           aria-label="Scroll right"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg>
         </button>
@@ -148,9 +150,9 @@
             href="https://www.instagram.com/kc360gym/" 
             target="_blank" 
             rel="noopener noreferrer"
-            class="inline-block bg-gradient-to-r from-purple-600 to-pink-500 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-600 transition-all duration-300 transform hover:scale-105"
+            class="btn-primary-blue btn-lg"
           >
-            {{'Follow @kc360gym'}}
+            <span class="btn-text">{{'Follow @kc360gym'}}</span>
           </a>
         </div>
       </div>

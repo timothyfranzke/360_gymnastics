@@ -14,13 +14,13 @@
       <!-- Features Grid -->
       <div 
         [@fadeInUpDelay]="animationState"
-        class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+        class="cards-grid-4 gap-6 mb-12"
       >
         <div 
           *ngFor="let feature of features; let i = index"
           [@staggerCards]="animationState"
           [style.animation-delay]="(i * 150) + 'ms'"
-          class="feature-card bg-indigo-800 bg-opacity-50 p-6 rounded-xl hover:bg-opacity-70 transition-all duration-300 group relative overflow-hidden"
+          class="card-primary bg-indigo-800 bg-opacity-50 p-8 rounded-xl group relative overflow-hidden card-entrance"
         >
           <!-- Card glow effect -->
           <div class="card-glow absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -28,11 +28,10 @@
           <div class="relative z-10">
             <!-- Icon and Title -->
             <div class="flex items-center mb-4">
-              <div class="icon-container w-10 h-10 rounded-lg bg-white bg-opacity-10 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-300">
+              <div class="icon-container w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300">
                 <svg 
                   xmlns="http://www.w3.org/2000/svg" 
-                  class="h-6 w-6 transition-colors duration-300"
-                  [ngClass]="feature.iconColor"
+                  class="h-8 w-8 text-white transition-colors duration-300"
                   fill="none" 
                   viewBox="0 0 24 24" 
                   stroke="currentColor"
@@ -45,19 +44,19 @@
                   />
                 </svg>
               </div>
-              <h4 class="text-lg font-bold group-hover:text-cyan-300 transition-colors duration-300">
+              <h4 class="card-title-primary text-xl font-bold group-hover:text-cyan-300 transition-colors duration-300">
                 {{ feature.title }}
               </h4>
             </div>
             
             <!-- Description -->
-            <p class="text-gray-300 group-hover:text-white transition-colors duration-300">
+            <p class="card-description-light text-gray-300 group-hover:text-white transition-colors duration-300">
               {{ feature.description }}
             </p>
           </div>
           
           <!-- Hover indicator -->
-          <div class="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 group-hover:w-full transition-all duration-500"></div>
+          <div class="hover-indicator absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-cyan-400 to-blue-400 group-hover:w-full transition-all duration-500"></div>
         </div>
       </div>
   
@@ -81,15 +80,15 @@
         <div class="flex flex-wrap justify-center gap-4">
           <a 
             routerLink="/classes" 
-            class="cta-button inline-block bg-cyan-500 hover:bg-cyan-600 transition-all duration-300 text-white font-bold py-3 px-8 rounded-lg shadow-lg transform hover:scale-105 hover:shadow-xl"
+            class="btn-primary btn-lg"
           >
-            View Classes
+            <span class="btn-text">View Classes</span>
           </a>
           <a 
             routerLink="/schedule-tuition" 
-            class="cta-button-secondary inline-block bg-white bg-opacity-10 hover:bg-opacity-20 border-2 border-cyan-400 hover:border-cyan-300 transition-all duration-300 text-white font-bold py-3 px-8 rounded-lg transform hover:scale-105"
+            class="btn-secondary btn-lg"
           >
-            Schedule & Pricing
+            <span class="btn-text">Schedule & Pricing</span>
           </a>
         </div>
       </div>

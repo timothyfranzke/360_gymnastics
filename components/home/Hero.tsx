@@ -2,25 +2,25 @@ import React from 'react';
 
 const Hero = () => {
   return (
-    <section className="relative text-white overflow-hidden" style={{ background: 'linear-gradient(135deg, #9333ea 0%, #6b21a8 100%)' }}>
+    <section className="relative text-white overflow-hidden" style={{ background: 'linear-gradient(135deg, #0226ff 0%, #0119b3 100%)' }}>
       {/* Floating colorful elements */}
-      <div className="absolute top-10 left-10 w-20 h-20 bg-orange-400 rounded-lg rotate-12 opacity-70 animate-float"></div>
-      <div className="absolute top-20 right-20 w-16 h-16 bg-cyan-400 rounded-full opacity-70 animate-float-delayed"></div>
-      <div className="absolute bottom-40 left-1/4 w-12 h-12 bg-pink-400 rounded-lg rotate-45 opacity-70 animate-float"></div>
-      <div className="absolute top-1/3 right-1/3 w-10 h-10 bg-yellow-300 rounded-full opacity-70 animate-float-delayed"></div>
+      <div className="absolute top-10 left-10 w-20 h-20 rounded-lg rotate-12 opacity-70 animate-float" style={{ backgroundColor: '#fc7900' }}></div>
+      <div className="absolute top-20 right-20 w-16 h-16 rounded-full opacity-70 animate-float-delayed" style={{ backgroundColor: '#0226ff' }}></div>
+      <div className="absolute bottom-40 left-1/4 w-12 h-12 rounded-lg rotate-45 opacity-70 animate-float" style={{ backgroundColor: '#fc7900' }}></div>
+      <div className="absolute top-1/3 right-1/3 w-10 h-10 rounded-full opacity-70 animate-float-delayed" style={{ backgroundColor: '#0226ff' }}></div>
 
       <div className="container mx-auto py-20 px-6 flex flex-col md:flex-row items-center relative">
         <div className="md:w-1/2 md:pr-12 z-10">
           <h2 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">Recreational & Competitive Gymnastics</h2>
-          <div className="inline-block bg-yellow-300 text-indigo-900 px-4 py-2 rounded-lg rotate-2 mb-6">
+          <div className="inline-block px-4 py-2 rounded-lg rotate-2 mb-6" style={{ backgroundColor: '#fc7900', color: '#ffffff' }}>
             <h3 className="text-2xl md:text-3xl font-bold">Enrolling for 2025!</h3>
           </div>
           <p className="mb-8 text-lg text-white drop-shadow-md">Building strength, confidence, and character through the sport of gymnastics</p>
           <div className="flex flex-wrap gap-4">
-            <a href="/enroll" className="bg-gradient-to-r from-orange-400 to-pink-500 hover:from-orange-500 hover:to-pink-600 transition text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:-translate-y-1 hover:scale-105">
+            <a href="/enroll" className="transition text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:-translate-y-1 hover:scale-105" style={{ background: 'linear-gradient(to right, #fc7900, #0226ff)' }} onMouseEnter={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #fc5900, #0119b3)'} onMouseLeave={(e) => e.currentTarget.style.background = 'linear-gradient(to right, #fc7900, #0226ff)'}>
               Enroll Now
             </a>
-            <a href="/classes" className="bg-white bg-opacity-20 hover:bg-opacity-30 border-2 border-white hover:border-yellow-300 transition font-bold py-3 px-6 rounded-lg transform hover:-translate-y-1 hover:scale-105">
+            <a href="/classes" className="bg-white bg-opacity-20 hover:bg-opacity-30 border-2 border-white transition font-bold py-3 px-6 rounded-lg transform hover:-translate-y-1 hover:scale-105" style={{ borderColor: 'white' }} onMouseEnter={(e) => e.currentTarget.style.borderColor = '#fc7900'} onMouseLeave={(e) => e.currentTarget.style.borderColor = 'white'}>
               View Classes
             </a>
           </div>
@@ -32,12 +32,12 @@ const Hero = () => {
               alt="Child doing gymnastics"
               className="rounded-lg shadow-xl relative"
             />
-            <div className="absolute -top-4 -right-4 w-full h-full border-4 border-yellow-300 rounded-lg -z-10"></div>
+            <div className="absolute -top-4 -right-4 w-full h-full border-4 rounded-lg -z-10" style={{ borderColor: '#fc7900' }}></div>
           </div>
 
           {/* Decorative elements */}
-          <div className="absolute -top-5 -right-5 w-24 h-24 bg-gradient-to-br from-pink-500 to-purple-600 rounded-full opacity-70 blur-xl"></div>
-          <div className="absolute -bottom-5 -left-5 w-32 h-32 bg-gradient-to-tr from-cyan-400 to-blue-500 rounded-full opacity-70 blur-xl"></div>
+          <div className="absolute -top-5 -right-5 w-24 h-24 rounded-full opacity-70 blur-xl" style={{ background: 'linear-gradient(to bottom right, #fc7900, #0226ff)' }}></div>
+          <div className="absolute -bottom-5 -left-5 w-32 h-32 rounded-full opacity-70 blur-xl" style={{ background: 'linear-gradient(to top right, #0226ff, #0119b3)' }}></div>
         </div>
       </div>
 

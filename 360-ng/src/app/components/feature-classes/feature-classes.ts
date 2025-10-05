@@ -58,9 +58,9 @@ export class FeaturedClasses implements OnInit {
       id: 'parent-tot',
       name: 'Parent-Tot',
       ageRange: 'Ages 18mo-3yrs',
-      bgColor: 'bg-pink-500',
-      hoverColor: 'hover:bg-pink-600',
-      iconColor: 'text-pink-500',
+      bgColor: 'bg-blue-500',
+      hoverColor: 'hover:bg-blue-600',
+      iconColor: 'text-blue-500',
       icon: 'happy',
       route: '/classes/parent-tot'
     },
@@ -68,9 +68,9 @@ export class FeaturedClasses implements OnInit {
       id: 'beginner-preschool',
       name: 'Beginner Preschool',
       ageRange: 'Ages 4-5.99yrs',
-      bgColor: 'bg-purple-500',
-      hoverColor: 'hover:bg-purple-600',
-      iconColor: 'text-purple-500',
+      bgColor: 'bg-cyan-500',
+      hoverColor: 'hover:bg-cyan-600',
+      iconColor: 'text-cyan-500',
       icon: 'person',
       route: '/classes/beginner-preschool'
     },
@@ -78,9 +78,9 @@ export class FeaturedClasses implements OnInit {
       id: 'beginner-boys',
       name: 'Beginner Boys',
       ageRange: 'Boys-only basics',
-      bgColor: 'bg-blue-500',
-      hoverColor: 'hover:bg-blue-600',
-      iconColor: 'text-blue-500',
+      bgColor: 'bg-blue-600',
+      hoverColor: 'hover:bg-blue-700',
+      iconColor: 'text-blue-600',
       icon: 'lightning',
       route: '/classes/beginner-boys'
     },
@@ -88,9 +88,9 @@ export class FeaturedClasses implements OnInit {
       id: 'adult-gymnastics',
       name: 'Adult Gymnastics',
       ageRange: 'All skill levels',
-      bgColor: 'bg-cyan-500',
-      hoverColor: 'hover:bg-cyan-600',
-      iconColor: 'text-cyan-500',
+      bgColor: 'bg-cyan-600',
+      hoverColor: 'hover:bg-cyan-700',
+      iconColor: 'text-cyan-600',
       icon: 'lightbulb',
       route: '/classes/adult-gymnastics'
     }
@@ -110,7 +110,4 @@ export class FeaturedClasses implements OnInit {
     return icons[iconType] || icons['lightning'];
   }
 
-  getClassesForCard(featuredClass: FeaturedClass): string {
-    return `${featuredClass.bgColor} ${featuredClass.hoverColor} rounded-xl p-6 text-center transition hover:shadow-lg flex flex-col items-center justify-center class-card`;
-  }
 }

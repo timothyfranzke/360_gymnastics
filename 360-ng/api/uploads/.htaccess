@@ -1,0 +1,52 @@
+# Security rules for uploads directory
+# Prevent direct access to uploaded files - all files must be served through the API
+
+# Deny access to all files by default
+Order Deny,Allow
+Deny from all
+
+# Allow access only to specific image file types when served through the API
+<FilesMatch "\.(jpg|jpeg|png|webp)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Prevent execution of PHP files
+<FilesMatch "\.php$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Prevent access to hidden files and directories
+<FilesMatch "^\.">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Prevent access to configuration files
+<FilesMatch "\.(conf|config|cfg|ini|sql|log|txt|md|yml|yaml|json)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Disable directory listing
+Options -Indexes
+
+# Disable server signature
+ServerSignature Off
+
+# Security headers for any accidentally served files
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options nosniff
+    Header always set X-Frame-Options DENY
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
+# Prevent hotlinking (optional - uncomment and adjust domain as needed)
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteCond %{HTTP_REFERER} !^$
+#     RewriteCond %{HTTP_REFERER} !^https?://(www\.)?yourdomain\.com [NC]
+#     RewriteRule \.(jpg|jpeg|png|webp)$ - [F,L]
+# </IfModule>

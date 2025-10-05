@@ -9,16 +9,18 @@
       
       <div 
         [@fadeInUpDelay]="animationState"
-        class="grid md:grid-cols-4 gap-6"
+        class="cards-grid-4 gap-6"
       >
         <a 
           *ngFor="let featuredClass of featuredClasses; let i = index"
           [routerLink]="featuredClass.route"
-          [ngClass]="getClassesForCard(featuredClass)"
+          class="card-tertiary rounded-xl p-6 text-center transition-all duration-300 text-white card-entrance card-interactive"
+          [ngClass]="[featuredClass.bgColor, featuredClass.hoverColor]"
           [@staggerClasses]="animationState"
           [style.animation-delay]="(i * 100) + 'ms'"
+          [attr.aria-label]="'View ' + featuredClass.name + ' classes for ' + featuredClass.ageRange"
         >
-          <div class="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-4">
+          <div class="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
             <svg 
               xmlns="http://www.w3.org/2000/svg" 
               class="h-8 w-8"
@@ -35,8 +37,8 @@
               />
             </svg>
           </div>
-          <h3 class="text-xl font-bold mb-2">{{ featuredClass.name }}</h3>
-          <p class="text-sm">{{ featuredClass.ageRange }}</p>
+          <h3 class="card-title-tertiary text-xl font-bold mb-2">{{ featuredClass.name }}</h3>
+          <p class="card-description-light text-sm opacity-90">{{ featuredClass.ageRange }}</p>
         </a>
       </div>
       
@@ -46,9 +48,9 @@
       >
         <a 
           routerLink="/classes" 
-          class="inline-block bg-white text-indigo-800 font-bold py-3 px-8 rounded-lg shadow hover:bg-gray-100 transition transform hover:-translate-y-1"
+          class="btn-secondary btn-secondary-dark btn-lg"
         >
-          View All Classes
+          <span class="btn-text">View All Classes</span>
         </a>
       </div>
     </div>

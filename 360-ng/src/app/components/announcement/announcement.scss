@@ -1,12 +1,12 @@
-// Announcement card enhancements
+// Announcement card enhancements - brand aligned
 .announcement-card {
     transition: all 0.3s ease;
-    border: 1px solid rgba(147, 51, 234, 0.1);
+    border: 1px solid rgba(252, 121, 0, 0.1);
     
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      border-color: rgba(147, 51, 234, 0.2);
+      box-shadow: 0 20px 25px -5px rgba(252, 121, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      border-color: rgba(252, 121, 0, 0.2);
     }
   }
   
@@ -75,7 +75,7 @@
       transform: translate(-50%, -50%);
       width: 100px;
       height: 100px;
-      background: linear-gradient(135deg, rgba(147, 51, 234, 0.1), rgba(99, 102, 241, 0.1));
+      background: linear-gradient(135deg, rgba(252, 121, 0, 0.1), rgba(2, 38, 255, 0.1));
       border-radius: 50%;
       transition: all 0.3s ease;
       z-index: -1;
@@ -83,7 +83,7 @@
     
     &:hover::before {
       transform: translate(-50%, -50%) scale(1.1);
-      background: linear-gradient(135deg, rgba(147, 51, 234, 0.15), rgba(99, 102, 241, 0.15));
+      background: linear-gradient(135deg, rgba(252, 121, 0, 0.15), rgba(2, 38, 255, 0.15));
     }
   }
   
@@ -98,7 +98,7 @@
       left: 0;
       width: 0;
       height: 2px;
-      background: linear-gradient(90deg, #9333ea, #6366f1);
+      background: linear-gradient(90deg, #fc7900, #0226ff);
       transition: width 0.3s ease;
     }
     
@@ -115,38 +115,6 @@
     }
   }
   
-  // Call to action button enhancements
-  .cta-button {
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 14px 0 rgba(147, 51, 234, 0.39);
-    
-    // Ripple effect
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.6s ease;
-    }
-    
-    &:hover::before {
-      left: 100%;
-    }
-    
-    // Enhanced shadow on hover
-    &:hover {
-      box-shadow: 0 8px 25px 0 rgba(147, 51, 234, 0.5);
-    }
-    
-    // Active state
-    &:active {
-      transform: scale(0.98);
-    }
-  }
   
   // Decorative background circles
   .decorative-circle {
@@ -160,7 +128,7 @@
       right: -20px;
       width: 120px;
       height: 120px;
-      background: linear-gradient(135deg, #9333ea, #6366f1);
+      background: linear-gradient(135deg, #fc7900, #0226ff);
     }
     
     &.decorative-circle-2 {
@@ -168,7 +136,7 @@
       left: -30px;
       width: 80px;
       height: 80px;
-      background: linear-gradient(45deg, #6366f1, #8b5cf6);
+      background: linear-gradient(45deg, #fc7900, #0226ff);
     }
   }
   
@@ -183,8 +151,8 @@
     }
   }
   
-  // Today indicator badge
-  .bg-yellow-300.text-indigo-900 {
+  // Today indicator badge - brand aligned
+  [style*="background-color: #ffffff"][style*="color: #3b82f6"] {
     animation: pulse 2s infinite;
   }
   
@@ -222,12 +190,6 @@
       }
     }
     
-    .cta-button {
-      width: 100%;
-      max-width: 200px;
-      margin: 0 auto;
-      display: block;
-    }
     
     .decorative-circle {
       display: none; // Hide decorative elements on mobile for cleaner look
@@ -240,11 +202,6 @@
     }
   }
   
-  // Focus states for accessibility
-  .cta-button:focus {
-    outline: 2px solid #9333ea;
-    outline-offset: 2px;
-  }
   
   // Animation enhancements
   .announcement-card,
@@ -262,7 +219,7 @@
   @media (prefers-color-scheme: dark) {
     .announcement-card {
       background-color: #1f2937;
-      border-color: rgba(147, 51, 234, 0.2);
+      border-color: rgba(252, 121, 0, 0.2);
     }
     
     .announcement-title {
@@ -278,7 +235,6 @@
   @media (prefers-reduced-motion: reduce) {
     .announcement-card,
     .hours-card,
-    .cta-button,
     .icon-container,
     .announcement-title {
       transition: none;
@@ -288,11 +244,8 @@
       }
     }
     
-    .cta-button::before {
-      display: none;
-    }
     
-    .bg-yellow-300.text-indigo-900 {
+    [style*="background-color: #ffffff"][style*="color: #3b82f6"] {
       animation: none;
     }
   }

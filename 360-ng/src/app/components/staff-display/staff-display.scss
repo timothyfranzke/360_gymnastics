@@ -1,0 +1,103 @@
+// Staff Display Component Styles
+
+.staff-card {
+  transition: all 0.3s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.staff-avatar {
+  transition: all 0.3s ease-in-out;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.staff-description {
+  // Ensure HTML content is properly styled
+  :deep(p) {
+    margin-bottom: 0.5rem;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  :deep(strong) {
+    font-weight: 600;
+    color: #1f2937;
+  }
+  
+  :deep(em) {
+    font-style: italic;
+  }
+  
+  :deep(ul) {
+    list-style-type: disc;
+    list-style-position: inside;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  :deep(ol) {
+    list-style-type: decimal;
+    list-style-position: inside;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  :deep(li) {
+    margin-bottom: 0.25rem;
+  }
+  
+  :deep(a) {
+    color: #2563eb;
+    text-decoration: underline;
+    
+    &:hover {
+      color: #1e40af;
+    }
+  }
+}
+
+// Animation keyframes
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .staff-card {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
+}
+
+// Accessibility improvements
+.staff-card:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+// Print styles
+@media print {
+  .staff-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #d1d5db;
+  }
+}

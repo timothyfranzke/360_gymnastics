@@ -1,34 +1,108 @@
-// Feature card enhancements (renamed from activity-card)
-.feature-card {
-    position: relative;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
+// Base card styles
+.card-base {
+  border-radius: 0.75rem; // rounded-xl
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+// Primary Card implementation (Hero-level Features)
+.card-primary {
+  @extend .card-base;
+  background: white;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  min-height: 120px; // Adequate touch area for primary actions
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: 
+      0 20px 25px -5px rgba(0, 0, 0, 0.3),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.2);
     
     &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-      border-radius: inherit;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      opacity: 1;
     }
     
-    &:hover {
-      transform: translateY(-8px);
-      box-shadow: 
-        0 20px 25px -5px rgba(0, 0, 0, 0.3),
-        0 10px 10px -5px rgba(0, 0, 0, 0.2);
-      border-color: rgba(255, 255, 255, 0.2);
-      
-      &::before {
-        opacity: 1;
-      }
+    .icon-container {
+      transform: scale(1.1);
+    }
+    
+    .hover-indicator {
+      width: 100%;
     }
   }
+  
+  &:focus-within {
+    outline: 2px solid #0226ff;
+    outline-offset: 2px;
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+}
+
+// Grid layouts
+.cards-grid-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+// Card typography
+.card-title-primary {
+  font-size: 1.25rem; // text-xl
+  font-weight: 700;   // font-bold
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.card-description-light {
+  color: #9ca3af;      // text-gray-400 (for dark backgrounds)
+  font-size: 0.875rem; // text-sm
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+// Entrance animations
+.card-entrance {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: cardFadeInUp 0.6s ease-out forwards;
+}
+
+@keyframes cardFadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
   
   // Card glow effect
   .card-glow {
@@ -36,9 +110,10 @@
     filter: blur(20px);
   }
   
-  // Icon container styling
+  // Icon container styling with shimmer effect
   .icon-container {
     position: relative;
+    transition: all 0.3s ease;
     
     &::before {
       content: '';
@@ -49,72 +124,12 @@
       opacity: 0;
       transition: opacity 0.3s ease;
     }
-    
-    .feature-card:hover &::before {
-      opacity: 1;
-    }
   }
   
-  // Call to action button enhancements
-  .cta-button {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #06b6d4, #0891b2);
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.6s ease;
-    }
-    
-    &:hover::before {
-      left: 100%;
-    }
-    
-    &:hover {
-      background: linear-gradient(135deg, #0891b2, #0e7490);
-      box-shadow: 0 10px 25px -5px rgba(6, 182, 212, 0.4);
-    }
-    
-    &:active {
-      transform: scale(0.98);
-    }
+  .card-primary:hover .icon-container::before {
+    opacity: 1;
   }
   
-  // Secondary CTA button styling
-  .cta-button-secondary {
-    position: relative;
-    overflow: hidden;
-    
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(34, 211, 238, 0.1), transparent);
-      transition: left 0.6s ease;
-    }
-    
-    &:hover::before {
-      left: 100%;
-    }
-    
-    &:hover {
-      background: rgba(255, 255, 255, 0.15);
-      box-shadow: 0 10px 25px -5px rgba(34, 211, 238, 0.3);
-    }
-    
-    &:active {
-      transform: scale(0.98);
-    }
-  }
   
   // About section styling
   .bg-indigo-800.bg-opacity-30 {
@@ -125,7 +140,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(34, 211, 238, 0.05), rgba(59, 130, 246, 0.05));
+      background: linear-gradient(135deg, rgba(2, 38, 255, 0.05), rgba(252, 121, 0, 0.05));
       border-radius: inherit;
       pointer-events: none;
     }
@@ -133,7 +148,7 @@
     &:hover {
       transform: translateY(-2px);
       box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
-      border-color: rgba(34, 211, 238, 0.3);
+      border-color: rgba(2, 38, 255, 0.3);
     }
   }
   
@@ -141,9 +156,9 @@
   .decorative-bubbles {
     background-image: 
       radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 40%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 60% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 30% 70%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+      radial-gradient(circle at 80% 40%, rgba(2, 38, 255, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 60% 80%, rgba(252, 121, 0, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 30% 70%, rgba(2, 38, 255, 0.1) 0%, transparent 50%);
     background-size: 300px 300px, 400px 400px, 350px 350px, 250px 250px;
     background-position: 0% 0%, 100% 0%, 100% 100%, 0% 100%;
     animation: float-bubbles 20s ease-in-out infinite;
@@ -185,7 +200,7 @@
         left: 10%;
         width: 60px;
         height: 60px;
-        background: linear-gradient(45deg, #22d3ee, #3b82f6);
+        background: linear-gradient(45deg, #0226ff, #0119b3);
         animation: float-1 8s ease-in-out infinite;
       }
       
@@ -194,7 +209,7 @@
         right: 20%;
         width: 40px;
         height: 40px;
-        background: linear-gradient(135deg, #a855f7, #ec4899);
+        background: linear-gradient(135deg, #fc7900, #0226ff);
         animation: float-2 10s ease-in-out infinite;
       }
       
@@ -203,7 +218,7 @@
         left: 30%;
         width: 30px;
         height: 30px;
-        background: linear-gradient(225deg, #fbbf24, #f59e0b);
+        background: linear-gradient(225deg, #fc7900, #fc5900);
         animation: float-3 12s ease-in-out infinite;
       }
       
@@ -212,7 +227,7 @@
         right: 40%;
         width: 50px;
         height: 50px;
-        background: linear-gradient(315deg, #10b981, #059669);
+        background: linear-gradient(315deg, #0226ff, #0119b3);
         animation: float-4 9s ease-in-out infinite;
       }
     }
@@ -277,24 +292,11 @@
     }
   }
   
-  // Stagger animation delays
-  .feature-card {
-    &:nth-child(1) {
-      animation-delay: 0ms;
-    }
-    
-    &:nth-child(2) {
-      animation-delay: 150ms;
-    }
-    
-    &:nth-child(3) {
-      animation-delay: 300ms;
-    }
-    
-    &:nth-child(4) {
-      animation-delay: 450ms;
-    }
-  }
+  // Stagger animation delays for entrance animations
+  .card-entrance:nth-child(1) { animation-delay: 0ms; }
+  .card-entrance:nth-child(2) { animation-delay: 150ms; }
+  .card-entrance:nth-child(3) { animation-delay: 300ms; }
+  .card-entrance:nth-child(4) { animation-delay: 450ms; }
   
   // Section container positioning fix
   section.relative {
@@ -350,18 +352,21 @@
       display: none;
     }
     
-    .feature-card {
+    .card-primary {
+      padding: 1.5rem; // Reduced padding on mobile
+      
       &:hover {
-        transform: translateY(-4px);
+        transform: translateY(-4px); // Reduced hover lift
       }
     }
     
-    .cta-button,
-    .cta-button-secondary {
-      width: 100%;
-      max-width: 300px;
-      text-align: center;
-      margin: 0.5rem;
+    .cards-grid-4 {
+      grid-template-columns: 1fr; // Single column on mobile
+      gap: 1rem;
+    }
+    
+    .card-glow {
+      display: none; // Remove glow effects on mobile for performance
     }
     
     .container {
@@ -374,17 +379,9 @@
     }
   }
   
-  // Focus states for accessibility
-  .feature-card:focus-within {
-    outline: 2px solid #22d3ee;
-    outline-offset: 2px;
-  }
+  // Focus states for accessibility (updated in Primary Card definition above)
+  // Removed duplicate focus states
   
-  .cta-button:focus,
-  .cta-button-secondary:focus {
-    outline: 2px solid #22d3ee;
-    outline-offset: 2px;
-  }
   
   // Debug styles (remove these after testing)
   .floating-shapes {
@@ -406,9 +403,8 @@
   
   // Reduced motion for accessibility
   @media (prefers-reduced-motion: reduce) {
-    .feature-card,
-    .cta-button,
-    .cta-button-secondary,
+    .card-primary,
+    .card-entrance,
     .child-image,
     .floating-shapes .shape,
     .bg-indigo-800.bg-opacity-30 {
@@ -424,8 +420,10 @@
       animation: none;
     }
     
-    .cta-button::before,
-    .cta-button-secondary::before {
+    .card-glow,
+    .floating-shapes,
+    .decorative-bubbles {
+      animation: none;
       display: none;
     }
   }

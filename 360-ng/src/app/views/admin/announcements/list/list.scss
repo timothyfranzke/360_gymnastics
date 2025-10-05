@@ -1,0 +1,44 @@
+// Announcement list styles
+.announcement-list {
+  // Table responsive behavior
+  .table-container {
+    overflow-x: auto;
+    
+    table {
+      min-width: 800px;
+    }
+  }
+  
+  // Status toggle animation
+  .status-toggle {
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+  
+  // Priority and type badges
+  .badge {
+    transition: all 0.2s ease-in-out;
+    
+    &:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .announcement-list {
+    .filter-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .actions-mobile {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+  }
+}

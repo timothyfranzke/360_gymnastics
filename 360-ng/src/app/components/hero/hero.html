@@ -1,71 +1,150 @@
 <section class="relative text-white overflow-hidden purple-gradient">
-    <!-- Floating colorful elements -->
-    <div class="floating-element floating-element-1"></div>
-    <div class="floating-element floating-element-2"></div>
-    <div class="floating-element floating-element-3"></div>
-    <div class="floating-element floating-element-4"></div>
-  
-    <div class="container mx-auto py-20 px-6 flex flex-col md:flex-row items-center relative">
-      <div 
-        [@fadeInUp]="animationState"
-        class="md:w-1/2 md:pr-12 z-10"
-      >
-        <h2 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
-          Recreational & Competitive Gymnastics
-        </h2>
-        <div class="inline-block bg-yellow-300 text-indigo-900 px-4 py-2 rounded-lg rotate-2 mb-6">
-          <h3 class="text-2xl md:text-3xl font-bold">Enrolling for 2025!</h3>
-        </div>
-        <p class="mb-8 text-lg text-white drop-shadow-md">
-          Building strength, confidence, and character through the sport of gymnastics
-        </p>
-        <div 
-          [@fadeInUpDelay]="animationState"
-          class="flex flex-wrap gap-4"
-        >
-          <a 
-            href="https://app.jackrabbitclass.com/regv2.asp?id=514082"
-            target="_blank"
-            class="bg-gradient-to-r from-orange-400 to-pink-500 hover:from-orange-500 hover:to-pink-600 transition text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:-translate-y-1 hover:scale-105"
-          >
-            Enroll Now
-          </a>
-          <a 
-            routerLink="/classes" 
-            class="bg-opacity-20 hover:bg-opacity-30 border-2 border-white hover:border-yellow-300 transition font-bold py-3 px-6 rounded-lg transform hover:-translate-y-1 hover:scale-105"
-          >
-            View Classes
-          </a>
-        </div>
+  <!-- Floating colorful elements -->
+  <div class="floating-element floating-element-1"></div>
+  <div class="floating-element floating-element-2"></div>
+  <div class="floating-element floating-element-3"></div>
+  <div class="floating-element floating-element-4"></div>
+
+  <div class="container mx-auto py-20 px-6 flex flex-col md:flex-row items-center relative">
+    <div 
+      [@fadeInUp]="animationState"
+      class="md:w-1/2 md:pr-12 z-10"
+    >
+      <h2 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+        Recreational & Competitive Gymnastics
+      </h2>
+      <div class="inline-block bg-orange-500 text-white px-4 py-2 rounded-lg rotate-2 mb-6" style="background-color: #fc7900;">
+        <h3 class="text-2xl md:text-3xl font-bold">Enrolling for 2025!</h3>
       </div>
-      
+      <p class="mb-8 text-lg text-white drop-shadow-md">
+        Building strength, confidence, and character through the sport of gymnastics
+      </p>
       <div 
-        [@fadeInRight]="animationState"
-        class="md:w-1/2 mt-10 md:mt-0 relative"
+        [@fadeInUpDelay]="animationState"
+        class="flex flex-wrap gap-4"
       >
-        <div class="relative z-10 transform rotate-3 hover:rotate-0 transition duration-300">
+        <a 
+          href="https://app.jackrabbitclass.com/regv2.asp?id=514082"
+          target="_blank"
+          class="btn-primary btn-lg"
+        >
+          <span class="btn-text">Enroll Now</span>
+        </a>
+        <a 
+          routerLink="/classes" 
+          class="btn-secondary btn-lg"
+        >
+          <span class="btn-text">View Classes</span>
+        </a>
+      </div>
+    </div>
+    
+    <div 
+      [@fadeInRight]="animationState"
+      class="md:w-1/2 mt-10 md:mt-0 relative"
+    >
+      <div class="relative z-10 transform rotate-3 hover:rotate-0 transition duration-300">
+        <div 
+          class="video-overlay-container relative rounded-lg shadow-xl overflow-hidden cursor-pointer"
+          [class.loading]="!imageLoaded && !imageError"
+          [class.error]="imageError"
+          (click)="playVideo()"
+        >
+          <!-- Loading placeholder -->
+          @if (!imageLoaded && !imageError) {
+            <div 
+              class="absolute inset-0 bg-gradient-to-r from-gray-300 to-gray-400 animate-pulse rounded-lg flex items-center justify-center"
+              style="min-height: 400px;"
+            >
+              <div class="text-gray-600 text-lg">Loading...</div>
+            </div>
+          }
+          
+          <!-- Error placeholder -->
+          @if (imageError) {
+            <div 
+              class="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-900 rounded-lg flex items-center justify-center"
+              style="min-height: 400px;"
+            >
+              <div class="text-center text-white">
+                <svg class="w-16 h-16 mx-auto mb-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <p class="text-gray-300">Image not available</p>
+              </div>
+            </div>
+          }
+          
+          <!-- Main image with proper loading handlers -->
           <img
             src="/images/gym1.jpg"
-            alt="Child doing gymnastics"
-            class="rounded-lg shadow-xl relative"
+            alt="Child doing gymnastics at 360 Gymnastics"
+            class="w-full rounded-lg block object-cover transition-opacity duration-300"
+            [class.opacity-0]="!imageLoaded"
+            [class.opacity-100]="imageLoaded"
+            style="min-height: 400px; max-height: 600px;"
+            (load)="onImageLoad()"
+            (error)="onImageError()"
           />
-          <div class="absolute -top-4 -right-4 w-full h-full border-4 border-yellow-300 rounded-lg -z-10"></div>
+          
+          <!-- Overlay with much lighter opacity so image shows through -->
+          <div class="absolute inset-0 bg-black bg-opacity-20 flex flex-col items-center justify-center hover:bg-opacity-10 transition duration-300">
+            <div class="text-center mb-4">
+              <h3 class="text-white text-xl md:text-2xl font-bold mb-2 drop-shadow-lg">Take a tour of our gym!</h3>
+            </div>
+            <div class="play-button-wrapper">
+              <button class="btn-play btn-play-pulse" aria-label="Play facility tour video">
+                <svg class="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M8 5v10l8-5-8-5z"/>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-  
-        <!-- Decorative elements -->
-        <div class="decorative-blur decorative-blur-1"></div>
-        <div class="decorative-blur decorative-blur-2"></div>
+        <div class="absolute -top-4 -right-4 w-full h-full border-4 border-yellow-300 rounded-lg -z-10"></div>
+      </div>
+
+      <!-- Decorative elements -->
+      <div class="decorative-blur decorative-blur-1"></div>
+      <div class="decorative-blur decorative-blur-2"></div>
+    </div>
+  </div>
+
+  <!-- Cloud divider -->
+  <div class="absolute bottom-0 left-0 w-full">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
+      <path
+        fill="#ffffff"
+        fillOpacity="1"
+        d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,82.7C1248,80,1344,64,1392,56L1440,48L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"
+      ></path>
+    </svg>
+  </div>
+
+  <!-- Video Modal -->
+  @if (showVideoModal) {
+    <div 
+      class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+      (click)="onModalBackdropClick($event)"
+    >
+      <div class="relative max-w-4xl w-full mx-4">
+        <button 
+          class="btn-tertiary btn-tertiary-light absolute -top-12 right-0 text-2xl"
+          (click)="closeVideoModal()"
+          aria-label="Close video modal"
+        >
+          <span class="btn-text">✕ Close</span>
+        </button>
+        <video 
+          controls 
+          autoplay 
+          class="w-full rounded-lg"
+          [attr.aria-label]="'360 Gymnastics facility tour video'"
+        >
+          <source src="videos/360gym.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
       </div>
     </div>
-  
-    <!-- Cloud divider -->
-    <div class="absolute bottom-0 left-0 w-full">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100">
-        <path
-          fill="#ffffff"
-          fillOpacity="1"
-          d="M0,64L48,69.3C96,75,192,85,288,80C384,75,480,53,576,48C672,43,768,53,864,64C960,75,1056,85,1152,82.7C1248,80,1344,64,1392,56L1440,48L1440,100L1392,100C1344,100,1248,100,1152,100C1056,100,960,100,864,100C768,100,672,100,576,100C480,100,384,100,288,100C192,100,96,100,48,100L0,100Z"
-        ></path>
-      </svg>
-    </div>
-  </section>
+  }
+</section>

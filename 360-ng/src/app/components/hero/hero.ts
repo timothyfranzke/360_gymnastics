@@ -34,8 +34,36 @@ import { RouterLink } from '@angular/router';
 })
 export class Hero implements OnInit {
   animationState = 'in';
+  imageLoaded = false;
+  imageError = false;
+  showVideoModal = false;
 
   ngOnInit(): void {
     // Component initialization logic here if needed
+  }
+
+  onImageLoad(): void {
+    this.imageLoaded = true;
+    this.imageError = false;
+  }
+
+  onImageError(): void {
+    this.imageError = true;
+    this.imageLoaded = false;
+    console.warn('Failed to load hero image: images/gym1.jpg');
+  }
+
+  playVideo(): void {
+    this.showVideoModal = true;
+  }
+
+  closeVideoModal(): void {
+    this.showVideoModal = false;
+  }
+
+  onModalBackdropClick(event: Event): void {
+    if (event.target === event.currentTarget) {
+      this.closeVideoModal();
+    }
   }
 }

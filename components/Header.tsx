@@ -43,12 +43,12 @@ const Header = () => {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex space-x-6">
-          <a href="/" className="hover:text-indigo-600 transition py-2">Home</a>
-          <a href="/classes" className="hover:text-indigo-600 transition py-2">Classes</a>
-          <a href="/camps-events" className="hover:text-indigo-600 transition py-2">Camps/Events</a>
-          <a href="/open-gym" className="hover:text-indigo-600 transition py-2">Open Gym</a>
-          <a href="/parties" className="hover:text-indigo-600 transition py-2">Parties</a>
-          <a href="/contact" className="hover:text-indigo-600 transition py-2">Contact</a>
+          <a href="/" className="transition py-2" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}>Home</a>
+          <a href="/classes" className="transition py-2" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}>Classes</a>
+          <a href="/camps-events" className="transition py-2" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}>Camps/Events</a>
+          <a href="/open-gym" className="transition py-2" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}>Open Gym</a>
+          <a href="/parties" className="transition py-2" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}>Parties</a>
+          <a href="/contact" className="transition py-2" style={{ color: 'inherit' }} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = 'inherit'}>Contact</a>
         </nav>
         
         {/* Mobile Menu Button */}
@@ -75,16 +75,16 @@ const Header = () => {
         style={{ top: '60px' }}
       >
         <nav className="container mx-auto py-8 px-6 flex flex-col space-y-6">
-          <a href="/" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Home</a>
-          <a href="/about" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>About Us</a>
-          <a href="/classes" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Classes</a>
-          <a href="/camps-events" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Camps/Events</a>
-          <a href="/open-gym" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Open Gym</a>
-          <a href="/parties" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Parties</a>
-          <a href="/team" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Team</a>
-          <a href="/schedule-tuition" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Schedule & Tuition</a>
-          <a href="/contact" className="text-xl font-medium text-gray-800 hover:text-indigo-600 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu}>Contact</a>
-          <a href="/parties#reserve" className="text-xl font-medium bg-indigo-600 text-white text-center py-3 rounded-md hover:bg-indigo-700 transition" onClick={toggleMobileMenu}>Reserve Now</a>
+          <a href="/" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>Home</a>
+          <a href="/about" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>About Us</a>
+          <a href="/classes" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>Classes</a>
+          <a href="/camps-events" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>Camps/Events</a>
+          <a href="/open-gym" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>Open Gym</a>
+          <a href="/parties" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>Parties</a>
+          <a href="/team" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>Team</a>
+          <a href="/schedule-tuition" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>Schedule & Tuition</a>
+          <a href="/contact" className="text-xl font-medium text-gray-800 transition border-b border-gray-200 pb-2" onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.color = '#0226ff'} onMouseLeave={(e) => e.currentTarget.style.color = '#374151'}>Contact</a>
+          <a href="/parties#reserve" className="text-xl font-medium text-white text-center py-3 rounded-md transition" style={{ backgroundColor: '#0226ff' }} onClick={toggleMobileMenu} onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#0119b3'} onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#0226ff'}>Reserve Now</a>
         </nav>
       </div>
     </header>
