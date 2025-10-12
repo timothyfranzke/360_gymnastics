@@ -20,7 +20,7 @@
           *ngFor="let feature of features; let i = index"
           [@staggerCards]="animationState"
           [style.animation-delay]="(i * 150) + 'ms'"
-          class="card-primary bg-indigo-800 bg-opacity-50 p-8 rounded-xl group relative overflow-hidden card-entrance"
+          class="card-primary bg-blue-600 bg-opacity-50 p-8 rounded-xl group relative overflow-hidden card-entrance"
         >
           <!-- Card glow effect -->
           <div class="card-glow absolute inset-0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -44,13 +44,13 @@
                   />
                 </svg>
               </div>
-              <h4 class="card-title-primary text-xl font-bold group-hover:text-cyan-300 transition-colors duration-300">
+              <h4 class="card-title-primary text-xl font-bold text-cyan-600 group-hover:text-cyan-300 transition-colors duration-300">
                 {{ feature.title }}
               </h4>
             </div>
             
             <!-- Description -->
-            <p class="card-description-light text-gray-300 group-hover:text-white transition-colors duration-300">
+            <p class="card-description-light text-gray-600 group-hover:text-gray-900 transition-colors duration-300">
               {{ feature.description }}
             </p>
           </div>

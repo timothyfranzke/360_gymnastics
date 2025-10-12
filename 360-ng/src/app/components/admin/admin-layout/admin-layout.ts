@@ -51,6 +51,12 @@ export class AdminLayout implements OnInit, OnDestroy {
       name: 'Closures',
       icon: 'M8 7V3a4 4 0 118 0v4m-4 6v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z',
       route: '/admin/closures'
+    },
+    {
+      name: 'Banner Management',
+      icon: 'M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h3a1 1 0 011 1v1a1 1 0 01-1 1h-1v9a2 2 0 01-2 2H7a2 2 0 01-2-2V7H4a1 1 0 01-1-1V5a1 1 0 011-1h3zM9 3v1h6V3H9zm1 5v7h4V8h-4z',
+      route: '/admin/banner',
+      adminOnly: true
     }
   ];
 

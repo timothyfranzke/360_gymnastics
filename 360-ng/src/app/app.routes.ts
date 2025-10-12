@@ -6,6 +6,7 @@ import { AdminLogin } from './views/admin/login/login';
 import { AdminLayout } from './components/admin/admin-layout/admin-layout';
 import { AdminDashboard } from './views/admin/dashboard/dashboard';
 import { authGuard, adminGuard, staffGuard } from './guards/auth.guard';
+import { OpenGym } from './views/open-gym/open-gym';
 
 export const routes: Routes = [
     {
@@ -19,6 +20,10 @@ export const routes: Routes = [
     {
         path: 'classes/:id',
         component: Detail
+    },
+    {
+        path: 'open-gym',
+        component: OpenGym
     },
     {
         path: 'admin/login',
@@ -58,6 +63,11 @@ export const routes: Routes = [
                 path: 'closures',
                 loadChildren: () => import('./views/admin/closures/closures.routes').then(m => m.routes),
                 canActivate: [staffGuard]
+            },
+            {
+                path: 'banner',
+                loadChildren: () => import('./views/admin/banner/banner.routes').then(m => m.bannerRoutes),
+                canActivate: [adminGuard]
             }
         ]
     },

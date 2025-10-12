@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
+import { ApiService } from '../../services/api.service';
+import { Banner } from '../../interfaces/api';
 
 @Component({
   selector: 'app-hero',
@@ -32,14 +35,49 @@ import { RouterLink } from '@angular/router';
     ])
   ]
 })
-export class Hero implements OnInit {
+export class Hero implements OnInit, OnDestroy {
   animationState = 'in';
   imageLoaded = false;
   imageError = false;
   showVideoModal = false;
+  banner: Banner | null = null;
+  bannerError = false;
+
+  private destroy$ = new Subject<void>();
+
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
-    // Component initialization logic here if needed
+    this.loadBanner();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadBanner(): void {
+    this.apiService.getBanner()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (banner) => {
+          this.banner = banner;
+          this.bannerError = false;
+        },
+        error: (error) => {
+          console.error('Failed to load banner', error);
+          this.bannerError = true;
+          // Fallback to default banner text if API fails
+          this.banner = {
+            id: 0,
+            text: 'Enrolling for 2025!',
+            is_visible: true,
+            background_color: '#fc7900',
+            created_at: '',
+            updated_at: ''
+          };
+        }
+      });
   }
 
   onImageLoad(): void {

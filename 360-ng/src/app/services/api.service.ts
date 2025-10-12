@@ -31,6 +31,8 @@ import {
   DashboardStats,
   ClassScheduleItem,
   ClassScheduleResponse,
+  Banner,
+  UpdateBannerRequest,
   ApiEndpoints
 } from '../interfaces/api';
 
@@ -552,6 +554,45 @@ export class ApiService {
     return this.http.get<ApiResponse<ClassScheduleItem[]>>(
       `${this.API_BASE}${ApiEndpoints.CLASSES_SCHEDULE}`,
       { params }
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  // ========== BANNER METHODS ==========
+
+  /**
+   * Get banner configuration (public endpoint - no auth required)
+   */
+  getBanner(): Observable<Banner> {
+    return this.http.get<ApiResponse<Banner>>(
+      `${this.API_BASE}${ApiEndpoints.BANNER}/public`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get banner configuration (admin endpoint - auth required)
+   */
+  getBannerAdmin(): Observable<Banner> {
+    return this.http.get<ApiResponse<Banner>>(
+      `${this.API_BASE}${ApiEndpoints.BANNER}`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Update banner configuration
+   */
+  updateBanner(bannerData: UpdateBannerRequest): Observable<Banner> {
+    return this.http.put<ApiResponse<Banner>>(
+      `${this.API_BASE}${ApiEndpoints.BANNER}`,
+      bannerData
     ).pipe(
       map(response => this.handleResponse(response)),
       catchError(this.handleError)

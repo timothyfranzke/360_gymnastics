@@ -143,7 +143,7 @@ export class Header implements OnInit, OnDestroy {
   }
 
   getMobileMenuClasses(): string {
-    const baseClasses = 'fixed inset-0 bg-white bg-opacity-95 z-40 transform transition-transform duration-300 ease-in-out md:hidden';
+    const baseClasses = 'fixed inset-0 bg-white/95 z-40 transform transition-transform duration-300 ease-in-out md:hidden';
     const positionClasses = this.isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full';
     
     return `${baseClasses} ${positionClasses}`;

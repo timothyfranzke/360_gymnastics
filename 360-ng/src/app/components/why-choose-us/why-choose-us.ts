@@ -58,7 +58,7 @@ export class WhyChooseUs implements OnInit {
   features: FeatureCard[] = [
     {
       icon: 'lightning',
-      bgColor: 'bg-pink-400',
+      bgColor: 'bg-orange-400',
       title: 'Target Skillsets',
       description: 'We focus on developing specific skills tailored to each gymnast\'s abilities.'
     },

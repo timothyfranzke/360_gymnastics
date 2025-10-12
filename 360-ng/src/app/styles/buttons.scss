@@ -434,12 +434,12 @@ $brand-gray-hover: #4b5563;
   @extend %btn-base;
   padding: 0.75rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, $brand-orange 0%, $brand-blue 100%);
+  background: $brand-orange;
   color: $brand-white;
   box-shadow: 0 4px 15px rgba(252, 121, 0, 0.3);
   
   &:hover:not(:disabled):not(.disabled) {
-    background: linear-gradient(135deg, $brand-orange-hover 0%, $brand-blue-hover 100%);
+    background: $brand-orange-hover;
     box-shadow: 0 6px 20px rgba(252, 121, 0, 0.4);
     transform: translateY(-2px) scale(1.1);
   }
@@ -553,13 +553,13 @@ $brand-gray-hover: #4b5563;
   right: 2rem;
   padding: 1rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, $brand-orange 0%, $brand-blue 100%);
+  background: $brand-orange;
   color: $brand-white;
   box-shadow: 0 8px 25px rgba(252, 121, 0, 0.3);
   z-index: 1000;
   
   &:hover:not(:disabled):not(.disabled) {
-    background: linear-gradient(135deg, $brand-orange-hover 0%, $brand-blue-hover 100%);
+    background: $brand-orange-hover;
     box-shadow: 0 12px 35px rgba(252, 121, 0, 0.4);
     transform: translateY(-3px) scale(1.1);
   }

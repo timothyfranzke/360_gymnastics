@@ -313,6 +313,22 @@ export interface ClassScheduleResponse {
   timestamp: string;
 }
 
+// Banner interfaces
+export interface Banner {
+  id: number;
+  text: string;
+  is_visible: boolean;
+  background_color?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface UpdateBannerRequest {
+  text?: string;
+  is_visible?: boolean;
+  background_color?: string;
+}
+
 // API endpoints enum for type safety
 export enum ApiEndpoints {
   // Auth
@@ -353,5 +369,8 @@ export enum ApiEndpoints {
   GYM_CLOSURES_STATS = '/gym-closures/stats',
   
   // Classes
-  CLASSES_SCHEDULE = '/classes/schedule'
+  CLASSES_SCHEDULE = '/classes/schedule',
+  
+  // Banner
+  BANNER = '/banner'
 }

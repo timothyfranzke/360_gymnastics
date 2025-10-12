@@ -7,6 +7,29 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        brand: {
+          orange: {
+            DEFAULT: '#fc7900',
+            hover: '#e66a00',
+          },
+          blue: {
+            DEFAULT: '#0226ff',
+            hover: '#0119b3',
+            light: '#3b82f6',
+            'light-hover': '#2563eb',
+          },
+          cyan: {
+            DEFAULT: '#06b6d4',
+            hover: '#0891b2',
+          },
+          white: '#ffffff',
+          gray: {
+            DEFAULT: '#6b7280',
+            hover: '#4b5563',
+          },
+        },
+      },
       animation: {
         'float': 'float 6s ease-in-out infinite',
         'float-delayed': 'float 6s ease-in-out 3s infinite',

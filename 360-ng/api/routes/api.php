@@ -231,6 +231,25 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // Banner routes
+    if ($uri === '/banner') {
+        $controller = new HeroBannerController($db);
+        $controller->index();
+        return;
+    }
+    
+    if ($uri === '/banner/public') {
+        $controller = new HeroBannerController($db);
+        $controller->publicBanner();
+        return;
+    }
+    
+    if ($uri === '/banner/stats') {
+        $controller = new HeroBannerController($db);
+        $controller->stats();
+        return;
+    }
+
     // If no route matches
     ResponseHelper::notFound('Route not found');
 }
@@ -310,6 +329,13 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // Banner routes
+    if ($uri === '/banner/reset') {
+        $controller = new HeroBannerController($db);
+        $controller->reset();
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -364,6 +390,13 @@ function handlePutRoutes($uri, $db) {
         return;
     }
 
+    // Banner routes
+    if ($uri === '/banner') {
+        $controller = new HeroBannerController($db);
+        $controller->update();
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -375,6 +408,13 @@ function handlePatchRoutes($uri, $db) {
     if (preg_match('/^\/announcements\/(\d+)\/toggle$/', $uri, $matches)) {
         $controller = new AnnouncementController($db);
         $controller->toggle($matches[1]);
+        return;
+    }
+
+    // Banner routes
+    if ($uri === '/banner/toggle') {
+        $controller = new HeroBannerController($db);
+        $controller->toggle();
         return;
     }
 

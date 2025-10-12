@@ -215,6 +215,57 @@
     }
   }
   
+  // Carousel specific styling
+  .carousel-content {
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .carousel-controls {
+    button {
+      transition: all 0.2s ease;
+      backdrop-filter: blur(4px);
+      
+      &:hover:not(:disabled) {
+        transform: scale(1.1);
+        background-color: rgba(255, 255, 255, 0.95);
+      }
+      
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  .carousel-indicators {
+    button {
+      transition: all 0.2s ease;
+      
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+  
+  .priority-badge {
+    font-weight: 500;
+    letter-spacing: 0.025em;
+  }
+  
+  // Loading spinner
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
   // Dark mode preparation
   @media (prefers-color-scheme: dark) {
     .announcement-card {
@@ -229,6 +280,14 @@
     p {
       color: #d1d5db;
     }
+    
+    .carousel-controls button {
+      background-color: rgba(31, 41, 55, 0.8);
+      
+      &:hover:not(:disabled) {
+        background-color: rgba(31, 41, 55, 0.95);
+      }
+    }
   }
   
   // Reduced motion for accessibility
@@ -236,16 +295,42 @@
     .announcement-card,
     .hours-card,
     .icon-container,
-    .announcement-title {
+    .announcement-title,
+    .carousel-content,
+    .carousel-controls button,
+    .carousel-indicators button {
       transition: none;
+      animation: none;
       
       &:hover {
         transform: none;
       }
     }
     
+    .animate-spin {
+      animation: none;
+    }
     
     [style*="background-color: #ffffff"][style*="color: #3b82f6"] {
       animation: none;
     }
   }
+
+// Wrapper for the main content of an announcement
+.announcement-content-wrapper {
+  width: 100%;
+  @media (min-width: 768px) {
+    width: 75%;
+    margin: 0 auto; // Center the content block
+  }
+}
+
+// Adjust carousel indicators position
+.carousel-indicators-container {
+  position: absolute;
+  bottom: 0.5rem; // 8px
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}

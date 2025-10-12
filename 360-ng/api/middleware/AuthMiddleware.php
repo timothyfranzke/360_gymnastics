@@ -20,7 +20,9 @@ class AuthMiddleware {
         '/api/v1/staff/homepage',
         '/staff/homepage',
         '/api/v1/classes/schedule',
-        '/classes/schedule'
+        '/classes/schedule',
+        '/api/v1/banner/public',
+        '/banner/public'
     ];
 
     public function __construct($database) {

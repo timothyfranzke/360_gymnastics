@@ -13,9 +13,14 @@
       <h2 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
         Recreational & Competitive Gymnastics
       </h2>
-      <div class="inline-block bg-orange-500 text-white px-4 py-2 rounded-lg rotate-2 mb-6" style="background-color: #fc7900;">
-        <h3 class="text-2xl md:text-3xl font-bold">Enrolling for 2025!</h3>
-      </div>
+      @if (banner && banner.is_visible) {
+        <div 
+          class="inline-block text-white px-4 py-2 rounded-lg rotate-2 mb-6" 
+          [style.background-color]="banner.background_color || '#fc7900'"
+        >
+          <h3 class="text-2xl md:text-3xl font-bold">{{ banner.text }}</h3>
+        </div>
+      }
       <p class="mb-8 text-lg text-white drop-shadow-md">
         Building strength, confidence, and character through the sport of gymnastics
       </p>
