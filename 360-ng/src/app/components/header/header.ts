@@ -57,22 +57,19 @@ export class Header implements OnInit, OnDestroy {
   desktopNavItems: NavigationItem[] = [
     { name: 'Home', href: '/' },
     { name: 'Classes', href: '/classes' },
-    { name: 'Camps/Events', href: '/camps-events' },
+    { name: 'Camps/Events', href: '/camps' },
     { name: 'Open Gym', href: '/open-gym' },
     { name: 'Parties', href: '/parties' },
-    { name: 'Contact', href: '/contact' }
+    { name: 'Contact', href: '/contact-us' }
   ];
 
   mobileNavItems: NavigationItem[] = [
     { name: 'Home', href: '/' },
-    { name: 'About Us', href: '/about' },
     { name: 'Classes', href: '/classes' },
-    { name: 'Camps/Events', href: '/camps-events' },
+    { name: 'Camps/Events', href: '/camps' },
     { name: 'Open Gym', href: '/open-gym' },
     { name: 'Parties', href: '/parties' },
-    { name: 'Team', href: '/team' },
-    { name: 'Schedule & Tuition', href: '/schedule-tuition' },
-    { name: 'Contact', href: '/contact' }
+    { name: 'Contact', href: '/contact-us' }
   ];
 
   ngOnInit(): void {

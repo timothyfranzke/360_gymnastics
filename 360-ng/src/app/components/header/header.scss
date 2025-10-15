@@ -20,7 +20,7 @@
       left: 50%;
       width: 0;
       height: 2px;
-      background: linear-gradient(90deg, #0226ff, #fc7900);
+      background: #0226ff;
       transition: all 0.3s ease;
       transform: translateX(-50%);
     }
@@ -148,6 +148,13 @@
     // Dark mode styles can be added here
   }
   
+  // Mobile menu button responsive visibility
+  .mobile-menu-btn {
+    @media (min-width: 768px) {
+      display: none !important;
+    }
+  }
+
   // Reduced motion for accessibility
   @media (prefers-reduced-motion: reduce) {
     .nav-link,

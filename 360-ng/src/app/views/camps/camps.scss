@@ -1,0 +1,315 @@
+// Camps Component Styles
+
+// Import brand colors for consistency
+$brand-orange: #fc7900;
+$brand-blue: #0226ff;
+$brand-blue-light: #3b82f6;
+$brand-cyan: #06b6d4;
+
+// Card styles
+.camp-card {
+  position: relative;
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-8px);
+    
+    .camp-header {
+      background: linear-gradient(135deg, $brand-blue-light 0%, $brand-cyan 100%);
+    }
+  }
+  
+  // Card entrance animation
+  &.card-entrance {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: cardEnter 0.6s ease-out forwards;
+  }
+}
+
+.camp-header {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, $brand-blue-light 0%, #8b5cf6 100%);
+  transition: background 0.3s ease;
+  
+  // Decorative elements
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    transform: rotate(45deg);
+  }
+  
+  .cost {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 10;
+  }
+}
+
+// Status badges
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  
+  &.status-upcoming {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+  }
+  
+  &.status-past {
+    background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+    color: white;
+  }
+}
+
+// Loading state
+.loading-spinner {
+  width: 3rem;
+  height: 3rem;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid $brand-blue-light;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+// Grid improvements
+.grid {
+  &.camps-grid {
+    gap: 2rem;
+    
+    @media (min-width: 768px) {
+      gap: 2.5rem;
+    }
+    
+    @media (min-width: 1024px) {
+      gap: 3rem;
+    }
+  }
+}
+
+// Button enhancements in cards
+.camp-card {
+  .btn-primary {
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    &:hover::before {
+      left: 100%;
+    }
+  }
+}
+
+// Hero section enhancements
+.hero-section {
+  position: relative;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  
+  // Animated background elements
+  .bg-decoration {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.1;
+    animation: float 6s ease-in-out infinite;
+    
+    &:nth-child(1) {
+      animation-delay: 0s;
+    }
+    
+    &:nth-child(2) {
+      animation-delay: 2s;
+    }
+    
+    &:nth-child(3) {
+      animation-delay: 4s;
+    }
+  }
+}
+
+// Contact section styling
+.contact-section {
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  
+  .contact-card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+}
+
+// Error and empty state improvements
+.error-state,
+.empty-state {
+  .icon-container {
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    transition: transform 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.empty-state {
+  .icon-container {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .camp-card {
+    margin-bottom: 1.5rem;
+    
+    &:hover {
+      transform: translateY(-4px);
+    }
+  }
+  
+  .camp-header {
+    padding: 1.25rem;
+    
+    h3 {
+      font-size: 1.125rem;
+    }
+    
+    .cost {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .hero-section {
+    min-height: 50vh;
+    
+    h1 {
+      font-size: 2.5rem !important;
+    }
+    
+    p {
+      font-size: 1.125rem !important;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .contact-section {
+    .flex {
+      flex-direction: column;
+      gap: 1rem;
+      
+      .btn-secondary,
+      .btn-tertiary {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Animations
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+// Accessibility improvements
+@media (prefers-reduced-motion: reduce) {
+  .camp-card,
+  .camp-header,
+  .btn-primary,
+  .loading-spinner,
+  .bg-decoration {
+    animation: none;
+    transition: none;
+  }
+  
+  .camp-card:hover {
+    transform: none;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .camp-card {
+    border: 2px solid #000;
+  }
+  
+  .status-badge {
+    border: 1px solid #000;
+  }
+  
+  .camp-header {
+    background: #000 !important;
+    color: #fff !important;
+  }
+}
+
+// Print styles
+@media print {
+  .camp-card {
+    break-inside: avoid;
+    box-shadow: none;
+    border: 1px solid #ccc;
+  }
+  
+  .btn-primary,
+  .btn-secondary,
+  .btn-tertiary {
+    display: none;
+  }
+  
+  .hero-section {
+    background: #fff !important;
+    color: #000 !important;
+  }
+}

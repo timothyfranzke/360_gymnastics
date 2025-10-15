@@ -7,11 +7,17 @@ import { AdminLayout } from './components/admin/admin-layout/admin-layout';
 import { AdminDashboard } from './views/admin/dashboard/dashboard';
 import { authGuard, adminGuard, staffGuard } from './guards/auth.guard';
 import { OpenGym } from './views/open-gym/open-gym';
+import { Camps } from './views/camps/camps';
+import { ContactUs } from './views/contact-us/contact-us';
 
 export const routes: Routes = [
     {
         path: '',
         component: Home
+    },
+    {
+        path: 'contact-us',
+        component: ContactUs
     },
     {
         path: 'classes',
@@ -24,6 +30,10 @@ export const routes: Routes = [
     {
         path: 'open-gym',
         component: OpenGym
+    },
+    {
+        path: 'camps',
+        component: Camps
     },
     {
         path: 'admin/login',

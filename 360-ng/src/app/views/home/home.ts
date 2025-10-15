@@ -7,10 +7,11 @@ import { HoursQuickLinks } from '../../components/hours-quick-links/hours-quick-
 import { MainActivities } from '../../components/main-activities/main-activities';
 import { SocialFeed } from '../../components/social-feed/social-feed';
 import { StaffDisplay } from '../../components/staff-display/staff-display';
+import { FooterDivider } from '../../components/footer-divider/footer-divider';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, Announcement, HoursQuickLinks, WhyChooseUs, FeaturedClasses, MainActivities, StaffDisplay, SocialFeed],
+  imports: [Hero, Announcement, HoursQuickLinks, WhyChooseUs, FeaturedClasses, MainActivities, StaffDisplay, SocialFeed, FooterDivider],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })

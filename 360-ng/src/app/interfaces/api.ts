@@ -1,5 +1,8 @@
 // API response interfaces for 360 Gym Management System
 
+// Re-export camp interfaces
+export * from './camp';
+
 // Base API response structure
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -329,6 +332,20 @@ export interface UpdateBannerRequest {
   background_color?: string;
 }
 
+// Contact form interfaces
+export interface ContactFormRequest {
+  name: string;
+  email: string;
+  subject?: string;
+  message: string;
+}
+
+export interface ContactFormResponse {
+  success: boolean;
+  message: string;
+  reference_id?: string;
+}
+
 // API endpoints enum for type safety
 export enum ApiEndpoints {
   // Auth
@@ -371,6 +388,15 @@ export enum ApiEndpoints {
   // Classes
   CLASSES_SCHEDULE = '/classes/schedule',
   
+  // Camps
+  CAMPS = '/camps',
+  CAMPS_ACTIVE = '/camps/active',
+  CAMPS_UPCOMING = '/camps/upcoming',
+  CAMPS_STATS = '/camps/stats',
+  
   // Banner
-  BANNER = '/banner'
+  BANNER = '/banner',
+  
+  // Contact
+  CONTACT = '/contact'
 }

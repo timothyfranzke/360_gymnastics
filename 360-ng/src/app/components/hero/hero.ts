@@ -81,11 +81,13 @@ export class Hero implements OnInit, OnDestroy {
   }
 
   onImageLoad(): void {
+    console.log('Hero image loaded');
     this.imageLoaded = true;
     this.imageError = false;
   }
 
   onImageError(): void {
+    console.log('Hero image error');
     this.imageError = true;
     this.imageLoaded = false;
     console.warn('Failed to load hero image: images/gym1.jpg');

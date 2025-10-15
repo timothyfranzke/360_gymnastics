@@ -27,7 +27,7 @@
       
       <!-- Mobile Menu Button -->
       <button 
-        class="btn-icon btn-icon-sm md:hidden z-50 mobile-menu-btn !bg-orange-500 !text-white" 
+        class="btn-icon btn-icon-sm !md:hidden z-50 mobile-menu-btn" 
         (click)="toggleMobileMenu()"
         [attr.aria-label]="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
         [attr.aria-expanded]="isMobileMenuOpen"
@@ -75,13 +75,13 @@
         
         <!-- Call to Action Button -->
         <a 
-          routerLink="/parties"
+          routerLink="/classes"
           fragment="reserve"
           class="btn-primary btn-lg w-full justify-center text-xl"
           (click)="onMobileNavClick()"
-          aria-label="Reserve a party now"
+          aria-label="Enroll now"
         >
-          <span class="btn-text">Reserve Now</span>
+          <span class="btn-text">Enroll Now</span>
         </a>
       </nav>
     </div>

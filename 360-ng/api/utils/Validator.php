@@ -190,6 +190,19 @@ class Validator {
     }
 
     /**
+     * Validate URL format
+     */
+    public function url($field, $message = null) {
+        $message = $message ?: "$field must be a valid URL";
+        
+        if (isset($this->data[$field]) && !filter_var($this->data[$field], FILTER_VALIDATE_URL)) {
+            $this->errors[$field][] = $message;
+        }
+        
+        return $this;
+    }
+
+    /**
      * Custom validation function
      */
     public function custom($field, $callback, $message = null) {

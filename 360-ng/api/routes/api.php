@@ -250,6 +250,37 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // Camps routes
+    if ($uri === '/camps') {
+        $controller = new CampsController($db);
+        $controller->index();
+        return;
+    }
+    
+    if ($uri === '/camps/active') {
+        $controller = new CampsController($db);
+        $controller->active();
+        return;
+    }
+    
+    if ($uri === '/camps/upcoming') {
+        $controller = new CampsController($db);
+        $controller->upcoming();
+        return;
+    }
+    
+    if ($uri === '/camps/stats') {
+        $controller = new CampsController($db);
+        $controller->stats();
+        return;
+    }
+    
+    if (preg_match('/^\/camps\/(\d+)$/', $uri, $matches)) {
+        $controller = new CampsController($db);
+        $controller->show($matches[1]);
+        return;
+    }
+
     // If no route matches
     ResponseHelper::notFound('Route not found');
 }
@@ -336,6 +367,13 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // Camps routes
+    if ($uri === '/camps') {
+        $controller = new CampsController($db);
+        $controller->create();
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -397,6 +435,13 @@ function handlePutRoutes($uri, $db) {
         return;
     }
 
+    // Camps routes
+    if (preg_match('/^\/camps\/(\d+)$/', $uri, $matches)) {
+        $controller = new CampsController($db);
+        $controller->update($matches[1]);
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -415,6 +460,13 @@ function handlePatchRoutes($uri, $db) {
     if ($uri === '/banner/toggle') {
         $controller = new HeroBannerController($db);
         $controller->toggle();
+        return;
+    }
+
+    // Camps routes
+    if (preg_match('/^\/camps\/(\d+)\/toggle$/', $uri, $matches)) {
+        $controller = new CampsController($db);
+        $controller->toggle($matches[1]);
         return;
     }
 
@@ -448,6 +500,13 @@ function handleDeleteRoutes($uri, $db) {
     // Gym Closures routes
     if (preg_match('/^\/gym-closures\/(\d+)$/', $uri, $matches)) {
         $controller = new GymClosureController($db);
+        $controller->delete($matches[1]);
+        return;
+    }
+
+    // Camps routes
+    if (preg_match('/^\/camps\/(\d+)$/', $uri, $matches)) {
+        $controller = new CampsController($db);
         $controller->delete($matches[1]);
         return;
     }
