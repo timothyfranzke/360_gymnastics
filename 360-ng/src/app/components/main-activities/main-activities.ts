@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AssetPathPipe } from '../../pipes/asset-path.pipe';
 
 interface Feature {
   title: string;
@@ -13,7 +14,7 @@ interface Feature {
   selector: 'app-main-activities',
   templateUrl: './main-activities.html',
   styleUrls: ['./main-activities.scss'],
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, AssetPathPipe],
   animations: [
     trigger('fadeInUp', [
       state('in', style({ opacity: 1, transform: 'translateY(0)' })),

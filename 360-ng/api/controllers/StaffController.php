@@ -87,11 +87,6 @@ class StaffController extends BaseController {
             return;
         }
 
-        // Validate image URL if provided
-        if (!empty($data['image']) && !$this->staffModel->validateImageUrl($data['image'])) {
-            ResponseHelper::validationError(['image' => ['Image URL must be a valid image URL']]);
-            return;
-        }
 
         try {
             $staffData = [
@@ -142,11 +137,6 @@ class StaffController extends BaseController {
                 return;
             }
 
-            // Validate image URL if provided
-            if (isset($data['image']) && !empty($data['image']) && !$this->staffModel->validateImageUrl($data['image'])) {
-                ResponseHelper::validationError(['image' => ['Image URL must be a valid image URL']]);
-                return;
-            }
 
             $updatedStaff = $this->staffModel->update($id, $data);
 
@@ -221,6 +211,40 @@ class StaffController extends BaseController {
     }
 
     /**
+     * Upload staff photo anonymously (for use during staff creation)
+     * POST /api/v1/staff/upload-photo-anonymous
+     */
+    public function uploadPhotoAnonymous() {
+        try {
+            // Check if file was uploaded
+            if (!isset($_FILES['photo']) || $_FILES['photo']['error'] === UPLOAD_ERR_NO_FILE) {
+                ResponseHelper::validationError(['photo' => ['Photo file is required']]);
+                return;
+            }
+
+            // Upload and process the file
+            $result = FileUploadUtility::uploadAnonymousStaffPhoto($_FILES['photo']);
+
+            if (!$result['success']) {
+                ResponseHelper::validationError(['photo' => $result['errors']]);
+                return;
+            }
+
+            ResponseHelper::created([
+                'filename' => $result['filename'],
+                'original_url' => $result['url'],
+                'thumbnail_url' => $result['thumbnail_url'],
+                'size' => $result['size'],
+                'dimensions' => $result['dimensions'],
+                'path' => $result['path']
+            ], 'Photo uploaded successfully');
+
+        } catch (Exception $e) {
+            ResponseHelper::serverError('Failed to upload photo: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Upload staff photo
      * POST /api/v1/staff/upload-photo
      */
@@ -256,7 +280,10 @@ class StaffController extends BaseController {
             }
 
             // Clean up old photos for this staff member
-            $this->staffModel->cleanupOldImage($staffId, $result['filename']);
+            $oldImagePath = $staff['image'] ?? null;
+            if ($oldImagePath) {
+                FileUploadUtility::cleanupOldFiles($oldImagePath);
+            }
 
             // Update staff record with new photo path
             $staffData = [

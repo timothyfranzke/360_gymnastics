@@ -113,7 +113,7 @@
       class="absolute bottom-0 right-10 hidden lg:block child-image"
     >
       <img 
-        src="/images/gym1.jpg" 
+        [src]="'/images/gym1.jpg' | assetPath" 
         alt="Child doing gymnastics" 
         class="h-64 transition-transform duration-500 hover:scale-105" 
       />

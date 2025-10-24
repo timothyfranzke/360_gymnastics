@@ -3,6 +3,7 @@ import { trigger, state, style, transition, animate } from '@angular/animations'
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
+import { AssetPathService } from '../../services/asset-path.service';
 
 interface NavigationItem {
   name: string;
@@ -53,6 +54,8 @@ export class Header implements OnInit, OnDestroy {
   isMobileMenuOpen = false;
   
   private destroy$ = new Subject<void>();
+
+  constructor(private assetPathService: AssetPathService) {}
 
   desktopNavItems: NavigationItem[] = [
     { name: 'Home', href: '/' },
@@ -150,5 +153,9 @@ export class Header implements OnInit, OnDestroy {
     return this.isMobileMenuOpen 
       ? 'M6 18L18 6M6 6l12 12'  // X icon
       : 'M4 6h16M4 12h16M4 18h16'; // Hamburger icon
+  }
+
+  getLogoPath(): string {
+    return this.assetPathService.getImagePath('/images/logo.jpg');
   }
 }

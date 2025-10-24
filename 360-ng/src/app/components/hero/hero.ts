@@ -5,12 +5,13 @@ import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { Banner } from '../../interfaces/api';
+import { AssetPathPipe } from '../../pipes/asset-path.pipe';
 
 @Component({
   selector: 'app-hero',
   templateUrl: './hero.html',
   styleUrls: ['./hero.scss'],
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, AssetPathPipe],
   animations: [
     trigger('fadeInUp', [
       state('in', style({ opacity: 1, transform: 'translateY(0)' })),

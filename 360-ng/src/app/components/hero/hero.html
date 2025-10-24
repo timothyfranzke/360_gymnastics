@@ -82,7 +82,7 @@
           
           <!-- Main image with proper loading handlers -->
           <img
-            src="/images/gym1.jpg"
+            [src]="'/images/gym1.jpg' | assetPath"
             alt="Child doing gymnastics at 360 Gymnastics"
             class="w-full rounded-lg block object-cover transition-opacity duration-300"
             [class.opacity-0]="!imageLoaded"
@@ -146,7 +146,7 @@
           class="w-full rounded-lg"
           [attr.aria-label]="'360 Gymnastics facility tour video'"
         >
-          <source src="videos/360gym.mp4" type="video/mp4">
+          <source [src]="'videos/360gym.mp4' | assetPath" type="video/mp4">
           Your browser does not support the video tag.
         </video>
       </div>

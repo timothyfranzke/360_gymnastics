@@ -1,27 +1,9 @@
 <!-- Hero Section -->
-<section class="py-20 px-6 text-white bg-gradient-to-br from-blue-600 via-blue-700 to-purple-800 relative overflow-hidden">
-  <!-- Background decoration -->
-  <div class="absolute inset-0 bg-black bg-opacity-20"></div>
-  <div class="absolute top-0 left-0 w-full h-full">
-    <div class="absolute top-10 left-10 w-32 h-32 bg-white bg-opacity-10 rounded-full blur-xl"></div>
-    <div class="absolute bottom-20 right-20 w-40 h-40 bg-orange-400 bg-opacity-20 rounded-full blur-2xl"></div>
-  </div>
-  
-  <div class="container mx-auto text-center relative z-10">
-    <h1 
-      [@fadeInUp]="animationState"
-      class="text-5xl md:text-6xl font-bold mb-6"
-    >
-      Gymnastics Camps
-    </h1>
-    <p 
-      [@fadeInUpDelay]="animationState"
-      class="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed"
-    >
-      Join our exciting gymnastics camps for skill development, fun activities, and unforgettable experiences.
-    </p>
-  </div>
-</section>
+<app-view-header
+title="Camps and Events"
+description="Discover our range of gymnastics camps designed for different skill levels and ages.">
+</app-view-header>
+
 
 <!-- Camps Section -->
 <section class="py-20 px-6 bg-gray-50">
@@ -58,16 +40,6 @@
     <!-- Camps Content -->
     <div *ngIf="!loading && !error">
       
-      <!-- Section Header -->
-      <div 
-        [@fadeInUp]="animationState"
-        class="text-center mb-12"
-      >
-        <h2 class="text-4xl font-bold text-gray-900 mb-4">Available Camps</h2>
-        <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Discover our range of gymnastics camps designed for different skill levels and ages.
-        </p>
-      </div>
 
       <!-- No Camps Message -->
       <div *ngIf="camps.length === 0" class="text-center py-12">

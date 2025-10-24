@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
+import { AssetPathPipe } from '../../pipes/asset-path.pipe';
 
 interface FeatureCard {
   icon: string;
@@ -13,7 +14,7 @@ interface FeatureCard {
   selector: 'app-why-choose-us',
   templateUrl: './why-choose-us.html',
   styleUrls: ['./why-choose-us.scss'],
-  imports: [CommonModule],
+  imports: [CommonModule, AssetPathPipe],
   animations: [
     trigger('fadeInUp', [
       state('in', style({ opacity: 1, transform: 'translateY(0)' })),

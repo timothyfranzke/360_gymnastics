@@ -111,12 +111,35 @@ class FileUploadUtility {
     }
 
     /**
-     * Generate secure filename
+     * Generate GUID-based filename
      */
     public static function generateSecureFilename($userId, $extension) {
-        $timestamp = time();
-        $random = bin2hex(random_bytes(8));
-        return "staff_{$userId}_{$timestamp}_{$random}.{$extension}";
+        // Generate a proper GUID (UUID v4)
+        $guid = sprintf(
+            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+        return "{$guid}.{$extension}";
+    }
+
+    /**
+     * Generate GUID-based filename for anonymous uploads
+     */
+    public static function generateAnonymousFilename($extension) {
+        // Generate a proper GUID (UUID v4)
+        $guid = sprintf(
+            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 0x3fff) | 0x8000,
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+        );
+        return "{$guid}.{$extension}";
     }
 
     /**
@@ -173,6 +196,64 @@ class FileUploadUtility {
 
         } catch (Exception $e) {
             error_log("File upload error: " . $e->getMessage());
+            return ['success' => false, 'errors' => ['An error occurred during file upload']];
+        }
+    }
+
+    /**
+     * Upload photo anonymously (for use during staff creation)
+     */
+    public static function uploadAnonymousStaffPhoto($file) {
+        // Validate file
+        $validation = self::validateFile($file);
+        if (!$validation['valid']) {
+            return ['success' => false, 'errors' => $validation['errors']];
+        }
+
+        try {
+            // Generate secure filename without user ID
+            $filename = self::generateAnonymousFilename($validation['extension']);
+            $uploadPath = UPLOAD_PATH . 'staff/' . $filename;
+            $thumbnailPath = UPLOAD_PATH . 'staff/thumbnails/' . $filename;
+
+            // Check if upload directory exists and is writable
+            $uploadDir = dirname($uploadPath);
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            if (!is_writable($uploadDir)) {
+                return ['success' => false, 'errors' => ['Upload directory is not writable']];
+            }
+
+            // Move uploaded file
+            if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                return ['success' => false, 'errors' => ['Failed to move uploaded file']];
+            }
+
+            // Set proper file permissions
+            chmod($uploadPath, 0644);
+
+            // Create thumbnail
+            $thumbnailResult = ImageProcessor::createThumbnail($uploadPath, $thumbnailPath, 300, 300);
+            if (!$thumbnailResult['success']) {
+                // If thumbnail creation fails, log error but don't fail the upload
+                error_log("Failed to create thumbnail for {$filename}: " . implode(', ', $thumbnailResult['errors']));
+            }
+
+            return [
+                'success' => true,
+                'filename' => $filename,
+                'path' => 'uploads/staff/' . $filename,
+                'thumbnail_path' => 'uploads/staff/thumbnails/' . $filename,
+                'url' => '/api/v1/files/staff/' . $filename,
+                'thumbnail_url' => '/api/v1/files/staff/thumbnails/' . $filename,
+                'size' => $validation['size'],
+                'dimensions' => $validation['dimensions']
+            ];
+
+        } catch (Exception $e) {
+            error_log("Anonymous file upload error: " . $e->getMessage());
             return ['success' => false, 'errors' => ['An error occurred during file upload']];
         }
     }
@@ -242,32 +323,13 @@ class FileUploadUtility {
 
     /**
      * Clean up old files for user (when replacing photo)
+     * Note: With GUID naming, we now rely on the staff model to track which files belong to which user
      */
-    public static function cleanupOldFiles($userId, $excludeFilename = null) {
-        $staffDir = UPLOAD_PATH . 'staff/';
-        $thumbnailDir = UPLOAD_PATH . 'staff/thumbnails/';
-        
-        if (!is_dir($staffDir)) {
-            return;
-        }
-
-        $pattern = "staff_{$userId}_*";
-        $files = glob($staffDir . $pattern);
-        
-        foreach ($files as $file) {
-            $filename = basename($file);
-            
-            // Skip the file we want to keep
-            if ($excludeFilename && $filename === $excludeFilename) {
-                continue;
-            }
-            
-            // Delete main file and thumbnail
-            unlink($file);
-            $thumbnailFile = $thumbnailDir . $filename;
-            if (file_exists($thumbnailFile)) {
-                unlink($thumbnailFile);
-            }
+    public static function cleanupOldFiles($oldImagePath = null) {
+        // Delete the old image file if it exists
+        if ($oldImagePath && !empty($oldImagePath)) {
+            $filename = basename($oldImagePath);
+            self::deleteStaffPhoto($filename);
         }
     }
 
@@ -306,6 +368,157 @@ class FileUploadUtility {
     }
 
     /**
+     * Upload and process gallery image
+     */
+    public static function uploadGalleryImage($file) {
+        // Validate file
+        $validation = self::validateFile($file);
+        if (!$validation['valid']) {
+            return ['success' => false, 'errors' => $validation['errors']];
+        }
+
+        try {
+            // Generate secure filename
+            $filename = self::generateAnonymousFilename($validation['extension']);
+            $uploadPath = UPLOAD_PATH . 'gallery/' . $filename;
+            $thumbnailPath = UPLOAD_PATH . 'gallery/thumbnails/' . $filename;
+
+            // Check if upload directory exists and is writable
+            $uploadDir = dirname($uploadPath);
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0755, true);
+            }
+            
+            $thumbnailDir = dirname($thumbnailPath);
+            if (!is_dir($thumbnailDir)) {
+                mkdir($thumbnailDir, 0755, true);
+            }
+            
+            if (!is_writable($uploadDir)) {
+                return ['success' => false, 'errors' => ['Upload directory is not writable']];
+            }
+
+            // Move uploaded file
+            if (!move_uploaded_file($file['tmp_name'], $uploadPath)) {
+                return ['success' => false, 'errors' => ['Failed to move uploaded file']];
+            }
+
+            // Set proper file permissions
+            chmod($uploadPath, 0644);
+
+            // Create thumbnail
+            $thumbnailResult = ImageProcessor::createThumbnail($uploadPath, $thumbnailPath, 400, 400);
+            if (!$thumbnailResult['success']) {
+                // If thumbnail creation fails, log error but don't fail the upload
+                error_log("Failed to create thumbnail for {$filename}: " . implode(', ', $thumbnailResult['errors']));
+            }
+
+            return [
+                'success' => true,
+                'filename' => $filename,
+                'path' => 'uploads/gallery/' . $filename,
+                'thumbnail_path' => 'uploads/gallery/thumbnails/' . $filename,
+                'url' => '/api/v1/files/gallery/' . $filename,
+                'thumbnail_url' => '/api/v1/files/gallery/thumbnails/' . $filename,
+                'size' => $validation['size'],
+                'dimensions' => $validation['dimensions']
+            ];
+
+        } catch (Exception $e) {
+            error_log("Gallery file upload error: " . $e->getMessage());
+            return ['success' => false, 'errors' => ['An error occurred during file upload']];
+        }
+    }
+
+    /**
+     * Delete gallery image and thumbnail
+     */
+    public static function deleteGalleryImage($filename) {
+        if (empty($filename)) {
+            return true;
+        }
+
+        $success = true;
+        
+        // Extract just the filename from path if full path is provided
+        $filename = basename($filename);
+        
+        // Delete main file
+        $mainPath = UPLOAD_PATH . 'gallery/' . $filename;
+        if (file_exists($mainPath)) {
+            if (!unlink($mainPath)) {
+                error_log("Failed to delete gallery image: {$mainPath}");
+                $success = false;
+            }
+        }
+
+        // Delete thumbnail
+        $thumbnailPath = UPLOAD_PATH . 'gallery/thumbnails/' . $filename;
+        if (file_exists($thumbnailPath)) {
+            if (!unlink($thumbnailPath)) {
+                error_log("Failed to delete gallery image thumbnail: {$thumbnailPath}");
+                $success = false;
+            }
+        }
+
+        return $success;
+    }
+
+    /**
+     * Serve gallery file securely
+     */
+    public static function serveGalleryFile($filename, $type = 'main') {
+        $filename = basename($filename); // Security: prevent directory traversal
+        
+        if ($type === 'thumbnail') {
+            $filePath = UPLOAD_PATH . 'gallery/thumbnails/' . $filename;
+        } else {
+            $filePath = UPLOAD_PATH . 'gallery/' . $filename;
+        }
+        
+        if (!file_exists($filePath)) {
+            http_response_code(404);
+            exit('File not found');
+        }
+        
+        // Get MIME type
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mimeType = $finfo->file($filePath);
+        
+        // Verify it's still a valid image
+        if (!in_array($mimeType, array_keys(self::$allowedMimeTypes))) {
+            http_response_code(403);
+            exit('Invalid file type');
+        }
+        
+        // Set CORS headers first
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type');
+        
+        // Handle preflight OPTIONS request
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            exit();
+        }
+        
+        // Set content headers
+        header('Content-Type: ' . $mimeType);
+        header('Content-Length: ' . filesize($filePath));
+        header('Content-Disposition: inline; filename="' . $filename . '"');
+        header('Cache-Control: public, max-age=31536000'); // Cache for 1 year
+        header('Last-Modified: ' . gmdate('D, d M Y H:i:s', filemtime($filePath)) . ' GMT');
+        
+        // Security headers
+        header('X-Content-Type-Options: nosniff');
+        header('X-Frame-Options: DENY');
+        
+        // Output file
+        readfile($filePath);
+        exit;
+    }
+
+    /**
      * Serve file securely
      */
     public static function serveFile($filename, $type = 'main') {
@@ -332,7 +545,18 @@ class FileUploadUtility {
             exit('Invalid file type');
         }
         
-        // Set headers
+        // Set CORS headers first
+        header('Access-Control-Allow-Origin: *');
+        header('Access-Control-Allow-Methods: GET, OPTIONS');
+        header('Access-Control-Allow-Headers: Content-Type');
+        
+        // Handle preflight OPTIONS request
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(200);
+            exit();
+        }
+        
+        // Set content headers
         header('Content-Type: ' . $mimeType);
         header('Content-Length: ' . filesize($filePath));
         header('Content-Disposition: inline; filename="' . $filename . '"');

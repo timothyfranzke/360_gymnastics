@@ -277,6 +277,12 @@ export interface PhotoUploadResponse {
   original_url: string;
   thumbnail_url: string;
   filename: string;
+  path: string;
+  size: number;
+  dimensions: {
+    width: number;
+    height: number;
+  };
 }
 
 export interface PhotoInfo {
@@ -364,6 +370,7 @@ export enum ApiEndpoints {
   STAFF_HOMEPAGE = '/staff/homepage',
   STAFF_STATS = '/staff/stats',
   STAFF_UPLOAD_PHOTO = '/staff/upload-photo',
+  STAFF_UPLOAD_PHOTO_ANONYMOUS = '/staff/upload-photo-anonymous',
   
   // Files
   FILES_STAFF = '/files/staff',
@@ -398,5 +405,25 @@ export enum ApiEndpoints {
   BANNER = '/banner',
   
   // Contact
-  CONTACT = '/contact'
+  CONTACT = '/contact',
+  
+  // Gallery
+  GALLERY = '/gallery'
+}
+
+// Gallery interfaces
+export interface GalleryImage {
+  id: number;
+  filename: string;
+  alt_text?: string;
+  caption?: string;
+  url: string;
+  thumbnail_url?: string;
+  created_at: string;
+  order_index?: number;
+}
+
+export interface GalleryResponse {
+  images: GalleryImage[];
+  total: number;
 }

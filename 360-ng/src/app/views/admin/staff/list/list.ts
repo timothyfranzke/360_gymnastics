@@ -163,7 +163,7 @@ export class StaffList implements OnInit, OnDestroy {
 
   // Avatar helper methods
   hasValidAvatar(staff: Staff): boolean {
-    return !!(staff.image_url && staff.image_url.trim().length > 0);
+    return !!(staff.image && staff.image.trim().length > 0);
   }
 
   getAvatarThumbnailUrl(staff: Staff): string | null {
@@ -171,8 +171,14 @@ export class StaffList implements OnInit, OnDestroy {
       return null;
     }
     
-    // Use thumbnail URL if available, otherwise use the main image URL
-    return staff.image_thumbnail_url || staff.image_url || null;
+    // Convert file path to API URL for serving the thumbnail
+    const filename = staff.image?.split('/').pop(); // Get just the filename
+    if (!filename) {
+      return null;
+    }
+    
+    // Use thumbnail endpoint for better performance
+    return this.apiService.getStaffThumbnailUrl(filename);
   }
 
   getAvatarFallback(staff: Staff): string {

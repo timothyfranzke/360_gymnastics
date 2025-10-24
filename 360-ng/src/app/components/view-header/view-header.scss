@@ -1,0 +1,118 @@
+// Blue gradient background
+.purple-gradient {
+  background: linear-gradient(135deg, #0226ff 0%, #0119b3 100%);
+}
+
+// Floating decorative elements
+.floating-element {
+  position: absolute;
+  opacity: 0.7;
+}
+
+.floating-element-1 {
+  top: 2.5rem;
+  left: 2.5rem;
+  width: 5rem;
+  height: 5rem;
+  background-color: #fc7900; // brand orange
+  border-radius: 0.5rem;
+  transform: rotate(12deg);
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-element-2 {
+  top: 5rem;
+  right: 5rem;
+  width: 4rem;
+  height: 4rem;
+  background-color: #0226ff; // brand blue
+  border-radius: 50%;
+  animation: float-delayed 3s ease-in-out infinite;
+}
+
+.floating-element-3 {
+  bottom: 10rem;
+  left: 25%;
+  width: 3rem;
+  height: 3rem;
+  background-color: #fc7900; // brand orange
+  border-radius: 0.5rem;
+  transform: rotate(45deg);
+  animation: float 3s ease-in-out infinite;
+}
+
+.floating-element-4 {
+  top: 33.333333%;
+  right: 33.333333%;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: #0226ff; // brand blue
+  border-radius: 50%;
+  animation: float-delayed 3s ease-in-out infinite;
+}
+
+// Decorative blur elements
+.decorative-blur {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.7;
+  filter: blur(24px);
+}
+
+.decorative-blur-1 {
+  top: -1.25rem;
+  right: -1.25rem;
+  width: 6rem;
+  height: 6rem;
+  background: linear-gradient(135deg, #fc7900 0%, #0226ff 100%);
+}
+
+.decorative-blur-2 {
+  bottom: -1.25rem;
+  left: -1.25rem;
+  width: 8rem;
+  height: 8rem;
+  background: linear-gradient(45deg, #0226ff 0%, #0119b3 100%);
+}
+
+// Floating animations
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(12deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(12deg);
+  }
+}
+
+@keyframes float-delayed {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+// Apply delayed animation
+.floating-element-2,
+.floating-element-4 {
+  animation-delay: 1s;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .floating-element {
+    display: none; // Hide floating elements on mobile for better performance
+  }
+  
+  .decorative-blur {
+    display: none; // Hide blur elements on mobile
+  }
+}
+
+// Button states
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

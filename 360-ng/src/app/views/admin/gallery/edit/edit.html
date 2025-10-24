@@ -1,0 +1,208 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Edit Gallery Image</h1>
+      <p *ngIf="currentImage" class="mt-1 text-sm text-gray-500">
+        Editing: {{ getImageDisplayName() }}
+      </p>
+    </div>
+    <a routerLink="/admin/gallery" class="text-gray-600 hover:text-gray-500">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoadingInitial" class="bg-white rounded-lg shadow p-8">
+    <div class="flex items-center justify-center">
+      <svg class="animate-spin h-8 w-8 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span class="ml-2 text-gray-600">Loading image details...</span>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoadingInitial" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div class="flex items-center">
+      <svg class="h-5 w-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+      </svg>
+      <p class="text-red-700">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div *ngIf="!isLoadingInitial && !error && currentImage" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- Image Preview -->
+    <div class="bg-white rounded-lg shadow overflow-hidden">
+      <div class="p-6">
+        <h2 class="text-lg font-medium text-gray-900 mb-4">Image Preview</h2>
+        
+        <!-- Image Display -->
+        <div class="space-y-4">
+          <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+            <img [src]="currentImage.url" 
+                 [alt]="currentImage.alt_text || currentImage.original_filename"
+                 class="w-full h-full object-cover">
+          </div>
+          
+          <!-- Image Details -->
+          <div class="space-y-2 text-sm text-gray-600">
+            <div class="flex justify-between">
+              <span class="font-medium">Filename:</span>
+              <span class="truncate ml-2" [title]="currentImage.filename">{{ currentImage.filename }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium">Original Name:</span>
+              <span class="truncate ml-2" [title]="currentImage.original_filename">{{ currentImage.original_filename }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium">File Size:</span>
+              <span>{{ formatFileSize(currentImage.file_size) }}</span>
+            </div>
+            <div *ngIf="currentImage.dimensions_width && currentImage.dimensions_height" class="flex justify-between">
+              <span class="font-medium">Dimensions:</span>
+              <span>{{ currentImage.dimensions_width }}×{{ currentImage.dimensions_height }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium">Type:</span>
+              <span>{{ currentImage.mime_type }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="font-medium">Created:</span>
+              <span>{{ formatDate(currentImage.created_at) }}</span>
+            </div>
+            <div *ngIf="currentImage.updated_at" class="flex justify-between">
+              <span class="font-medium">Updated:</span>
+              <span>{{ formatDate(currentImage.updated_at) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-4">Image Details</h2>
+      
+      <form [formGroup]="editForm" (ngSubmit)="onSubmit()" class="space-y-6">
+        
+        <!-- Alt Text -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Alt Text</label>
+          <input type="text" 
+                 formControlName="alt_text"
+                 placeholder="Descriptive text for accessibility"
+                 [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' +
+                         (isFieldInvalid('alt_text') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')">
+          <div *ngIf="isFieldInvalid('alt_text')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('alt_text') }}
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Used by screen readers and search engines</p>
+        </div>
+
+        <!-- Caption -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Caption</label>
+          <textarea formControlName="caption"
+                    rows="3"
+                    placeholder="Optional caption for the image"
+                    [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' +
+                            (isFieldInvalid('caption') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')"></textarea>
+          <div *ngIf="isFieldInvalid('caption')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('caption') }}
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Displayed as a description below the image</p>
+        </div>
+
+        <!-- Order Index -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Order Index <span class="text-red-500">*</span>
+          </label>
+          <input type="number" 
+                 formControlName="order_index"
+                 min="0"
+                 [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' +
+                         (isFieldInvalid('order_index') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')">
+          <div *ngIf="isFieldInvalid('order_index')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('order_index') }}
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Controls display order (lower numbers appear first)</p>
+        </div>
+
+        <!-- Status Controls -->
+        <div class="space-y-4">
+          <h3 class="text-sm font-medium text-gray-700">Status</h3>
+          
+          <!-- Featured Toggle -->
+          <div class="flex items-center">
+            <input type="checkbox" 
+                   formControlName="is_featured"
+                   class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded">
+            <div class="ml-3">
+              <label class="text-sm font-medium text-gray-700">Featured Image</label>
+              <p class="text-xs text-gray-500">Highlight this image in the gallery</p>
+            </div>
+          </div>
+
+          <!-- Active Toggle -->
+          <div class="flex items-center">
+            <input type="checkbox" 
+                   formControlName="is_active"
+                   class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded">
+            <div class="ml-3">
+              <label class="text-sm font-medium text-gray-700">Active</label>
+              <p class="text-xs text-gray-500">Show this image in the public gallery</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+          <button type="button" 
+                  (click)="deleteImage()"
+                  [disabled]="isLoading"
+                  class="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 disabled:opacity-50 disabled:cursor-not-allowed">
+            
+            <span *ngIf="!isLoading">Delete Image</span>
+            <span *ngIf="isLoading" class="flex items-center">
+              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </span>
+          </button>
+          
+          <div class="flex space-x-4">
+            <button type="button" 
+                    (click)="cancel()" 
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+              Cancel
+            </button>
+            
+            <button type="submit" 
+                    [disabled]="editForm.invalid || isLoading"
+                    class="px-4 py-2 text-sm font-medium text-white bg-orange-600 border border-transparent rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed">
+              
+              <span *ngIf="!isLoading">Save Changes</span>
+              <span *ngIf="isLoading" class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Saving...
+              </span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

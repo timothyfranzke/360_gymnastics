@@ -1,0 +1,125 @@
+// Critical button styles for initial load
+// Only the most essential button styles to reduce initial CSS bundle size
+
+// Brand Colors
+$brand-orange: #fc7900;
+$brand-orange-hover: #e66a00;
+$brand-blue: #0226ff;
+$brand-blue-hover: #0119b3;
+$brand-white: #ffffff;
+
+// Base button styles (essential)
+%btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  
+  &:focus-visible {
+    outline: 2px solid;
+    outline-offset: 2px;
+  }
+  
+  &:disabled,
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+// Primary button (most critical)
+.btn-primary {
+  @extend %btn-base;
+  background: $brand-orange !important;
+  background-image: none !important;
+  color: $brand-white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  
+  &:hover:not(:disabled):not(.disabled) {
+    background: $brand-orange-hover !important;
+    background-image: none !important;
+    transform: translateY(-1px);
+  }
+  
+  &:focus-visible {
+    outline-color: $brand-orange;
+  }
+}
+
+// Secondary button (critical for navigation)
+.btn-secondary {
+  @extend %btn-base;
+  background: rgba(255, 255, 255, 0.1);
+  color: $brand-white;
+  border: 2px solid $brand-white;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  
+  &:hover:not(:disabled):not(.disabled) {
+    background: rgba(252, 121, 0, 0.2);
+    border-color: $brand-orange;
+  }
+  
+  &:focus-visible {
+    outline-color: $brand-white;
+  }
+}
+
+// Enrollment CTA (high priority for conversions)
+.btn-enroll {
+  @extend %btn-base;
+  background: $brand-orange;
+  color: $brand-white;
+  padding: 1rem 2rem;
+  font-size: 1.125rem;
+  font-weight: 700;
+  border-radius: 0.75rem;
+  
+  &:hover:not(:disabled):not(.disabled) {
+    background: $brand-orange-hover;
+    transform: translateY(-1px);
+  }
+  
+  &:focus-visible {
+    outline-color: $brand-orange;
+  }
+}
+
+// Mobile optimizations
+@media (max-width: 640px) {
+  .btn-primary,
+  .btn-secondary {
+    min-height: 48px;
+    font-size: 1rem;
+    padding: 0.875rem 1.5rem;
+  }
+  
+  .btn-enroll {
+    min-height: 48px;
+    padding: 1rem 1.75rem;
+    font-size: 1rem;
+  }
+}
+
+// Reduced motion accessibility
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary,
+  .btn-secondary,
+  .btn-enroll {
+    transition: none;
+    
+    &:hover {
+      transform: none;
+    }
+  }
+}

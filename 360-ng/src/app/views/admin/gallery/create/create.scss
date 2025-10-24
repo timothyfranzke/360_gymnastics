@@ -1,0 +1,162 @@
+/* File upload area styling */
+.upload-area {
+  transition: border-color 0.2s ease-in-out;
+}
+
+.upload-area:hover {
+  border-color: theme('colors.orange.400');
+}
+
+/* File preview cards */
+.file-preview-card {
+  @apply relative border border-gray-200 rounded-lg p-4 bg-gray-50;
+  transition: all 0.2s ease-in-out;
+}
+
+.file-preview-card:hover {
+  @apply shadow-md;
+}
+
+/* Progress bar animations */
+.progress-bar {
+  transition: width 0.3s ease-out;
+}
+
+/* Upload status indicators */
+.status-success {
+  @apply flex items-center text-xs text-green-600;
+}
+
+.status-error {
+  @apply text-xs text-red-600;
+}
+
+.status-uploading {
+  @apply text-xs text-blue-600;
+}
+
+/* Loading spinner */
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Form field validation */
+.field-error {
+  @apply text-sm text-red-600 mt-1;
+}
+
+.field-invalid {
+  @apply border-red-300 focus:border-red-500 focus:ring-red-500;
+}
+
+/* Button states */
+.btn-primary {
+  @apply px-4 py-2 text-sm font-medium text-white bg-orange-600 border border-transparent rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500;
+}
+
+.btn-primary:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500;
+}
+
+/* Grid responsiveness */
+@media (max-width: 640px) {
+  .file-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .file-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1025px) {
+  .file-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Drag and drop states */
+.upload-area.drag-over {
+  @apply border-orange-400 bg-orange-50;
+}
+
+/* File type icons */
+.file-icon {
+  @apply h-8 w-8 text-gray-400;
+}
+
+/* Remove button styling */
+.remove-btn {
+  @apply ml-2 text-red-600 hover:text-red-500 transition-colors;
+}
+
+.remove-btn:hover {
+  @apply bg-red-50 rounded;
+}
+
+/* Status icon animations */
+.status-icon {
+  @apply h-4 w-4 mr-1;
+}
+
+.success-icon {
+  @apply text-green-600;
+}
+
+.error-icon {
+  @apply text-red-600;
+}
+
+.loading-icon {
+  @apply text-blue-600 animate-spin;
+}
+
+/* Form section spacing */
+.form-section {
+  @apply space-y-6;
+}
+
+.form-section + .form-section {
+  @apply pt-6 border-t border-gray-200;
+}
+
+/* Error message styling */
+.error-message {
+  @apply bg-red-50 border border-red-200 rounded-lg p-4;
+}
+
+.error-message .error-icon {
+  @apply h-5 w-5 text-red-400 mr-2;
+}
+
+.error-message .error-text {
+  @apply text-red-700;
+}
+
+/* Success message styling */
+.success-message {
+  @apply bg-green-50 border border-green-200 rounded-lg p-4;
+}
+
+.success-message .success-icon {
+  @apply h-5 w-5 text-green-400 mr-2;
+}
+
+.success-message .success-text {
+  @apply text-green-700;
+}

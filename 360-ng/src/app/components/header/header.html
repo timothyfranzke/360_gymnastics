@@ -4,7 +4,7 @@
       <div class="logo-container flex items-center">
         <a routerLink="/" class="flex items-center logo-link">
           <img 
-            src="/images/logo.jpg" 
+            [src]="getLogoPath()" 
             alt="360 Gymnastics Logo" 
             class="h-12 mr-3 rounded transition-transform duration-300 hover:scale-105" 
           />

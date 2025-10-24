@@ -43,17 +43,20 @@ class Migration {
         $results = [];
         
         foreach ($pendingMigrations as $migration) {
+            $connection = $this->db->getConnection();
             try {
-                $this->db->beginTransaction();
+                $connection->beginTransaction();
                 
                 $this->runMigration($migration);
                 $this->markMigrationAsExecuted($migration);
                 
-                $this->db->commit();
+                $connection->commit();
                 $results[] = "Executed: $migration";
                 
             } catch (Exception $e) {
-                $this->db->rollback();
+                if ($connection->inTransaction()) {
+                    $connection->rollback();
+                }
                 throw new Exception("Migration failed: $migration - " . $e->getMessage());
             }
         }

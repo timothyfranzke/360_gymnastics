@@ -26,7 +26,7 @@ export interface ImageUploadValue {
   ]
 })
 export class ImageUploadComponent implements OnInit, OnDestroy, ControlValueAccessor {
-  @Input() userId?: number;
+  @Input() staffId?: number;
   @Input() accept = 'image/jpeg,image/jpg,image/png,image/webp';
   @Input() maxSizeBytes = 5 * 1024 * 1024; // 5MB
   @Input() minWidth = 200;
@@ -131,8 +131,8 @@ export class ImageUploadComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   onDeletePhoto(): void {
-    if (!this.userId || !this.currentValue?.isLocal) {
-      // For non-local images or when no userId, just clear the value
+    if (!this.staffId || !this.currentValue?.isLocal) {
+      // For non-local images or when no staffId, just clear the value
       this.clearValue();
       return;
     }
@@ -140,7 +140,7 @@ export class ImageUploadComponent implements OnInit, OnDestroy, ControlValueAcce
     this.isDeleting = true;
     this.error = null;
 
-    this.apiService.deleteStaffPhoto(this.userId)
+    this.apiService.deleteStaffPhoto(this.staffId)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: () => {
@@ -170,22 +170,8 @@ export class ImageUploadComponent implements OnInit, OnDestroy, ControlValueAcce
     // Create preview
     this.createPreview(file);
 
-    // Upload if userId is provided
-    if (this.userId) {
-      this.uploadFile(file);
-    } else {
-      // Store file info for later upload (e.g., in add form)
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        this.currentValue = {
-          url: result,
-          isLocal: false
-        };
-        this.onChange(this.currentValue);
-      };
-      reader.readAsDataURL(file);
-    }
+    // Upload immediately - use anonymous upload if no staffId provided
+    this.uploadFile(file);
   }
 
   private validateFile(file: File): boolean {
@@ -263,17 +249,16 @@ export class ImageUploadComponent implements OnInit, OnDestroy, ControlValueAcce
   }
 
   private uploadFile(file: File): void {
-    if (!this.userId) {
-      this.error = 'User ID is required for upload';
-      this.uploadError.emit(this.error);
-      return;
-    }
-
     this.isUploading = true;
     this.uploadProgress = 0;
     this.uploadStart.emit();
 
-    this.apiService.uploadStaffPhoto(this.userId, file)
+    // Choose upload method based on whether staffId is provided
+    const uploadObservable = this.staffId 
+      ? this.apiService.uploadStaffPhoto(this.staffId, file)
+      : this.apiService.uploadStaffPhotoAnonymous(file);
+
+    uploadObservable
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response: PhotoUploadResponse) => {

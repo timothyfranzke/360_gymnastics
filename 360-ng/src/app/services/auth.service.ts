@@ -278,7 +278,7 @@ export class AuthService {
       return 'http://localhost:8080/api/v1';
     }
     
-    return '/api/v1';
+    return '/360gym/api/v1';
   }
 
   /**

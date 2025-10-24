@@ -5,12 +5,13 @@ import { Class } from '../../interface/class';
 import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ViewHeader } from '../../components/view-header/view-header';
 
 @Component({
   selector: 'app-classes',
   templateUrl: './classes.html',
   styleUrls: ['./classes.scss'],
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, ViewHeader],
   animations: [
     trigger('fadeInUp', [
       state('in', style({ opacity: 1, transform: 'translateY(0)' })),

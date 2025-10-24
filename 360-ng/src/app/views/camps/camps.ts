@@ -3,10 +3,11 @@ import { CommonModule } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CampsService } from '../../services/camps.service';
 import { Camp } from '../../interfaces/camp';
+import { ViewHeader } from '../../components/view-header/view-header';
 
 @Component({
   selector: 'app-camps',
-  imports: [CommonModule],
+  imports: [CommonModule, ViewHeader],
   templateUrl: './camps.html',
   styleUrl: './camps.scss',
   animations: [

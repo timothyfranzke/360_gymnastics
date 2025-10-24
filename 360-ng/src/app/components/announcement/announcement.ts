@@ -7,6 +7,7 @@ import { takeUntil, switchMap, catchError, map } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { Announcement as AnnouncementData } from '../../interfaces/api';
+import { AssetPathPipe } from '../../pipes/asset-path.pipe';
 
 interface HourEntry {
   day: string;
@@ -27,7 +28,7 @@ interface CarouselState {
   selector: 'app-announcement',
   templateUrl: './announcement.html',
   styleUrls: ['./announcement.scss'],
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, AssetPathPipe],
   animations: [
     trigger('fadeInUp', [
       state('in', style({ opacity: 1, transform: 'translateY(0)' })),

@@ -6,11 +6,18 @@
 // Environment configuration
 define('ENV', 'development'); // Change to 'production' for live environment
 
+// franzket_application_user
+// S;84%OI2YGyI
+// DB: franzket_360gym  
+// DB User: franzket_360gym_user
+// DB Pass: S;84%OI2YGyI
+
+
 // Database configuration
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_NAME', getenv('DB_NAME') ?: 'gym_360');
-define('DB_USER', getenv('DB_USER') ?: '360_user');
-define('DB_PASS', getenv('DB_PASS') ?: 'Password1@');
+define('DB_NAME', getenv('DB_NAME') ?: 'franzket_360gym');
+define('DB_USER', getenv('DB_USER') ?: 'franzket_360gym_user');
+define('DB_PASS', getenv('DB_PASS') ?: 'S;84%OI2YGyI');
 define('DB_CHARSET', 'utf8');
 
 // JWT configuration

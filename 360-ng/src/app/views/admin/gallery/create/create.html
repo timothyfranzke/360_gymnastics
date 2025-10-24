@@ -1,0 +1,167 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Upload Gallery Images</h1>
+      <p class="mt-1 text-sm text-gray-500">Upload multiple images to the gallery with optional metadata</p>
+    </div>
+    <a routerLink="/admin/gallery" class="text-gray-600 hover:text-gray-500">
+      <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+    </a>
+  </div>
+
+  <!-- Upload Form -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      
+      <!-- File Upload Area -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          Select Images <span class="text-red-500">*</span>
+        </label>
+        
+        <div class="mt-1">
+          <div class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-orange-400 transition-colors">
+            <div class="space-y-1 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <div class="flex text-sm text-gray-600">
+                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500">
+                  <span>Upload files</span>
+                  <input id="file-upload" 
+                         type="file" 
+                         class="sr-only" 
+                         multiple 
+                         accept="image/jpeg,image/jpg,image/png,image/webp"
+                         (change)="onFileSelect($event)">
+                </label>
+                <p class="pl-1">or drag and drop</p>
+              </div>
+              <p class="text-xs text-gray-500">JPEG, PNG, WebP up to 5MB each</p>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="isFieldInvalid('files')" class="mt-1 text-sm text-red-600">
+          {{ getFieldError('files') }}
+        </div>
+      </div>
+
+      <!-- Selected Files Preview -->
+      <div *ngIf="selectedFiles && selectedFiles.length > 0" class="space-y-4">
+        <h3 class="text-lg font-medium text-gray-900">Selected Files ({{ selectedFiles.length }})</h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div *ngFor="let file of getSelectedFilesArray(); let i = index" 
+               class="relative border border-gray-200 rounded-lg p-4 bg-gray-50">
+            
+            <!-- File Info -->
+            <div class="flex items-start justify-between mb-2">
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm font-medium text-gray-900 truncate" [title]="file.name">{{ file.name }}</h4>
+                <p class="text-xs text-gray-500">{{ formatFileSize(file.size) }}</p>
+              </div>
+              <button type="button" 
+                      (click)="removeFile(i)"
+                      class="ml-2 text-red-600 hover:text-red-500">
+                <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+            </div>
+            
+            <!-- Upload Progress -->
+            <div *ngIf="isUploading" class="mb-2">
+              <div class="flex items-center justify-between text-xs text-gray-600 mb-1">
+                <span>Uploading...</span>
+                <span>{{ getUploadProgress(file, i) }}%</span>
+              </div>
+              <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-orange-500 h-2 rounded-full transition-all duration-300" 
+                     [style.width.%]="getUploadProgress(file, i)"></div>
+              </div>
+            </div>
+            
+            <!-- Upload Status -->
+            <div *ngIf="isUploadComplete(file, i)" class="flex items-center text-xs text-green-600 mb-2">
+              <svg class="h-4 w-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              Upload complete
+            </div>
+            
+            <!-- Upload Error -->
+            <div *ngIf="hasUploadError(file, i)" class="text-xs text-red-600 mb-2">
+              <svg class="h-4 w-4 mr-1 inline" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+              {{ getUploadError(file, i) }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Options -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Featured Setting -->
+        <div>
+          <label class="flex items-center">
+            <input type="checkbox" 
+                   formControlName="is_featured"
+                   class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded">
+            <span class="ml-2 text-sm font-medium text-gray-700">Mark as featured</span>
+          </label>
+          <p class="mt-1 text-xs text-gray-500">Featured images are highlighted in the gallery display</p>
+        </div>
+
+        <!-- Order Index -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Order Index</label>
+          <input type="number" 
+                 formControlName="order_index"
+                 min="0"
+                 placeholder="Leave empty for auto-assignment"
+                 class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+          <p class="mt-1 text-xs text-gray-500">Controls display order (lower numbers appear first)</p>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div class="flex items-center">
+          <svg class="h-5 w-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+          </svg>
+          <p class="text-red-700">{{ error }}</p>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+        <button type="button" 
+                (click)="cancel()" 
+                class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+          Cancel
+        </button>
+        
+        <button type="submit" 
+                [disabled]="uploadForm.invalid || isUploading || !selectedFiles || selectedFiles.length === 0"
+                class="px-4 py-2 text-sm font-medium text-white bg-orange-600 border border-transparent rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed">
+          
+          <span *ngIf="!isUploading">Upload Images</span>
+          <span *ngIf="isUploading" class="flex items-center">
+            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Uploading...
+          </span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

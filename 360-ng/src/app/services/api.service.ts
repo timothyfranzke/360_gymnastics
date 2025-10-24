@@ -251,10 +251,10 @@ export class ApiService {
   /**
    * Upload staff photo
    */
-  uploadStaffPhoto(userId: number, file: File): Observable<PhotoUploadResponse> {
+  uploadStaffPhoto(staffId: number, file: File): Observable<PhotoUploadResponse> {
     const formData = new FormData();
     formData.append('photo', file);
-    formData.append('user_id', userId.toString());
+    formData.append('staff_id', staffId.toString());
 
     return this.http.post<ApiResponse<PhotoUploadResponse>>(
       `${this.API_BASE}${ApiEndpoints.STAFF_UPLOAD_PHOTO}`,
@@ -266,11 +266,41 @@ export class ApiService {
   }
 
   /**
+   * Upload staff photo anonymously (for use during staff creation)
+   */
+  uploadStaffPhotoAnonymous(file: File): Observable<PhotoUploadResponse> {
+    const formData = new FormData();
+    formData.append('photo', file);
+
+    return this.http.post<ApiResponse<PhotoUploadResponse>>(
+      `${this.API_BASE}${ApiEndpoints.STAFF_UPLOAD_PHOTO_ANONYMOUS}`,
+      formData
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get staff photo thumbnail URL
+   */
+  getStaffThumbnailUrl(filename: string): string {
+    return `${this.API_BASE}${ApiEndpoints.FILES_STAFF_THUMBNAILS}/${filename}`;
+  }
+
+  /**
+   * Get staff photo URL
+   */
+  getStaffPhotoUrl(filename: string): string {
+    return `${this.API_BASE}${ApiEndpoints.FILES_STAFF}/${filename}`;
+  }
+
+  /**
    * Delete staff photo
    */
-  deleteStaffPhoto(userId: number): Observable<void> {
+  deleteStaffPhoto(staffId: number): Observable<void> {
     return this.http.delete<ApiResponse<void>>(
-      `${this.API_BASE}${ApiEndpoints.STAFF}/${userId}/photo`
+      `${this.API_BASE}${ApiEndpoints.STAFF}/${staffId}/photo`
     ).pipe(
       map(() => void 0),
       catchError(this.handleError)
@@ -599,6 +629,72 @@ export class ApiService {
     );
   }
 
+  // ========== GALLERY METHODS ==========
+
+  /**
+   * Get gallery images with pagination and filters
+   */
+  getGalleryImages(params?: URLSearchParams): Observable<any> {
+    const queryString = params ? `?${params.toString()}` : '';
+    return this.http.get<any>(`${this.API_BASE}/gallery${queryString}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Get single gallery image by ID
+   */
+  getGalleryImage(id: number): Observable<any> {
+    return this.http.get<any>(`${this.API_BASE}/gallery/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Upload gallery image
+   */
+  uploadGalleryImage(formData: FormData): Observable<any> {
+    return this.http.post<any>(`${this.API_BASE}/gallery/upload`, formData)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Update gallery image metadata
+   */
+  updateGalleryImage(id: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.API_BASE}/gallery/${id}`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Delete gallery image
+   */
+  deleteGalleryImage(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.API_BASE}/gallery/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  /**
+   * Generic HTTP methods for gallery API
+   */
+  get<T>(endpoint: string): Observable<T> {
+    return this.http.get<T>(`${this.API_BASE}${endpoint}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  post<T>(endpoint: string, data: any): Observable<T> {
+    return this.http.post<T>(`${this.API_BASE}${endpoint}`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  put<T>(endpoint: string, data: any): Observable<T> {
+    return this.http.put<T>(`${this.API_BASE}${endpoint}`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  delete<T>(endpoint: string): Observable<T> {
+    return this.http.delete<T>(`${this.API_BASE}${endpoint}`)
+      .pipe(catchError(this.handleError));
+  }
+
   // ========== UTILITY METHODS ==========
 
   /**
@@ -612,7 +708,7 @@ export class ApiService {
       return 'http://localhost:8080/api/v1';
     }
     
-    return '/api/v1';
+    return '/360gym/api/v1';
   }
 
   /**

@@ -1,5 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 @import "tailwindcss";
 
-/* Import button system */
-@import "app/styles/buttons.scss";
+/* Import critical button styles only for initial load */
+@import "app/styles/critical-buttons.scss";

@@ -1,14 +1,9 @@
 import { Routes } from '@angular/router';
-import { Classes } from './views/classes/classes';
-import { Detail } from './views/classes/detail/detail';
 import { Home } from './views/home/home';
 import { AdminLogin } from './views/admin/login/login';
 import { AdminLayout } from './components/admin/admin-layout/admin-layout';
 import { AdminDashboard } from './views/admin/dashboard/dashboard';
 import { authGuard, adminGuard, staffGuard } from './guards/auth.guard';
-import { OpenGym } from './views/open-gym/open-gym';
-import { Camps } from './views/camps/camps';
-import { ContactUs } from './views/contact-us/contact-us';
 
 export const routes: Routes = [
     {
@@ -17,23 +12,19 @@ export const routes: Routes = [
     },
     {
         path: 'contact-us',
-        component: ContactUs
+        loadChildren: () => import('./views/contact-us/contact-us.routes').then(m => m.contactUsRoutes)
     },
     {
         path: 'classes',
-        component: Classes
-    },
-    {
-        path: 'classes/:id',
-        component: Detail
+        loadChildren: () => import('./views/classes/classes.routes').then(m => m.classesRoutes)
     },
     {
         path: 'open-gym',
-        component: OpenGym
+        loadChildren: () => import('./views/open-gym/open-gym.routes').then(m => m.openGymRoutes)
     },
     {
         path: 'camps',
-        component: Camps
+        loadChildren: () => import('./views/camps/camps.routes').then(m => m.campsRoutes)
     },
     {
         path: 'admin/login',
@@ -78,6 +69,11 @@ export const routes: Routes = [
                 path: 'banner',
                 loadChildren: () => import('./views/admin/banner/banner.routes').then(m => m.bannerRoutes),
                 canActivate: [adminGuard]
+            },
+            {
+                path: 'gallery',
+                loadChildren: () => import('./views/admin/gallery/gallery.routes').then(m => m.GALLERY_ROUTES),
+                canActivate: [staffGuard]
             }
         ]
     },

@@ -8,13 +8,14 @@ import { MainActivities } from '../../components/main-activities/main-activities
 import { SocialFeed } from '../../components/social-feed/social-feed';
 import { StaffDisplay } from '../../components/staff-display/staff-display';
 import { FooterDivider } from '../../components/footer-divider/footer-divider';
+import { Gallery } from '../../components/gallery/gallery';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, Announcement, HoursQuickLinks, WhyChooseUs, FeaturedClasses, MainActivities, StaffDisplay, SocialFeed, FooterDivider],
+  imports: [Hero, Announcement, HoursQuickLinks, WhyChooseUs, FeaturedClasses, MainActivities, StaffDisplay, SocialFeed, FooterDivider, Gallery],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })
-export class Home {
+export class Home { 
 
 }

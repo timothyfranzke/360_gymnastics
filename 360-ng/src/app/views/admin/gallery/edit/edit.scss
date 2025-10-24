@@ -1,0 +1,206 @@
+/* Image preview styling */
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.image-preview {
+  @apply bg-gray-100 rounded-lg overflow-hidden;
+  min-height: 300px;
+}
+
+.image-preview img {
+  @apply w-full h-full object-cover;
+  transition: transform 0.2s ease-in-out;
+}
+
+.image-preview:hover img {
+  transform: scale(1.02);
+}
+
+/* Form field styling */
+.form-field {
+  @apply space-y-1;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700;
+}
+
+.form-input {
+  @apply block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500;
+}
+
+.form-input.invalid {
+  @apply border-red-300 focus:border-red-500 focus:ring-red-500;
+}
+
+.form-textarea {
+  @apply block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 resize-vertical;
+}
+
+.form-textarea.invalid {
+  @apply border-red-300 focus:border-red-500 focus:ring-red-500;
+}
+
+.form-error {
+  @apply text-sm text-red-600;
+}
+
+.form-help {
+  @apply text-xs text-gray-500;
+}
+
+/* Checkbox styling */
+.form-checkbox {
+  @apply h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded;
+}
+
+/* Button styling */
+.btn-primary {
+  @apply px-4 py-2 text-sm font-medium text-white bg-orange-600 border border-transparent rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500;
+}
+
+.btn-primary:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.btn-secondary {
+  @apply px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500;
+}
+
+.btn-danger {
+  @apply px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500;
+}
+
+.btn-danger:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Loading states */
+.loading-spinner {
+  @apply animate-spin h-4 w-4;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Status indicators */
+.status-featured {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800;
+}
+
+.status-active {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800;
+}
+
+.status-inactive {
+  @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800;
+}
+
+/* Image details table */
+.image-details {
+  @apply space-y-2 text-sm text-gray-600;
+}
+
+.detail-row {
+  @apply flex justify-between;
+}
+
+.detail-label {
+  @apply font-medium;
+}
+
+.detail-value {
+  @apply truncate ml-2;
+}
+
+/* Form sections */
+.form-section {
+  @apply space-y-6;
+}
+
+.form-section-title {
+  @apply text-lg font-medium text-gray-900 mb-4;
+}
+
+/* Grid layout */
+.main-grid {
+  @apply grid grid-cols-1 lg:grid-cols-2 gap-6;
+}
+
+/* Error state styling */
+.error-state {
+  @apply bg-red-50 border border-red-200 rounded-lg p-4;
+}
+
+.error-icon {
+  @apply h-5 w-5 text-red-400 mr-2;
+}
+
+.error-text {
+  @apply text-red-700;
+}
+
+/* Loading state styling */
+.loading-state {
+  @apply bg-white rounded-lg shadow p-8;
+}
+
+.loading-content {
+  @apply flex items-center justify-center;
+}
+
+.loading-text {
+  @apply ml-2 text-gray-600;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .main-grid {
+    @apply grid-cols-1;
+  }
+}
+
+/* Toggle switch styling */
+.toggle-section {
+  @apply space-y-4;
+}
+
+.toggle-item {
+  @apply flex items-center;
+}
+
+.toggle-checkbox {
+  @apply h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded;
+}
+
+.toggle-label {
+  @apply ml-3;
+}
+
+.toggle-title {
+  @apply text-sm font-medium text-gray-700;
+}
+
+.toggle-description {
+  @apply text-xs text-gray-500;
+}
+
+/* Action button container */
+.action-buttons {
+  @apply flex items-center justify-between pt-6 border-t border-gray-200;
+}
+
+.action-group {
+  @apply flex space-x-4;
+}

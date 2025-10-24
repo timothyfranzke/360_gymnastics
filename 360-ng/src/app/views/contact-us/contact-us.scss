@@ -1,152 +1,62 @@
-// Contact Us Page Styles
-// Following 360 Gymnastics design system with brand colors and patterns
-
-// Import the brand button system
-@import '../../styles/buttons';
-
-// Brand Colors (consistent with button system)
 $brand-orange: #fc7900;
-$brand-orange-hover: #e66a00;
 $brand-blue: #0226ff;
-$brand-blue-hover: #0119b3;
 $brand-white: #ffffff;
-$brand-gray: #6b7280;
 
 .contact-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  background: #f8fafc;
 }
 
-// Header Section
 .contact-header {
-  background: linear-gradient(
-    135deg,
-    $brand-blue 0%,
-    $brand-blue-hover 50%,
-    $brand-orange 100%
-  );
+  background: linear-gradient(135deg, $brand-blue 0%, $brand-orange 100%);
   position: relative;
   overflow: hidden;
-
-  // Animated background pattern
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
-    animation: headerPattern 20s ease-in-out infinite alternate;
-  }
-
-  h1 {
-    position: relative;
-    z-index: 2;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-
-  p {
-    position: relative;
-    z-index: 2;
-  }
 }
 
-@keyframes headerPattern {
-  0% {
-    transform: scale(1) rotate(0deg);
-  }
-  100% {
-    transform: scale(1.05) rotate(1deg);
-  }
-}
-
-// Success and Error Banners
-.success-banner,
-.error-banner {
+.success-banner, .error-banner {
   border-radius: 0.75rem;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  
-  @media (max-width: 768px) {
-    margin-left: 1rem;
-    margin-right: 1rem;
-  }
 }
 
-// Contact Content
-.contact-content {
-  background: transparent;
-}
-
-// Contact Info Cards
-.contact-info {
-  .bg-white {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(59, 130, 246, 0.1);
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      border-color: rgba(252, 121, 0, 0.2);
-    }
-  }
-
-  // Contact method buttons
-  button {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border-radius: 0.375rem;
-    padding: 0.5rem;
-    margin: -0.5rem;
-
-    &:hover {
-      background-color: rgba(252, 121, 0, 0.05);
-      transform: translateX(4px);
-    }
-
-    &:focus {
-      outline: 2px solid $brand-orange;
-      outline-offset: 2px;
-    }
-  }
-}
-
-// Map Container
-.map-container {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+.contact-info .bg-white {
+  transition: all 0.3s ease;
   border: 1px solid rgba(59, 130, 246, 0.1);
-
+  
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: rgba(252, 121, 0, 0.2);
-  }
-
-  iframe {
-    transition: all 0.3s ease;
-
-    &:hover {
-      filter: brightness(1.05);
-    }
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   }
 }
 
-// Contact Form
-.contact-form {
-  .bg-white {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(59, 130, 246, 0.1);
+.contact-info button {
+  transition: all 0.3s ease;
+  border-radius: 0.375rem;
+  padding: 0.5rem;
+  margin: -0.5rem;
 
-    &:hover {
-      border-color: rgba(252, 121, 0, 0.2);
-    }
+  &:hover {
+    background-color: rgba(252, 121, 0, 0.05);
+    transform: translateX(4px);
+  }
+
+  &:focus {
+    outline: 2px solid $brand-orange;
+    outline-offset: 2px;
   }
 }
 
-// Form Styles
-.form-group {
-  position: relative;
+.map-container {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(59, 130, 246, 0.1);
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+.contact-form .bg-white {
+  transition: all 0.3s ease;
+  border: 1px solid rgba(59, 130, 246, 0.1);
 }
 
 .form-label {
@@ -155,7 +65,6 @@ $brand-gray: #6b7280;
   font-weight: 600;
   color: #374151;
   margin-bottom: 0.5rem;
-  transition: color 0.2s ease;
 }
 
 .form-input {
@@ -167,7 +76,7 @@ $brand-gray: #6b7280;
   line-height: 1.5;
   color: #1f2937;
   background-color: $brand-white;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s ease;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
 
   &::placeholder {
@@ -178,9 +87,7 @@ $brand-gray: #6b7280;
   &:focus {
     outline: none;
     border-color: $brand-orange;
-    box-shadow: 
-      0 0 0 3px rgba(252, 121, 0, 0.1),
-      0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 0 3px rgba(252, 121, 0, 0.1);
     transform: translateY(-1px);
   }
 
@@ -189,7 +96,6 @@ $brand-gray: #6b7280;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.05);
   }
 
-  // Error state
   &.form-input-error {
     border-color: #ef4444;
     box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
@@ -200,7 +106,6 @@ $brand-gray: #6b7280;
     }
   }
 
-  // Disabled state
   &:disabled {
     background-color: #f9fafb;
     border-color: #e5e7eb;
@@ -209,18 +114,16 @@ $brand-gray: #6b7280;
   }
 }
 
-// Textarea specific styles
 textarea.form-input {
   resize: vertical;
   min-height: 150px;
   font-family: inherit;
   
   &:focus {
-    transform: none; // Don't lift textareas as much
+    transform: none;
   }
 }
 
-// Form error messages
 .form-error {
   color: #ef4444;
   font-size: 0.875rem;
@@ -231,17 +134,8 @@ textarea.form-input {
   gap: 0.25rem;
 
   &::before {
-    content: ' ';
+    content: '!';
     font-size: 0.75rem;
-  }
-}
-
-// Responsive Design
-@media (max-width: 1024px) {
-  .contact-content {
-    .grid {
-      gap: 2rem;
-    }
   }
 }
 
@@ -280,7 +174,7 @@ textarea.form-input {
 
   .map-container {
     .relative {
-      height: 16rem; // Smaller on mobile
+      height: 16rem;
     }
   }
 
@@ -292,134 +186,5 @@ textarea.form-input {
   .btn-primary {
     min-height: 48px;
     font-size: 1rem;
-  }
-}
-
-@media (max-width: 640px) {
-  .contact-header {
-    h1 {
-      font-size: 2rem;
-    }
-
-    p {
-      font-size: 1rem;
-    }
-  }
-
-  .contact-info,
-  .contact-form {
-    .bg-white {
-      padding: 1rem;
-    }
-  }
-
-  .map-container {
-    .relative {
-      height: 14rem;
-    }
-  }
-
-  // Stack contact info items on mobile
-  .contact-info {
-    .flex {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.75rem;
-
-      .flex-shrink-0 {
-        margin-top: 0;
-      }
-    }
-  }
-}
-
-// Loading States
-.form-input.loading {
-  background-image: linear-gradient(
-    90deg,
-    transparent,
-    rgba(252, 121, 0, 0.1),
-    transparent
-  );
-  background-size: 200% 100%;
-  animation: inputLoading 1.5s ease-in-out infinite;
-}
-
-@keyframes inputLoading {
-  0% {
-    background-position: 200% 0;
-  }
-  100% {
-    background-position: -200% 0;
-  }
-}
-
-// Focus Within Enhancement
-.form-group:focus-within {
-  .form-label {
-    color: $brand-orange;
-  }
-}
-
-// High Contrast Mode Support
-@media (prefers-contrast: high) {
-  .form-input {
-    border-width: 3px;
-    
-    &:focus {
-      border-color: #000;
-      box-shadow: 0 0 0 3px #000;
-    }
-    
-    &.form-input-error {
-      border-color: #dc2626;
-    }
-  }
-  
-  .form-error {
-    font-weight: 700;
-  }
-}
-
-// Reduced Motion Support
-@media (prefers-reduced-motion: reduce) {
-  .contact-header::before,
-  .form-input,
-  .contact-info button,
-  .map-container,
-  .contact-info .bg-white,
-  .contact-form .bg-white {
-    animation: none;
-    transition: none;
-  }
-  
-  .form-input:focus {
-    transform: none;
-  }
-  
-  .contact-info button:hover {
-    transform: none;
-  }
-}
-
-// Print Styles
-@media print {
-  .contact-page {
-    background: white;
-  }
-  
-  .contact-header {
-    background: white;
-    color: black;
-  }
-  
-  .map-container,
-  .btn-primary {
-    display: none;
-  }
-  
-  .contact-info button {
-    color: black;
-    text-decoration: underline;
   }
 }

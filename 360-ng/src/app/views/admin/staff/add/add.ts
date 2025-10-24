@@ -73,23 +73,19 @@ export class StaffAdd implements OnInit, OnDestroy {
       }
     });
 
-    const staffData: CreateStaffRequest = formData;
+    // Add image path if photo was uploaded
+    if (this.uploadedPhotoData) {
+      formData.image = this.uploadedPhotoData.path;
+    }
 
-    // Remove image from the staff data as it's handled separately
-    delete formData.image;
+    const staffData: CreateStaffRequest = formData;
     
     this.apiService.createStaff(staffData)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (createdStaff) => {
           console.log('Staff member created successfully', createdStaff);
-          
-          // If we have uploaded photo data, update the staff record with the image URL
-          if (this.uploadedPhotoData) {
-            this.updateStaffImage(createdStaff.id, this.uploadedPhotoData.original_url);
-          } else {
-            this.router.navigate(['/admin/staff']);
-          }
+          this.router.navigate(['/admin/staff']);
         },
         error: (error) => {
           console.error('Failed to create staff member', error);
@@ -126,21 +122,6 @@ export class StaffAdd implements OnInit, OnDestroy {
     this.photoUploadError = null;
   }
 
-  private updateStaffImage(staffId: number, imageUrl: string): void {
-    this.apiService.updateStaff(staffId, { image: imageUrl })
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: () => {
-          console.log('Staff image updated successfully');
-          this.router.navigate(['/admin/staff']);
-        },
-        error: (error) => {
-          console.error('Failed to update staff image', error);
-          // Still navigate to staff list, but show a warning
-          this.router.navigate(['/admin/staff']);
-        }
-      });
-  }
 
   private markFormGroupTouched(): void {
     Object.keys(this.staffForm.controls).forEach(key => {

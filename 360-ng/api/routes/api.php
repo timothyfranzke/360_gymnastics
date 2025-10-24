@@ -4,6 +4,17 @@
  * Defines all REST endpoints and their corresponding controllers
  */
 
+// Set CORS headers for all API requests
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+
+// Handle preflight OPTIONS requests
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
 // Initialize authentication middleware
 $authMiddleware = new AuthMiddleware($db);
 
@@ -17,9 +28,12 @@ $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
 // Remove API prefix from URI
-$apiPrefix = '/api/v1';
-if (strpos($uri, $apiPrefix) === 0) {
-    $uri = substr($uri, strlen($apiPrefix));
+$apiPrefixes = ['/360gym/api/v1', '/360gym/api', '/api/v1', '/api'];
+foreach ($apiPrefixes as $prefix) {
+    if (strpos($uri, $prefix) === 0) {
+        $uri = substr($uri, strlen($prefix));
+        break;
+    }
 }
 
 // Simple router implementation
@@ -141,6 +155,41 @@ function handleGetRoutes($uri, $db) {
     
     if (preg_match('/^\/files\/staff\/thumbnails\/(.+)$/', $uri, $matches)) {
         FileUploadUtility::serveFile($matches[1], 'thumbnail');
+        return;
+    }
+    
+    if (preg_match('/^\/files\/gallery\/(.+)$/', $uri, $matches)) {
+        FileUploadUtility::serveGalleryFile($matches[1], 'main');
+        return;
+    }
+    
+    if (preg_match('/^\/files\/gallery\/thumbnails\/(.+)$/', $uri, $matches)) {
+        FileUploadUtility::serveGalleryFile($matches[1], 'thumbnail');
+        return;
+    }
+
+    // Gallery routes
+    if ($uri === '/gallery') {
+        $controller = new GalleryController($db);
+        $controller->index();
+        return;
+    }
+    
+    if ($uri === '/gallery/featured') {
+        $controller = new GalleryController($db);
+        $controller->featured();
+        return;
+    }
+    
+    if ($uri === '/gallery/stats') {
+        $controller = new GalleryController($db);
+        $controller->stats();
+        return;
+    }
+    
+    if (preg_match('/^\/gallery\/(\d+)$/', $uri, $matches)) {
+        $controller = new GalleryController($db);
+        $controller->show($matches[1]);
         return;
     }
 
@@ -333,6 +382,12 @@ function handlePostRoutes($uri, $db) {
         $controller->uploadPhoto();
         return;
     }
+    
+    if ($uri === '/staff/upload-photo-anonymous') {
+        $controller = new StaffController($db);
+        $controller->uploadPhotoAnonymous();
+        return;
+    }
 
     // Gym Hours routes
     if ($uri === '/gym-hours/reset') {
@@ -371,6 +426,31 @@ function handlePostRoutes($uri, $db) {
     if ($uri === '/camps') {
         $controller = new CampsController($db);
         $controller->create();
+        return;
+    }
+
+    // Gallery routes
+    if ($uri === '/gallery') {
+        $controller = new GalleryController($db);
+        $controller->create();
+        return;
+    }
+    
+    if ($uri === '/gallery/upload') {
+        $controller = new GalleryController($db);
+        $controller->upload();
+        return;
+    }
+    
+    if ($uri === '/gallery/reorder') {
+        $controller = new GalleryController($db);
+        $controller->reorder();
+        return;
+    }
+    
+    if ($uri === '/gallery/cleanup') {
+        $controller = new GalleryController($db);
+        $controller->cleanup();
         return;
     }
 
@@ -442,6 +522,13 @@ function handlePutRoutes($uri, $db) {
         return;
     }
 
+    // Gallery routes
+    if (preg_match('/^\/gallery\/(\d+)$/', $uri, $matches)) {
+        $controller = new GalleryController($db);
+        $controller->update($matches[1]);
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -507,6 +594,13 @@ function handleDeleteRoutes($uri, $db) {
     // Camps routes
     if (preg_match('/^\/camps\/(\d+)$/', $uri, $matches)) {
         $controller = new CampsController($db);
+        $controller->delete($matches[1]);
+        return;
+    }
+
+    // Gallery routes
+    if (preg_match('/^\/gallery\/(\d+)$/', $uri, $matches)) {
+        $controller = new GalleryController($db);
         $controller->delete($matches[1]);
         return;
     }

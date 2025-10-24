@@ -57,6 +57,11 @@ export class AdminLayout implements OnInit, OnDestroy {
       icon: 'M7 4V2a1 1 0 011-1h8a1 1 0 011 1v2h3a1 1 0 011 1v1a1 1 0 01-1 1h-1v9a2 2 0 01-2 2H7a2 2 0 01-2-2V7H4a1 1 0 01-1-1V5a1 1 0 011-1h3zM9 3v1h6V3H9zm1 5v7h4V8h-4z',
       route: '/admin/banner',
       adminOnly: true
+    },
+    {
+      name: 'Gallery Management',
+      icon: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
+      route: '/admin/gallery'
     }
   ];
 

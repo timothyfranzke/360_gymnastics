@@ -24,6 +24,24 @@ import { HomepageStaff } from '../../interfaces/api';
         style({ opacity: 0, transform: 'translateY(30px)' }),
         animate('600ms ease-out')
       ])
+    ]),
+    trigger('modalBackdrop', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-out', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('300ms ease-in', style({ opacity: 0 }))
+      ])
+    ]),
+    trigger('modalContent', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.9) translateY(-20px)' }),
+        animate('300ms ease-out', style({ opacity: 1, transform: 'scale(1) translateY(0)' }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0, transform: 'scale(0.95) translateY(-10px)' }))
+      ])
     ])
   ]
 })
@@ -34,6 +52,10 @@ export class StaffDisplay implements OnInit, OnDestroy {
   loading = true;
   error: string | null = null;
   animationState = 'in';
+  
+  // Modal state
+  isModalOpen = false;
+  selectedStaff: HomepageStaff | null = null;
 
   constructor(private apiService: ApiService) {}
 
@@ -44,6 +66,11 @@ export class StaffDisplay implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    
+    // Ensure body scroll is restored if component is destroyed while modal is open
+    if (this.isModalOpen) {
+      document.body.style.overflow = 'auto';
+    }
   }
 
   private loadStaff(): void {
@@ -82,7 +109,7 @@ export class StaffDisplay implements OnInit, OnDestroy {
   }
 
   hasValidAvatar(staff: HomepageStaff): boolean {
-    return !!(staff.image_url && staff.image_url.trim().length > 0);
+    return !!(staff.image_thumbnail_url && staff.image_thumbnail_url.trim().length > 0);
   }
 
   getAvatarThumbnailUrl(staff: HomepageStaff): string | null {
@@ -90,20 +117,15 @@ export class StaffDisplay implements OnInit, OnDestroy {
       return null;
     }
     
-    // If it's a local file, use the thumbnail version for better performance
-    if (staff.image_url!.includes('/api/v1/files/staff/')) {
-      return staff.image_url!.replace('/files/staff/', '/files/staff/thumbnails/');
-    }
-    
-    // For external URLs, use the original URL
-    return staff.image_url!;
+    // The API already provides the correct thumbnail URL
+    return staff.image_thumbnail_url!;
   }
 
   retryLoad(): void {
     this.loadStaff();
   }
 
-  trackByStaffId(index: number, staff: HomepageStaff): number {
+  trackByStaffId(_index: number, staff: HomepageStaff): number {
     return staff.id;
   }
 
@@ -111,5 +133,41 @@ export class StaffDisplay implements OnInit, OnDestroy {
     // Hide the image when it fails to load
     const target = event.target as HTMLImageElement;
     target.style.display = 'none';
+  }
+
+  // Modal methods
+  openStaffModal(staff: HomepageStaff): void {
+    this.selectedStaff = staff;
+    this.isModalOpen = true;
+    // Prevent body scrolling when modal is open
+    document.body.style.overflow = 'hidden';
+  }
+
+  closeStaffModal(): void {
+    this.isModalOpen = false;
+    this.selectedStaff = null;
+    // Restore body scrolling
+    document.body.style.overflow = 'auto';
+  }
+
+  onModalBackdropClick(event: Event): void {
+    // Close modal when clicking the backdrop
+    if (event.target === event.currentTarget) {
+      this.closeStaffModal();
+    }
+  }
+
+  onModalKeydown(event: KeyboardEvent): void {
+    // Close modal when pressing Escape
+    if (event.key === 'Escape') {
+      this.closeStaffModal();
+    }
+  }
+
+  getFullImageUrl(staff: HomepageStaff): string | null {
+    if (!staff.image_url) {
+      return null;
+    }
+    return staff.image_url;
   }
 }
