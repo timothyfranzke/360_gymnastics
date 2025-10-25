@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
+import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { ApiService } from '../../../../services/api.service';
 import { AuthService } from '../../../../services/auth.service';
 
@@ -43,7 +44,7 @@ interface PaginatedGalleryResponse {
   selector: 'app-gallery-list',
   templateUrl: './list.html',
   styleUrls: ['./list.scss'],
-  imports: [CommonModule, RouterLink, ReactiveFormsModule]
+  imports: [CommonModule, RouterLink, ReactiveFormsModule, DragDropModule]
 })
 export class GalleryList implements OnInit, OnDestroy {
   images: GalleryImage[] = [];
@@ -60,6 +61,9 @@ export class GalleryList implements OnInit, OnDestroy {
   filterForm: FormGroup;
   
   Math = Math;
+  
+  // Drag and drop state
+  isReordering = false;
   
   private destroy$ = new Subject<void>();
 
@@ -139,6 +143,14 @@ export class GalleryList implements OnInit, OnDestroy {
           this.isLoading = false;
         }
       });
+  }
+
+  getImageThumbnailUrl(image: GalleryImage): string {
+    return this.apiService.getGalleryThumbnailUrl(image.filename);
+  }
+
+  getImageUrl(image: GalleryImage): string {
+    return this.apiService.getGalleryImageUrl(image.filename);
   }
 
   deleteImage(image: GalleryImage): void {
@@ -245,5 +257,52 @@ export class GalleryList implements OnInit, OnDestroy {
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
     target.style.display = 'none';
+  }
+
+  trackByImageId(index: number, image: GalleryImage): number {
+    return image.id;
+  }
+
+  // Drag and drop functionality
+  drop(event: CdkDragDrop<GalleryImage[]>): void {
+    if (event.previousIndex !== event.currentIndex) {
+      // Update local array order
+      moveItemInArray(this.images, event.previousIndex, event.currentIndex);
+      
+      // Update order_index for all images based on new positions
+      const pageOffset = (this.currentPage - 1) * this.itemsPerPage;
+      this.images.forEach((image, index) => {
+        image.order_index = pageOffset + index;
+      });
+      
+      // Save new order to API
+      this.saveImageOrder();
+    }
+  }
+
+  private saveImageOrder(): void {
+    this.isReordering = true;
+    
+    // Create order mapping: image_id -> new_order_index
+    const pageOffset = (this.currentPage - 1) * this.itemsPerPage;
+    const imageOrders: { [key: number]: number } = {};
+    this.images.forEach((image, index) => {
+      imageOrders[image.id] = pageOffset + index;
+    });
+
+    this.apiService.post('/gallery/reorder', { image_orders: imageOrders })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.isReordering = false;
+          console.log('Image order updated successfully');
+        },
+        error: (error: any) => {
+          console.error('Failed to update image order:', error);
+          this.isReordering = false;
+          // Reload images to restore original order on error
+          this.loadImages();
+        }
+      });
   }
 }

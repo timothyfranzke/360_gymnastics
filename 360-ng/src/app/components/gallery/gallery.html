@@ -39,10 +39,11 @@
         tabindex="0">
         
         <img 
-          [src]="image.thumbnail_url || image.url" 
+          [src]="getImageThumbnailUrl(image)" 
           [alt]="image.alt_text || image.caption || 'Gallery image ' + (i + 1)"
           class="absolute inset-0 h-full w-full object-cover"
           loading="lazy"
+          (click)="openPopup(i)"
           (error)="onImageError($event)">
         
         <!-- Optional caption overlay -->
@@ -65,3 +66,69 @@
     <p class="text-gray-500">Check back soon for amazing gym moments!</p>
   </div>
 </section>
+
+<!-- Image Popup Modal -->
+<div *ngIf="showPopup" 
+     class="gallery-popup fixed inset-0 z-50 bg-black bg-opacity-90 flex items-center justify-center"
+     [@popupAnimation]
+     (click)="closePopup()"
+     (touchstart)="onTouchStart($event)"
+     (touchend)="onTouchEnd($event)">
+  
+  <!-- Close Button -->
+  <button 
+    class="absolute top-4 right-4 z-10 text-white hover:text-gray-300 transition-colors duration-200"
+    (click)="closePopup()"
+    aria-label="Close gallery">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+    </svg>
+  </button>
+
+  <!-- Previous Button -->
+  <button *ngIf="images.length > 1"
+    class="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 text-white hover:text-gray-300 transition-colors duration-200 p-2"
+    (click)="previousImage($event)"
+    [disabled]="currentImageIndex === 0"
+    [class.opacity-50]="currentImageIndex === 0"
+    aria-label="Previous image">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+  </button>
+
+  <!-- Next Button -->
+  <button *ngIf="images.length > 1"
+    class="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 text-white hover:text-gray-300 transition-colors duration-200 p-2"
+    (click)="nextImage($event)"
+    [disabled]="currentImageIndex === images.length - 1"
+    [class.opacity-50]="currentImageIndex === images.length - 1"
+    aria-label="Next image">
+    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+  </button>
+
+  <!-- Image Container -->
+  <div class="popup-image-container max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+       (click)="$event.stopPropagation()">
+    <img 
+      *ngIf="currentImageIndex >= 0 && images[currentImageIndex]"
+      [src]="getImageFullUrl(images[currentImageIndex])"
+      [alt]="images[currentImageIndex].alt_text || images[currentImageIndex].caption || 'Gallery image'"
+      class="max-w-full max-h-full object-contain"
+      [@imageSlide]="slideDirection">
+    
+    <!-- Image Caption -->
+    <div *ngIf="images[currentImageIndex]?.caption" 
+         class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-75 text-white px-4 py-2 rounded-lg max-w-[80%] text-center">
+      <p class="text-sm font-medium">{{ images[currentImageIndex].caption }}</p>
+    </div>
+  </div>
+
+  <!-- Image Counter -->
+  <div *ngIf="images.length > 1" 
+       class="absolute bottom-4 right-4 bg-black bg-opacity-75 text-white px-3 py-1 rounded-lg text-sm">
+    {{ currentImageIndex + 1 }} / {{ images.length }}
+  </div>
+</div>

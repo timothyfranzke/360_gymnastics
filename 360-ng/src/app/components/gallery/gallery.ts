@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Subject, takeUntil } from 'rxjs';
 import { GalleryImage } from '../../interfaces/api';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-gallery',
@@ -22,6 +23,29 @@ import { GalleryImage } from '../../interfaces/api';
         style({ opacity: 0, transform: 'scale(0.95)' }),
         animate('300ms ease-out', style({ opacity: 1, transform: 'scale(1)' }))
       ])
+    ]),
+    trigger('popupAnimation', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('200ms ease-out', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('200ms ease-in', style({ opacity: 0 }))
+      ])
+    ]),
+    trigger('imageSlide', [
+      transition('* => left', [
+        style({ transform: 'translateX(100%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
+      ]),
+      transition('* => right', [
+        style({ transform: 'translateX(-100%)', opacity: 0 }),
+        animate('300ms ease-out', style({ transform: 'translateX(0)', opacity: 1 }))
+      ]),
+      transition('* => none', [
+        style({ opacity: 0 }),
+        animate('200ms ease-out', style({ opacity: 1 }))
+      ])
     ])
   ]
 })
@@ -32,8 +56,18 @@ export class Gallery implements OnInit, OnDestroy {
   loading = true;
   error: string | null = null;
   animationState = 'in';
+  
+  // Popup state
+  showPopup = false;
+  currentImageIndex = 0;
+  slideDirection: 'left' | 'right' | 'none' = 'none';
+  
+  // Touch gesture tracking
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private minSwipeDistance = 50;
 
-  constructor() {}
+  constructor(private apiService: ApiService) {}
 
   ngOnInit(): void {
     this.loadGalleryImages();
@@ -48,11 +82,20 @@ export class Gallery implements OnInit, OnDestroy {
     this.loading = true;
     this.error = null;
 
-    // Simulate API call with mock data
-    setTimeout(() => {
-      this.images = this.getMockGalleryImages();
-      this.loading = false;
-    }, 800);
+    // Use real API to get gallery images ordered by order_index
+    this.apiService.get<any>('/gallery?featured=true&limit=20')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.images = response.data?.images || [];
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Failed to load gallery images:', error);
+          this.error = 'Failed to load gallery images. Please try again later.';
+          this.loading = false;
+        }
+      });
   }
 
   private getMockGalleryImages(): GalleryImage[] {
@@ -60,6 +103,7 @@ export class Gallery implements OnInit, OnDestroy {
       {
         id: 1,
         filename: 'gym-action-1.jpg',
+        file_path: 'uploads/gallery/5fd7e362-a4d6-4877-8ccd-08bc7dd3b0bf.jpg',
         alt_text: 'Gymnast performing on balance beam',
         caption: 'Focus and determination in action',
         url: '/api/placeholder/400/500',
@@ -70,6 +114,7 @@ export class Gallery implements OnInit, OnDestroy {
       {
         id: 2,
         filename: 'gym-team-1.jpg',
+        file_path: 'uploads/gallery/2a8f9b3c-1e4d-4c7a-9f2b-1a3e5c7d9f2b.jpg',
         alt_text: 'Team training session',
         caption: 'Building skills together',
         url: '/api/placeholder/400/500',
@@ -80,6 +125,7 @@ export class Gallery implements OnInit, OnDestroy {
       {
         id: 3,
         filename: 'gym-vault-1.jpg',
+        file_path: 'uploads/gallery/8e1c3f5a-6b2d-4a9e-8c1f-3a5e7c9d1f3a.jpg',
         alt_text: 'Athlete performing vault',
         caption: 'Soaring to new heights',
         url: '/api/placeholder/400/500',
@@ -184,6 +230,10 @@ export class Gallery implements OnInit, OnDestroy {
     return index % 2 === 0 ? 'rotate-2' : '-rotate-2';
   }
 
+  getImageThumbnailUrl(image: GalleryImage): string {
+    return this.apiService.getGalleryThumbnailUrl(image.filename);
+  }
+
   retryLoad(): void {
     this.loadGalleryImages();
   }
@@ -194,6 +244,98 @@ export class Gallery implements OnInit, OnDestroy {
 
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
-    target.src = '/api/placeholder/400/500';
+    target.style.display = 'none';
+  }
+
+  // Popup functionality
+  openPopup(index: number): void {
+    this.currentImageIndex = index;
+    this.showPopup = true;
+    this.slideDirection = 'none';
+    document.body.style.overflow = 'hidden'; // Prevent body scroll
+  }
+
+  closePopup(): void {
+    this.showPopup = false;
+    document.body.style.overflow = ''; // Restore body scroll
+  }
+
+  previousImage(event: Event): void {
+    event.stopPropagation();
+    if (this.currentImageIndex > 0) {
+      this.slideDirection = 'right';
+      this.currentImageIndex--;
+    }
+  }
+
+  nextImage(event: Event): void {
+    event.stopPropagation();
+    if (this.currentImageIndex < this.images.length - 1) {
+      this.slideDirection = 'left';
+      this.currentImageIndex++;
+    }
+  }
+
+  getImageFullUrl(image: GalleryImage): string {
+    // Use file_path if available (which includes the full path like uploads/gallery/filename.jpg)
+    // Otherwise fall back to filename for backwards compatibility
+    const imagePath = image.file_path || image.filename;
+    
+    // If file_path is used, it already includes the full path from the uploads directory
+    if (image.file_path) {
+      return `${this.apiService.getFileBaseUrl()}/files/${imagePath}`;
+    } else {
+      // Use the standard gallery image URL method for filename
+      return this.apiService.getGalleryImageUrl(imagePath);
+    }
+  }
+
+  // Touch gesture handling
+  onTouchStart(event: TouchEvent): void {
+    const touch = event.touches[0];
+    this.touchStartX = touch.clientX;
+    this.touchStartY = touch.clientY;
+  }
+
+  onTouchEnd(event: TouchEvent): void {
+    if (!event.changedTouches.length) return;
+    
+    const touch = event.changedTouches[0];
+    const deltaX = touch.clientX - this.touchStartX;
+    const deltaY = touch.clientY - this.touchStartY;
+    
+    // Only handle horizontal swipes if they're more horizontal than vertical
+    if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > this.minSwipeDistance) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      if (deltaX > 0) {
+        // Swipe right - go to previous image
+        this.previousImage(event);
+      } else {
+        // Swipe left - go to next image
+        this.nextImage(event);
+      }
+    }
+  }
+
+  // Keyboard navigation
+  @HostListener('document:keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent): void {
+    if (!this.showPopup) return;
+
+    switch (event.key) {
+      case 'Escape':
+        this.closePopup();
+        break;
+      case 'ArrowLeft':
+        event.preventDefault();
+        this.previousImage(event);
+        break;
+      case 'ArrowRight':
+        event.preventDefault();
+        this.nextImage(event);
+        break;
+    }
   }
 }

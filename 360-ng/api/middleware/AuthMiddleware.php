@@ -46,6 +46,8 @@ class AuthMiddleware {
         '/360gym/api/v1/files/staff',
         '/files/staff',
         '/api/v1/files/gallery',
+        '/api/v1/files/uploads/gallery',
+        
         '/360gym/api/v1/files/gallery',
         '/files/gallery',
         '/api/v1/gallery',

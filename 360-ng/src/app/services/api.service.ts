@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import {
   ApiResponse,
   PaginatedResponse,
@@ -40,7 +41,7 @@ import {
   providedIn: 'root'
 })
 export class ApiService {
-  private readonly API_BASE = this.getApiBase();
+  private readonly API_BASE = environment.api.baseUrl;
 
   constructor(private http: HttpClient) {}
 
@@ -698,17 +699,24 @@ export class ApiService {
   // ========== UTILITY METHODS ==========
 
   /**
-   * Get API base URL based on environment
+   * Get file base URL for images and other assets
    */
-  private getApiBase(): string {
-    const isLocalhost = window.location.hostname === 'localhost' || 
-                       window.location.hostname === '127.0.0.1';
-    
-    if (isLocalhost) {
-      return 'http://localhost:8080/api/v1';
-    }
-    
-    return '/360gym/api/v1';
+  getFileBaseUrl(): string {
+    return environment.api.fileBaseUrl;
+  }
+
+  /**
+   * Get full URL for gallery image
+   */
+  getGalleryImageUrl(filename: string): string {
+    return `${this.getFileBaseUrl()}/files/gallery/${filename}`;
+  }
+
+  /**
+   * Get full URL for gallery thumbnail
+   */
+  getGalleryThumbnailUrl(filename: string): string {
+    return `${this.getFileBaseUrl()}/files/gallery/thumbnails/${filename}`;
   }
 
   /**

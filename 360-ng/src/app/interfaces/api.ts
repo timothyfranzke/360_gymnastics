@@ -113,6 +113,7 @@ export interface HomepageStaff {
   first_name: string;
   last_name: string;
   image?: string;
+  image_filename?: string;
   description?: string;
   hire_date: string;
   years_at_gym: number;
@@ -415,6 +416,7 @@ export enum ApiEndpoints {
 export interface GalleryImage {
   id: number;
   filename: string;
+  file_path?: string;
   alt_text?: string;
   caption?: string;
   url: string;
