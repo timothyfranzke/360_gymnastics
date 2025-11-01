@@ -27,6 +27,10 @@ export const routes: Routes = [
         loadChildren: () => import('./views/camps/camps.routes').then(m => m.campsRoutes)
     },
     {
+        path: 'parties',
+        loadChildren: () => import('./views/parties/parties.routes').then(m => m.partiesRoutes)
+    },
+    {
         path: 'admin/login',
         component: AdminLogin
     },

@@ -1,7 +1,34 @@
 // Blue gradient background
+$brand-orange: #fc7900;
+$brand-blue: #0226ff;
+$brand-blue-light: #3b82f6;
+$brand-cyan: #06b6d4;
+
 .purple-gradient {
     background: linear-gradient(135deg, #0226ff 0%, #0119b3 100%);
   }
+
+// Card styles
+.camp-card {
+  position: relative;
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &:hover {
+    transform: translateY(-8px);
+    
+    .camp-header {
+      background: linear-gradient(135deg, $brand-blue-light 0%, $brand-cyan 100%);
+    }
+  }
+}
+
+.camp-header {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, $brand-blue-light 0%, #8b5cf6 100%);
+  transition: background 0.3s ease;
+}
   
   // Floating decorative elements
   .floating-element {

@@ -277,17 +277,7 @@ export class Gallery implements OnInit, OnDestroy {
   }
 
   getImageFullUrl(image: GalleryImage): string {
-    // Use file_path if available (which includes the full path like uploads/gallery/filename.jpg)
-    // Otherwise fall back to filename for backwards compatibility
-    const imagePath = image.file_path || image.filename;
-    
-    // If file_path is used, it already includes the full path from the uploads directory
-    if (image.file_path) {
-      return `${this.apiService.getFileBaseUrl()}/files/${imagePath}`;
-    } else {
-      // Use the standard gallery image URL method for filename
-      return this.apiService.getGalleryImageUrl(imagePath);
-    }
+    return this.apiService.getGalleryUrl(image.filename);
   }
 
   // Touch gesture handling

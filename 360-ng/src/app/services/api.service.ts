@@ -719,6 +719,10 @@ export class ApiService {
     return `${this.getFileBaseUrl()}/files/gallery/thumbnails/${filename}`;
   }
 
+  getGalleryUrl(filename: string): string {
+    return `${this.getFileBaseUrl()}/files/gallery/${filename}`;
+  }
+
   /**
    * Handle successful API responses
    */

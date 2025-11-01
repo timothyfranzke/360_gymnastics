@@ -193,6 +193,13 @@ export class AnnouncementList implements OnInit, OnDestroy {
     });
   }
 
+  isAnnouncementCurrentlyActive(announcement: Announcement): boolean {
+    const now = new Date();
+    const startDate = new Date(announcement.start_date);
+    const endDate = new Date(announcement.end_date);
+    return announcement.is_active && startDate <= now && endDate >= now;
+  }
+
   clearFilters(): void {
     this.filterForm.reset();
     this.currentPage = 1;

@@ -66,7 +66,7 @@ description="Discover our range of gymnastics camps designed for different skill
           *ngFor="let camp of camps; let i = index"
           [@staggerCamps]="animationState"
           [style.animation-delay]="(i * 150) + 'ms'"
-          class="camp-card bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
+          class="camp-card bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col"
         >
           <!-- Card Header -->
           <div class="camp-header bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white relative overflow-hidden">
@@ -89,7 +89,7 @@ description="Discover our range of gymnastics camps designed for different skill
           </div>
 
           <!-- Card Body -->
-          <div class="p-6">
+          <div class="p-6 flex flex-col flex-grow">
             <!-- Date -->
             <div class="flex items-center mb-4 text-gray-600">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -106,7 +106,7 @@ description="Discover our range of gymnastics camps designed for different skill
             <!-- Registration Button -->
             <button 
               (click)="openRegistration(camp.registration_link)"
-              class="btn-primary w-full group-hover:scale-105 transition-transform duration-300"
+              class="btn-primary w-full group-hover:scale-105 transition-transform duration-300 mt-auto"
               type="button"
               [attr.aria-label]="'Register for ' + camp.title"
             >

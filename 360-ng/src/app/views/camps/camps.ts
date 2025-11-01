@@ -79,8 +79,12 @@ export class Camps implements OnInit {
   /**
    * Format cost for display
    */
-  formatCost(cost: number): string {
-    return `$${cost.toFixed(2)}`;
+  formatCost(cost: number | string): string {
+    const numericCost = typeof cost === 'string' ? parseFloat(cost) : cost;
+    if (isNaN(numericCost)) {
+      return '$0.00'; // Or some other default/error display
+    }
+    return `$${numericCost.toFixed(2)}`;
   }
 
   /**

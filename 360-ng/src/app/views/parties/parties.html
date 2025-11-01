@@ -1,0 +1,486 @@
+<!-- Parties Page -->
+<main class="parties-page">
+  <!-- Page Header -->
+  <app-view-header
+    title="Parties"
+    description="360 Gymnastics is a great place to have your next birthday party, school field  trip, scouting event, or any other special event!">
+  </app-view-header>
+
+  <!-- Main Content -->
+  <section class="parties-content py-16">
+    <div class="container mx-auto px-4">
+      
+      <!-- Party Types Section -->
+      <div class="mb-16">
+        <h1 class="text-4xl font-bold text-gray-900 mb-8">Birthday Party/Rental Options</h1>
+        
+        <div class="space-y-8">
+          <!-- Private Party -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Image Placeholder -->
+              <div class="bg-gradient-to-br from-blue-100 to-purple-100 h-64 md:h-auto flex items-center justify-center">
+                <div class="text-center p-8">
+                  <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <p class="text-gray-500 text-sm">Party Image Placeholder</p>
+                </div>
+              </div>
+              
+              <!-- Content -->
+              <div class="p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Private Party</h2>
+                <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                  Our parties are structured and scheduled outside of open gym and class times so your kids get to take over the gym! You have a gym instructor leading your child and friends through an obstacle course, games, assistance on the equipment, and of course, free time!
+                </p>
+                
+                <!-- Schedule Includes -->
+                <div class="mb-6">
+                  <h3 class="text-xl font-semibold text-gray-900 mb-3">Schedule includes:</h3>
+                  <ul class="space-y-2 text-gray-700">
+                    <li class="flex items-start">
+                      <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span>30 minutes in the party room</span>
+                    </li>
+                    <li class="flex items-start">
+                      <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span>60 minutes in the gym with an instructor</span>
+                    </li>
+                    <li class="flex items-start">
+                      <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span>Tons of FUN!</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <!-- Pricing -->
+                <div class="mb-6">
+                  <h3 class="text-xl font-semibold text-gray-900 mb-3">Cost:</h3>
+                  <div class="bg-blue-50 rounded-lg p-4">
+                    <p class="text-lg font-bold text-blue-900">$200 <span class="text-sm font-normal text-blue-700">(for 15 kids including birthday child)</span></p>
+                    <p class="text-sm text-blue-700 mt-1">Additional children – $10 each</p>
+                  </div>
+                </div>
+                
+                <!-- Hours Available -->
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900 mb-3">Hours available:</h3>
+                  <ul class="space-y-1 text-gray-700">
+                    <li><strong>Friday</strong> – after 5pm</li>
+                    <li><strong>Saturday</strong> – after 3pm</li>
+                    <li><strong>Sunday</strong> – all day</li>
+                  </ul>
+                  <p class="text-sm text-gray-500 italic mt-2">(scheduled when no other activities are going on)</p>
+                </div>
+                
+                <!-- Register Button -->
+                <div class="mt-6">
+                  <button type="button" (click)="scrollToForm()" class="btn-primary">
+                    Register for Private Party
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Open Gym Party -->
+          <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <!-- Content -->
+              <div class="p-8">
+                <h2 class="text-2xl font-bold text-gray-900 mb-4">Open Gym Party</h2>
+                <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                  Your party takes place during our regularly scheduled open gym time. The children have access to all of the equipment to play and have fun. This includes 30 minutes in the party room prior to open gym.
+                </p>
+                
+                <!-- Schedule Includes -->
+                <div class="mb-6">
+                  <h3 class="text-xl font-semibold text-gray-900 mb-3">Schedule includes:</h3>
+                  <ul class="space-y-2 text-gray-700">
+                    <li class="flex items-start">
+                      <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span>30 minutes in the party room</span>
+                    </li>
+                    <li class="flex items-start">
+                      <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span>60 minutes in the gym during open gym</span>
+                    </li>
+                    <li class="flex items-start">
+                      <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
+                      </svg>
+                      <span>Tons of FUN!</span>
+                    </li>
+                  </ul>
+                </div>
+                
+                <!-- Pricing -->
+                <div class="mb-6">
+                  <h3 class="text-xl font-semibold text-gray-900 mb-3">Cost:</h3>
+                  <div class="bg-green-50 rounded-lg p-4">
+                    <p class="text-lg font-bold text-green-900">$150 <span class="text-sm font-normal text-green-700">(for 15 kids including birthday child)</span></p>
+                    <p class="text-sm text-green-700 mt-1">Additional children – $8 each</p>
+                  </div>
+                </div>
+                
+                <!-- Hours Available -->
+                <div>
+                  <h3 class="text-xl font-semibold text-gray-900 mb-3">Hours available:</h3>
+                  <ul class="space-y-1 text-gray-700">
+                    <li><strong>Monday, Wednesday, Friday</strong> – 12-1 pm</li>
+                    <li><strong>Saturday</strong> – 2-3:30 pm</li>
+                  </ul>
+                </div>
+                
+                <!-- Register Button -->
+                <div class="mt-6">
+                  <button type="button" (click)="scrollToForm()" class="btn-primary">
+                    Register for Open Gym Party
+                  </button>
+                </div>
+              </div>
+              
+              <!-- Image Placeholder -->
+              <div class="bg-gradient-to-br from-green-100 to-teal-100 h-64 md:h-auto flex items-center justify-center">
+                <div class="text-center p-8">
+                  <svg class="w-24 h-24 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <p class="text-gray-500 text-sm">Party Image Placeholder</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Groups/Field Trips -->
+          <div class="bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Groups/Field Trips</h2>
+            <p class="text-lg text-gray-700 leading-relaxed">
+              Perfect for schools, daycares, scout troops, and other organized groups. Field trips include structured activities led by our staff, safety briefing, and age-appropriate challenges. Can accommodate groups of 10-50 children with advance booking.
+            </p>
+            <!-- contact us button -->
+            <button class="btn btn-primary">
+              Contact Us
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Birthday Party Request Form -->
+      <div id="party-form" class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-900 mb-4">Birthday Party/Rental Request</h2>
+        <p class="text-lg text-gray-700">Fill out the form below and we'll get back to you with availability and pricing!</p>
+      </div>
+        
+      <div class="bg-white rounded-xl shadow-lg p-8 max-w-4xl mx-auto">
+        <form [formGroup]="partyForm" (ngSubmit)="onSubmit()" novalidate>
+          <!-- Parent Name -->
+          <div class="form-group mb-6">
+            <label for="parentName" class="form-label">
+              Your First & Last Name <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="parentName"
+              formControlName="parentName"
+              class="form-input"
+              [class.form-input-error]="hasFieldError('parentName')"
+              placeholder="Enter your full name"
+              aria-describedby="parentName-error"
+              autocomplete="name"
+              required>
+            <div *ngIf="hasFieldError('parentName')" 
+                 id="parentName-error" 
+                 class="form-error"
+                 role="alert"
+                 aria-live="polite">
+              {{ getFieldError('parentName') }}
+            </div>
+          </div>
+
+          <!-- Phone Number -->
+          <div class="form-group mb-6">
+            <label for="phone" class="form-label">
+              Phone Number <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="tel"
+              id="phone"
+              formControlName="phone"
+              class="form-input"
+              [class.form-input-error]="hasFieldError('phone')"
+              placeholder="(555) 123-4567"
+              aria-describedby="phone-error"
+              autocomplete="tel"
+              required>
+            <div *ngIf="hasFieldError('phone')" 
+                 id="phone-error" 
+                 class="form-error"
+                 role="alert"
+                 aria-live="polite">
+              {{ getFieldError('phone') }}
+            </div>
+          </div>
+
+          <!-- Can Text Permission -->
+          <div class="form-group mb-6">
+            <label class="form-label">
+              Can we text you? <span class="text-red-500">*</span>
+            </label>
+            <div class="checkbox-group">
+              <label class="flex items-center">
+                <input type="radio" formControlName="canText" value="yes" class="mr-2" required>
+                <span>Yes</span>
+              </label>
+              <label class="flex items-center">
+                <input type="radio" formControlName="canText" value="no" class="mr-2" required>
+                <span>No</span>
+              </label>
+            </div>
+            <div *ngIf="hasFieldError('canText')" 
+                 class="form-error"
+                 role="alert"
+                 aria-live="polite">
+              {{ getFieldError('canText') }}
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group mb-6">
+            <label for="email" class="form-label">
+              Email <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="email"
+              id="email"
+              formControlName="email"
+              class="form-input"
+              [class.form-input-error]="hasFieldError('email')"
+              placeholder="your@email.com"
+              aria-describedby="email-error"
+              autocomplete="email"
+              required>
+            <div *ngIf="hasFieldError('email')" 
+                 id="email-error" 
+                 class="form-error"
+                 role="alert"
+                 aria-live="polite">
+              {{ getFieldError('email') }}
+            </div>
+          </div>
+
+          <!-- City -->
+          <div class="form-group mb-6">
+            <label for="city" class="form-label">
+              City <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="city"
+              formControlName="city"
+              class="form-input"
+              [class.form-input-error]="hasFieldError('city')"
+              placeholder="Enter your city"
+              aria-describedby="city-error"
+              autocomplete="address-level2"
+              required>
+            <div *ngIf="hasFieldError('city')" 
+                 id="city-error" 
+                 class="form-error"
+                 role="alert"
+                 aria-live="polite">
+              {{ getFieldError('city') }}
+            </div>
+          </div>
+
+          <!-- Party Type -->
+          <div class="form-group mb-6">
+            <label for="partyType" class="form-label">
+              Party Type <span class="text-red-500">*</span>
+            </label>
+            <select 
+              id="partyType"
+              formControlName="partyType"
+              class="form-input"
+              [class.form-input-error]="hasFieldError('partyType')"
+              aria-describedby="partyType-error"
+              required>
+              <option value="">Select party type</option>
+              <option value="private">Private Party</option>
+              <option value="open-gym">Open Gym Party</option>
+              <option value="field-trip">Groups/Field Trip</option>
+            </select>
+            <div *ngIf="hasFieldError('partyType')" 
+                 id="partyType-error" 
+                 class="form-error"
+                 role="alert"
+                 aria-live="polite">
+              {{ getFieldError('partyType') }}
+            </div>
+          </div>
+
+          <!-- Date and Time -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="form-group">
+              <label for="requestedDate" class="form-label">
+                Requested Date <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                id="requestedDate"
+                formControlName="requestedDate"
+                class="form-input"
+                [class.form-input-error]="hasFieldError('requestedDate')"
+                aria-describedby="requestedDate-error"
+                required>
+              <div *ngIf="hasFieldError('requestedDate')" 
+                   id="requestedDate-error" 
+                   class="form-error"
+                   role="alert"
+                   aria-live="polite">
+                {{ getFieldError('requestedDate') }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="requestedTime" class="form-label">
+                Requested Time <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="time"
+                id="requestedTime"
+                formControlName="requestedTime"
+                class="form-input"
+                [class.form-input-error]="hasFieldError('requestedTime')"
+                aria-describedby="requestedTime-error"
+                required>
+              <div *ngIf="hasFieldError('requestedTime')" 
+                   id="requestedTime-error" 
+                   class="form-error"
+                   role="alert"
+                   aria-live="polite">
+                {{ getFieldError('requestedTime') }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Child Information -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <div class="form-group">
+              <label for="childName" class="form-label">
+                Child's Name <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                id="childName"
+                formControlName="childName"
+                class="form-input"
+                [class.form-input-error]="hasFieldError('childName')"
+                placeholder="Enter child's name"
+                aria-describedby="childName-error"
+                required>
+              <div *ngIf="hasFieldError('childName')" 
+                   id="childName-error" 
+                   class="form-error"
+                   role="alert"
+                   aria-live="polite">
+                {{ getFieldError('childName') }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="childAge" class="form-label">
+                Child's Age <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="number"
+                id="childAge"
+                formControlName="childAge"
+                class="form-input"
+                [class.form-input-error]="hasFieldError('childAge')"
+                placeholder="Age"
+                min="1"
+                max="18"
+                aria-describedby="childAge-error"
+                required>
+              <div *ngIf="hasFieldError('childAge')" 
+                   id="childAge-error" 
+                   class="form-error"
+                   role="alert"
+                   aria-live="polite">
+                {{ getFieldError('childAge') }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Estimated Children -->
+          <div class="form-group mb-6">
+            <label for="estimatedChildren" class="form-label">
+              Estimated number of children attending <span class="text-red-500">*</span>
+            </label>
+            <input
+              type="number"
+              id="estimatedChildren"
+              formControlName="estimatedChildren"
+              class="form-input"
+              [class.form-input-error]="hasFieldError('estimatedChildren')"
+              placeholder="Number of children"
+              min="1"
+              max="50"
+              aria-describedby="estimatedChildren-error"
+              required>
+            <div *ngIf="hasFieldError('estimatedChildren')" 
+                 id="estimatedChildren-error" 
+                 class="form-error"
+                 role="alert"
+                 aria-live="polite">
+              {{ getFieldError('estimatedChildren') }}
+            </div>
+          </div>
+
+          <!-- Additional Details -->
+          <div class="form-group mb-6">
+            <label for="additionalDetails" class="form-label">
+              Additional Details or Special Requests
+            </label>
+            <textarea
+              id="additionalDetails"
+              formControlName="additionalDetails"
+              rows="4"
+              class="form-input resize-none"
+              placeholder="Tell us about any special needs, themes, or additional information..."></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <div class="form-group">
+            <button
+              type="submit"
+              class="btn-primary w-full"
+              [class.loading]="isSubmitting"
+              [disabled]="isSubmitting">
+              <span class="btn-text">
+                {{ isSubmitting ? 'Submitting Request...' : 'Submit Party Request' }}
+              </span>
+              <div *ngIf="isSubmitting" class="btn-spinner"></div>
+            </button>
+            
+            <p class="text-sm text-gray-500 mt-3 text-center">
+              We'll contact you within 24 hours with availability and pricing information.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
