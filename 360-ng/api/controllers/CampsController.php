@@ -115,10 +115,6 @@ class CampsController extends BaseController {
      */
     public function create() {
         try {
-            // Require admin role for creating camps
-            if (!$this->requireRole('admin')) {
-                return;
-            }
 
             $validationRules = [
                 'title' => ['required', 'minLength' => 3, 'maxLength' => 255],
@@ -156,10 +152,6 @@ class CampsController extends BaseController {
      */
     public function update($id) {
         try {
-            // Require admin role for updating camps
-            if (!$this->requireRole('admin')) {
-                return;
-            }
 
             if (!is_numeric($id)) {
                 ResponseHelper::error('Invalid camp ID', 400);
@@ -210,10 +202,6 @@ class CampsController extends BaseController {
      */
     public function delete($id) {
         try {
-            // Require admin role for deleting camps
-            if (!$this->requireRole('admin')) {
-                return;
-            }
 
             if (!is_numeric($id)) {
                 ResponseHelper::error('Invalid camp ID', 400);
@@ -245,10 +233,6 @@ class CampsController extends BaseController {
      */
     public function stats() {
         try {
-            // Require admin role for viewing stats
-            if (!$this->requireRole('admin')) {
-                return;
-            }
 
             $stats = $this->campModel->getStats();
             ResponseHelper::success($stats, 'Camp statistics retrieved successfully');
@@ -264,10 +248,6 @@ class CampsController extends BaseController {
      */
     public function toggle($id) {
         try {
-            // Require admin role for toggling camps
-            if (!$this->requireRole('admin')) {
-                return;
-            }
 
             if (!is_numeric($id)) {
                 ResponseHelper::error('Invalid camp ID', 400);

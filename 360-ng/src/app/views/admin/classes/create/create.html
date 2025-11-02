@@ -1,0 +1,309 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Create New Class</h1>
+      <p class="mt-1 text-sm text-gray-500">Add a new gymnastics class to your program</p>
+    </div>
+    <button
+      type="button"
+      (click)="cancel()"
+      class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors"
+    >
+      Cancel
+    </button>
+  </div>
+
+  <!-- Success Display -->
+  <div *ngIf="successMessage" class="bg-green-50 border border-green-200 rounded-lg p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-green-800">Success</h3>
+        <p class="mt-1 text-sm text-green-700">{{ successMessage }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-red-800">Error creating class</h3>
+        <p class="mt-1 text-sm text-red-700">{{ error }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="createForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-6">Basic Information</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Class Name -->
+        <div class="md:col-span-2">
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+            Class Name <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            (blur)="generateId()"
+            placeholder="e.g., Level 1, Parent Tot, Advanced Tumbling"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' + 
+                    (isFieldInvalid('name') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+          />
+          <p *ngIf="isFieldInvalid('name')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('name') }}
+          </p>
+        </div>
+
+        <!-- Age Range -->
+        <div>
+          <label for="ageRange" class="block text-sm font-medium text-gray-700 mb-1">
+            Age Range <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="ageRange"
+            formControlName="ageRange"
+            placeholder="e.g., 6yrs and Older, Ages 18mo-3yrs"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' + 
+                    (isFieldInvalid('ageRange') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+          />
+          <p *ngIf="isFieldInvalid('ageRange')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('ageRange') }}
+          </p>
+        </div>
+
+        <!-- Duration -->
+        <div>
+          <label for="duration" class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+          <input
+            type="text"
+            id="duration"
+            formControlName="duration"
+            placeholder="e.g., 50 MIN CLASS, 90 MIN CLASS"
+            class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          />
+        </div>
+
+        <!-- Ratio -->
+        <div>
+          <label for="ratio" class="block text-sm font-medium text-gray-700 mb-1">Student-Teacher Ratio</label>
+          <input
+            type="text"
+            id="ratio"
+            formControlName="ratio"
+            placeholder="e.g., 8:1, 10:1"
+            class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          />
+        </div>
+
+        <!-- URL -->
+        <div>
+          <label for="url" class="block text-sm font-medium text-gray-700 mb-1">Class URL</label>
+          <input
+            type="text"
+            id="url"
+            formControlName="url"
+            placeholder="e.g., /classes/level-1"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' + 
+                    (isFieldInvalid('url') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+          />
+          <p *ngIf="isFieldInvalid('url')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('url') }}
+          </p>
+        </div>
+
+        <!-- Description -->
+        <div class="md:col-span-2">
+          <label for="description" class="block text-sm font-medium text-gray-700 mb-1">
+            Description <span class="text-red-500">*</span>
+          </label>
+          <textarea
+            id="description"
+            formControlName="description"
+            rows="4"
+            placeholder="Describe the class, its objectives, and what students will learn..."
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' + 
+                    (isFieldInvalid('description') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+          ></textarea>
+          <p *ngIf="isFieldInvalid('description')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('description') }}
+          </p>
+        </div>
+
+        <!-- Featured -->
+        <div class="md:col-span-2">
+          <div class="flex items-center">
+            <input
+              id="featured"
+              type="checkbox"
+              formControlName="featured"
+              class="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+            />
+            <label for="featured" class="ml-2 block text-sm text-gray-900">
+              Feature this class (will be highlighted on the website)
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-medium text-gray-900">Skills Taught</h2>
+        <button
+          type="button"
+          (click)="addSkill()"
+          class="bg-orange-50 hover:bg-orange-100 text-orange-600 font-medium py-2 px-4 rounded-md transition-colors"
+        >
+          Add Skill
+        </button>
+      </div>
+      
+      <div formArrayName="skills" class="space-y-3">
+        <div *ngFor="let skill of skills.controls; let i = index" class="flex items-center space-x-3">
+          <div class="flex-1">
+            <input
+              type="text"
+              [formControlName]="i"
+              placeholder="e.g., Forward rolls, handstands, cartwheels"
+              [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' + 
+                      (isArrayFieldInvalid('skills', i) ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+            />
+            <p *ngIf="isArrayFieldInvalid('skills', i)" class="mt-1 text-sm text-red-600">
+              {{ getArrayFieldError('skills', i) }}
+            </p>
+          </div>
+          <button
+            type="button"
+            (click)="removeSkill(i)"
+            [disabled]="skills.length <= 1"
+            class="flex-shrink-0 p-2 text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Structure Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-medium text-gray-900">Class Structure</h2>
+        <button
+          type="button"
+          (click)="addStructureItem()"
+          class="bg-orange-50 hover:bg-orange-100 text-orange-600 font-medium py-2 px-4 rounded-md transition-colors"
+        >
+          Add Item
+        </button>
+      </div>
+      
+      <div formArrayName="structure" class="space-y-3">
+        <div *ngFor="let item of structure.controls; let i = index" class="flex items-center space-x-3">
+          <div class="flex-1">
+            <input
+              type="text"
+              [formControlName]="i"
+              placeholder="e.g., 10 minute warm up/stretch, 15 minutes 1st event"
+              [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' + 
+                      (isArrayFieldInvalid('structure', i) ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+            />
+            <p *ngIf="isArrayFieldInvalid('structure', i)" class="mt-1 text-sm text-red-600">
+              {{ getArrayFieldError('structure', i) }}
+            </p>
+          </div>
+          <button
+            type="button"
+            (click)="removeStructureItem(i)"
+            [disabled]="structure.length <= 1"
+            class="flex-shrink-0 p-2 text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prerequisites Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-lg font-medium text-gray-900">Prerequisites (Optional)</h2>
+        <button
+          type="button"
+          (click)="addPrerequisite()"
+          class="bg-orange-50 hover:bg-orange-100 text-orange-600 font-medium py-2 px-4 rounded-md transition-colors"
+        >
+          Add Prerequisite
+        </button>
+      </div>
+      
+      <div formArrayName="prerequisites" class="space-y-3">
+        <div *ngFor="let prereq of prerequisites.controls; let i = index" class="flex items-center space-x-3">
+          <div class="flex-1">
+            <input
+              type="text"
+              [formControlName]="i"
+              placeholder="e.g., Backward roll on the floor, cartwheel, handstand"
+              class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            />
+          </div>
+          <button
+            type="button"
+            (click)="removePrerequisite(i)"
+            class="flex-shrink-0 p-2 text-red-600 hover:text-red-800"
+          >
+            <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      
+      <p *ngIf="prerequisites.length === 0" class="text-sm text-gray-500 italic">
+        No prerequisites required for this class.
+      </p>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="flex justify-end space-x-3">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="px-6 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        [disabled]="createForm.invalid || isLoading"
+        class="px-6 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+      >
+        <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        {{ isLoading ? 'Creating...' : 'Create Class' }}
+      </button>
+    </div>
+  </form>
+</div>

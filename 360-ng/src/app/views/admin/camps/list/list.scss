@@ -1,0 +1,87 @@
+// Camps List Component Styles
+
+.btn-primary {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors;
+}
+
+// Custom table styles
+table {
+  th {
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  
+  td {
+    vertical-align: middle;
+  }
+}
+
+// Status badge transitions
+.status-badge {
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+}
+
+// Loading animation enhancement
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Stats card hover effect
+.stats-card {
+  transition: transform 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+// Filter form enhancements
+.filter-form {
+  .form-input {
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  }
+}
+
+// Responsive table
+@media (max-width: 768px) {
+  .table-responsive {
+    font-size: 0.875rem;
+    
+    th, td {
+      padding: 0.5rem;
+    }
+  }
+}
+
+// Action buttons spacing
+.action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+// Truncated text with tooltip
+.truncated-text {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

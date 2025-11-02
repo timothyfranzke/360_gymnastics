@@ -280,6 +280,31 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // Gymnastics Classes routes
+    if ($uri === '/classes') {
+        $controller = new GymnasticsClassController($db);
+        $controller->index();
+        return;
+    }
+    
+    if ($uri === '/classes/featured') {
+        $controller = new GymnasticsClassController($db);
+        $controller->featured();
+        return;
+    }
+    
+    if ($uri === '/classes/search') {
+        $controller = new GymnasticsClassController($db);
+        $controller->search();
+        return;
+    }
+    
+    if (preg_match('/^\/classes\/([a-z0-9-]+)$/', $uri, $matches)) {
+        $controller = new GymnasticsClassController($db);
+        $controller->show($matches[1]);
+        return;
+    }
+
     // Banner routes
     if ($uri === '/banner') {
         $controller = new HeroBannerController($db);
@@ -326,6 +351,37 @@ function handleGetRoutes($uri, $db) {
     
     if (preg_match('/^\/camps\/(\d+)$/', $uri, $matches)) {
         $controller = new CampsController($db);
+        $controller->show($matches[1]);
+        return;
+    }
+
+    // Events routes
+    if ($uri === '/events') {
+        $controller = new EventsController($db);
+        $controller->index();
+        return;
+    }
+    
+    if ($uri === '/events/active') {
+        $controller = new EventsController($db);
+        $controller->active();
+        return;
+    }
+    
+    if ($uri === '/events/upcoming') {
+        $controller = new EventsController($db);
+        $controller->upcoming();
+        return;
+    }
+    
+    if ($uri === '/events/stats') {
+        $controller = new EventsController($db);
+        $controller->stats();
+        return;
+    }
+    
+    if (preg_match('/^\/events\/(\d+)$/', $uri, $matches)) {
+        $controller = new EventsController($db);
         $controller->show($matches[1]);
         return;
     }
@@ -415,6 +471,13 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // Gymnastics Classes routes
+    if ($uri === '/classes') {
+        $controller = new GymnasticsClassController($db);
+        $controller->create();
+        return;
+    }
+
     // Banner routes
     if ($uri === '/banner/reset') {
         $controller = new HeroBannerController($db);
@@ -425,6 +488,13 @@ function handlePostRoutes($uri, $db) {
     // Camps routes
     if ($uri === '/camps') {
         $controller = new CampsController($db);
+        $controller->create();
+        return;
+    }
+
+    // Events routes
+    if ($uri === '/events') {
+        $controller = new EventsController($db);
         $controller->create();
         return;
     }
@@ -522,6 +592,20 @@ function handlePutRoutes($uri, $db) {
         return;
     }
 
+    // Events routes
+    if (preg_match('/^\/events\/(\d+)$/', $uri, $matches)) {
+        $controller = new EventsController($db);
+        $controller->update($matches[1]);
+        return;
+    }
+
+    // Gymnastics Classes routes
+    if (preg_match('/^\/classes\/([a-z0-9-]+)$/', $uri, $matches)) {
+        $controller = new GymnasticsClassController($db);
+        $controller->update($matches[1]);
+        return;
+    }
+
     // Gallery routes
     if (preg_match('/^\/gallery\/(\d+)$/', $uri, $matches)) {
         $controller = new GalleryController($db);
@@ -553,6 +637,13 @@ function handlePatchRoutes($uri, $db) {
     // Camps routes
     if (preg_match('/^\/camps\/(\d+)\/toggle$/', $uri, $matches)) {
         $controller = new CampsController($db);
+        $controller->toggle($matches[1]);
+        return;
+    }
+
+    // Events routes
+    if (preg_match('/^\/events\/(\d+)\/toggle$/', $uri, $matches)) {
+        $controller = new EventsController($db);
         $controller->toggle($matches[1]);
         return;
     }
@@ -594,6 +685,20 @@ function handleDeleteRoutes($uri, $db) {
     // Camps routes
     if (preg_match('/^\/camps\/(\d+)$/', $uri, $matches)) {
         $controller = new CampsController($db);
+        $controller->delete($matches[1]);
+        return;
+    }
+
+    // Events routes
+    if (preg_match('/^\/events\/(\d+)$/', $uri, $matches)) {
+        $controller = new EventsController($db);
+        $controller->delete($matches[1]);
+        return;
+    }
+
+    // Gymnastics Classes routes
+    if (preg_match('/^\/classes\/([a-z0-9-]+)$/', $uri, $matches)) {
+        $controller = new GymnasticsClassController($db);
         $controller->delete($matches[1]);
         return;
     }

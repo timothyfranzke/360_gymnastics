@@ -114,8 +114,24 @@ export class Detail implements OnInit, OnDestroy {
     this.isLoading = true;
     this.error = null;
 
-    this.classData = this.classesService.getClass(classId);
+    // Using local data for now - to use API, uncomment the following lines:
+    this.classData = this.classesService.getLocalClass(classId);
     this.isLoading = false;
+    
+    // To use API instead:
+    // this.classesService.getClass(classId).subscribe({
+    //   next: (classData) => {
+    //     this.classData = classData;
+    //     this.isLoading = false;
+    //   },
+    //   error: (error) => {
+    //     console.error('Error loading class:', error);
+    //     this.error = 'Failed to load class details. Please try again later.';
+    //     // Fallback to local data
+    //     this.classData = this.classesService.getLocalClass(classId);
+    //     this.isLoading = false;
+    //   }
+    // });
   }
 
   scrollToSchedule(): void {

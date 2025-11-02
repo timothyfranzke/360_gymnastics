@@ -1,10 +1,25 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 import { Class } from '../interface/class';
+import {
+  ApiResponse,
+  PaginatedResponse,
+  CreateClassRequest,
+  UpdateClassRequest,
+  ClassFilters,
+  ApiEndpoints
+} from '../interfaces/api';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ClassesService {
+  private readonly API_BASE = environment.api.baseUrl;
+
+  constructor(private http: HttpClient) {}
   classes: Class[] = [
     {
       id: "parent-tot",
@@ -319,11 +334,172 @@ export class ClassesService {
     }
   ];
 
-  getClasses(): Class[] {
+  // ========== PUBLIC METHODS (using local data) ==========
+
+  getLocalClasses(): Class[] {
     return this.classes;
   }
 
-  getClass(id: string): Class {
+  getLocalClass(id: string): Class {
     return this.classes.find(c => c.id === id) || {} as Class;
   }
+
+  // ========== API METHODS (CRUD operations) ==========
+
+  /**
+   * Get all classes with optional filters
+   */
+  getClasses(filters?: ClassFilters): Observable<PaginatedResponse<Class>> {
+    let params = new HttpParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params = params.set(key, value.toString());
+        }
+      });
+    }
+
+    return this.http.get<ApiResponse<PaginatedResponse<Class>>>(
+      `${this.API_BASE}${ApiEndpoints.CLASSES}`,
+      { params }
+    ).pipe(
+      map(response => this.handlePaginatedResponse<Class>(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get class by ID
+   */
+  getClass(id: string): Observable<Class> {
+    return this.http.get<ApiResponse<Class>>(
+      `${this.API_BASE}${ApiEndpoints.CLASSES}/${id}`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Create new class
+   */
+  createClass(classData: CreateClassRequest): Observable<Class> {
+    return this.http.post<ApiResponse<Class>>(
+      `${this.API_BASE}${ApiEndpoints.CLASSES}`,
+      classData
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Update class
+   */
+  updateClass(id: string, classData: UpdateClassRequest): Observable<Class> {
+    return this.http.put<ApiResponse<Class>>(
+      `${this.API_BASE}${ApiEndpoints.CLASSES}/${id}`,
+      classData
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Delete class
+   */
+  deleteClass(id: string): Observable<void> {
+    return this.http.delete<ApiResponse<void>>(
+      `${this.API_BASE}${ApiEndpoints.CLASSES}/${id}`
+    ).pipe(
+      map(() => void 0),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get featured classes (public endpoint)
+   */
+  getFeaturedClasses(): Observable<Class[]> {
+    const params = new HttpParams().set('featured', 'true');
+    
+    return this.http.get<ApiResponse<Class[]>>(
+      `${this.API_BASE}${ApiEndpoints.CLASSES}/featured`,
+      { params }
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Search classes by name or description
+   */
+  searchClasses(query: string, limit?: number): Observable<Class[]> {
+    let params = new HttpParams().set('search', query);
+    if (limit) {
+      params = params.set('limit', limit.toString());
+    }
+    
+    return this.http.get<ApiResponse<Class[]>>(
+      `${this.API_BASE}${ApiEndpoints.CLASSES}/search`,
+      { params }
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  // ========== UTILITY METHODS ==========
+
+  /**
+   * Handle successful API responses
+   */
+  private handleResponse<T>(response: ApiResponse<T>): T {
+    if (!response.success) {
+      throw new Error(response.message || 'API request failed');
+    }
+    return response.data!;
+  }
+
+  /**
+   * Handle successful paginated API responses
+   */
+  private handlePaginatedResponse<T>(response: any): PaginatedResponse<T> {
+    if (!response.success) {
+      throw new Error(response.message || 'API request failed');
+    }
+    
+    return {
+      data: response.data || [],
+      pagination: {
+        current_page: response.pagination?.current_page || 1,
+        total_pages: response.pagination?.total_pages || 1,
+        total_items: response.pagination?.total_items || 0,
+        items_per_page: response.pagination?.per_page || response.pagination?.items_per_page || 10,
+        has_next_page: response.pagination?.has_next_page || false,
+        has_previous_page: response.pagination?.has_prev_page || response.pagination?.has_previous_page || false
+      }
+    };
+  }
+
+  /**
+   * Handle API errors
+   */
+  private handleError = (error: any): Observable<never> => {
+    let errorMessage = 'An unexpected error occurred';
+    
+    if (error.error?.message) {
+      errorMessage = error.error.message;
+    } else if (error.error?.errors) {
+      const errors = Object.values(error.error.errors).flat();
+      errorMessage = (errors as string[]).join(', ');
+    } else if (error.message) {
+      errorMessage = error.message;
+    }
+    
+    throw new Error(errorMessage);
+  };
 }

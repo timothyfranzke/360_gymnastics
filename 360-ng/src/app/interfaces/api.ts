@@ -394,6 +394,7 @@ export enum ApiEndpoints {
   GYM_CLOSURES_STATS = '/gym-closures/stats',
   
   // Classes
+  CLASSES = '/classes',
   CLASSES_SCHEDULE = '/classes/schedule',
   
   // Camps
@@ -410,6 +411,42 @@ export enum ApiEndpoints {
   
   // Gallery
   GALLERY = '/gallery'
+}
+
+// Class interfaces
+export interface CreateClassRequest {
+  name: string;
+  ageRange: string;
+  description: string;
+  prerequisites: string[];
+  structure: string[];
+  skills: string[];
+  ratio?: string;
+  duration?: string;
+  url?: string;
+  featured?: boolean;
+}
+
+export interface UpdateClassRequest {
+  id?: string;
+  name?: string;
+  ageRange?: string;
+  description?: string;
+  prerequisites?: string[];
+  structure?: string[];
+  skills?: string[];
+  ratio?: string;
+  duration?: string;
+  url?: string;
+  featured?: boolean;
+}
+
+export interface ClassFilters {
+  page?: number;
+  limit?: number;
+  search?: string;
+  ageRange?: string;
+  featured?: boolean;
 }
 
 // Gallery interfaces

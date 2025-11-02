@@ -1,71 +1,296 @@
-function extract_jackrabbit_events_to_json(string $html_content): string
-{
-    $events = [];
+<?php
+/**
+ * Events Controller
+ * Handles HTTP requests for event management
+ */
 
-    // 1. Extract the current Month and Year from the table header
-    if (!preg_match('/<b>(.*?) (\d{4})<\/b>/s', $html_content, $month_year_matches)) {
-        return json_encode(['error' => 'Could not determine calendar month and year.'], JSON_PRETTY_PRINT);
+class EventsController extends BaseController {
+    private $eventModel;
+
+    public function __construct($database) {
+        parent::__construct($database);
+        $this->eventModel = new Event($database);
     }
-    $month_name = $month_year_matches[1];
-    $year = (int)$month_year_matches[2];
-    $month = date('n', strtotime($month_name)); // Convert month name to number (1-12)
 
-    // Regex to find all table cells that contain a day number AND events.
-    // We look for <td> with class MonthlyCal_InMonth or MonthlyCal_Today,
-    // which wraps an inner <table>, which contains the day number (<small>X</small>)
-    // and the event rows (<tr><td oheight...)
-    // The 's' modifier allows '.' to match newlines.
-    $day_cell_regex = '/<td[^>]*class="MonthlyCal_(InMonth|Today)"[^>]*>(.*?)<\/td>/s';
-
-    if (preg_match_all($day_cell_regex, $html_content, $day_matches)) {
-        
-        foreach ($day_matches[2] as $cell_content) {
+    /**
+     * GET /events - Get all events with pagination and filters
+     */
+    public function index() {
+        try {
+            $pagination = $this->getPaginationParams();
+            $searchParams = $this->getSearchParams();
             
-            // Extract the day number from the cell content: <small>X</small>
-            if (!preg_match('/<small>(\d{1,2})<\/small>/', $cell_content, $day_match)) {
-                // Skip if no day number is found (e.g., if the cell only contains a <p> tag or is empty)
-                continue; 
-            }
-            $day = (int)$day_match[1];
-            
-            // Create the full date string
-            $date_str = sprintf('%d-%02d-%02d', $year, $month, $day);
+            // Get filters from request
+            $filters = [
+                'search' => $searchParams['search'],
+                'sort_by' => $searchParams['sort_by'],
+                'sort_order' => $searchParams['sort_order'],
+                'is_active' => isset($_GET['is_active']) ? (bool) $_GET['is_active'] : null,
+                'date_from' => $_GET['date_from'] ?? null,
+                'date_to' => $_GET['date_to'] ?? null
+            ];
 
-            // Regex to find all event rows within the day cell.
-            // This targets the <tr><td oheight="16" ...>...</td></tr>
-            // The event link contains the ID (openreg(ID)) and the event title.
-            $event_regex = '/<td oheight="16" sort="" bgcolor="#([0-9A-F]{6})"><a href="#" onclick="openreg\((\d+)\);.*?"><b>(.*?)<\/b> (.*?)<\/a><\/td>/s';
+            // Remove null values from filters
+            $filters = array_filter($filters, function($value) {
+                return $value !== null && $value !== '';
+            });
 
-            if (preg_match_all($event_regex, $cell_content, $event_matches, PREG_SET_ORDER)) {
-                
-                foreach ($event_matches as $match) {
-                    
-                    // $match[4] is the bold time (e.g., "2:00p")
-                    // $match[5] is the event details (e.g., "Open Gym (60)")
-                    
-                    $full_event_title = trim($match[5]);
-                    
-                    // Extract event name and capacity/openings from the title (e.g., "Open Gym (60)")
-                    $name = $full_event_title;
-                    $openings = 0;
-                    if (preg_match('/^(.*?)\s+\((\d+)\)$/', $full_event_title, $title_parts)) {
-                        $name = trim($title_parts[1]);
-                        $openings = (int)$title_parts[2];
-                    }
-                    
-                    $events[] = [
-                        'date' => $date_str,
-                        'time' => trim($match[4]),
-                        'event_id' => (int)$match[3],
-                        'name' => $name,
-                        'openings' => $openings,
-                        'bg_color' => '#' . $match[2], // e.g., #00CC00
-                        'sort_time_24h' => trim($match[1]), // e.g., 'register_url' => "https://app.jackrabbitclass.com/regevent.asp?xID=" . $match[3] . "&orgid=514082&PortalSession=", // Reconstruct URL
-                    ];
-                }
-            }
+            // Get total count and paginated data
+            $total = $this->eventModel->getCount($filters);
+            $events = $this->eventModel->getAll($filters, $pagination);
+
+            ResponseHelper::paginated(
+                $events,
+                $total,
+                $pagination['page'],
+                $pagination['page_size'],
+                'Events retrieved successfully'
+            );
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::index: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve events');
         }
     }
 
-    return json_encode($events, JSON_PRETTY_PRINT);
+    /**
+     * GET /events/active - Get active events (public endpoint)
+     */
+    public function active() {
+        try {
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : null;
+            $events = $this->eventModel->getActive($limit);
+
+            ResponseHelper::success($events, 'Active events retrieved successfully');
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::active: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve active events');
+        }
+    }
+
+    /**
+     * GET /events/upcoming - Get upcoming events (public endpoint)
+     */
+    public function upcoming() {
+        try {
+            $limit = isset($_GET['limit']) ? intval($_GET['limit']) : null;
+            $events = $this->eventModel->getUpcoming($limit);
+
+            ResponseHelper::success($events, 'Upcoming events retrieved successfully');
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::upcoming: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve upcoming events');
+        }
+    }
+
+    /**
+     * GET /events/{id} - Get specific event
+     */
+    public function show($id) {
+        try {
+            if (!is_numeric($id)) {
+                ResponseHelper::error('Invalid event ID', 400);
+                return;
+            }
+
+            $event = $this->eventModel->getById($id);
+
+            if (!$event) {
+                ResponseHelper::notFound('Event not found');
+                return;
+            }
+
+            ResponseHelper::success($event, 'Event retrieved successfully');
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::show: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve event');
+        }
+    }
+
+    /**
+     * POST /events - Create new event
+     */
+    public function create() {
+        try {
+            // Require admin role for creating events
+            if (!$this->requireRole('admin')) {
+                return;
+            }
+
+            $validationRules = [
+                'title' => ['required', 'minLength' => 3, 'maxLength' => 255],
+                'date' => ['required', 'date'],
+                'cost' => ['required', 'numeric', 'min' => 0],
+                'description' => ['required', 'minLength' => 10],
+                'time' => ['required', 'minLength' => 5],
+                'registration_link' => ['required', 'url']
+            ];
+
+            $data = $this->validate($validationRules);
+            if (!$data) return;
+
+            // Validate date is not in the past
+            $eventDate = new DateTime($data['date']);
+            $today = new DateTime();
+            if ($eventDate < $today) {
+                ResponseHelper::error('Event date cannot be in the past', 400);
+                return;
+            }
+
+            $event = $this->eventModel->create($data);
+
+            $this->logActivity('create_event', ['event_id' => $event['id'], 'title' => $event['title']]);
+            ResponseHelper::created($event, 'Event created successfully');
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::create: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to create event');
+        }
+    }
+
+    /**
+     * PUT /events/{id} - Update event
+     */
+    public function update($id) {
+        try {
+            // Require admin role for updating events
+            if (!$this->requireRole('admin')) {
+                return;
+            }
+
+            if (!is_numeric($id)) {
+                ResponseHelper::error('Invalid event ID', 400);
+                return;
+            }
+
+            if (!$this->eventModel->exists($id)) {
+                ResponseHelper::notFound('Event not found');
+                return;
+            }
+
+            $validationRules = [
+                'title' => ['minLength' => 3, 'maxLength' => 255],
+                'date' => ['date'],
+                'cost' => ['numeric', 'min' => 0],
+                'description' => ['minLength' => 10],
+                'time' => ['minLength' => 5],
+                'registration_link' => ['url'],
+                'is_active' => ['boolean']
+            ];
+
+            $data = $this->validate($validationRules);
+            if (!$data) return;
+
+            // Validate date is not in the past if provided
+            if (isset($data['date'])) {
+                $eventDate = new DateTime($data['date']);
+                $today = new DateTime();
+                if ($eventDate < $today) {
+                    ResponseHelper::error('Event date cannot be in the past', 400);
+                    return;
+                }
+            }
+
+            $event = $this->eventModel->update($id, $data);
+
+            $this->logActivity('update_event', ['event_id' => $id, 'updates' => array_keys($data)]);
+            ResponseHelper::updated($event, 'Event updated successfully');
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::update: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to update event');
+        }
+    }
+
+    /**
+     * DELETE /events/{id} - Delete event
+     */
+    public function delete($id) {
+        try {
+            // Require admin role for deleting events
+            if (!$this->requireRole('admin')) {
+                return;
+            }
+
+            if (!is_numeric($id)) {
+                ResponseHelper::error('Invalid event ID', 400);
+                return;
+            }
+
+            if (!$this->eventModel->exists($id)) {
+                ResponseHelper::notFound('Event not found');
+                return;
+            }
+
+            $success = $this->eventModel->delete($id);
+
+            if ($success) {
+                $this->logActivity('delete_event', ['event_id' => $id]);
+                ResponseHelper::deleted('Event deleted successfully');
+            } else {
+                ResponseHelper::serverError('Failed to delete event');
+            }
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::delete: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to delete event');
+        }
+    }
+
+    /**
+     * GET /events/stats - Get event statistics
+     */
+    public function stats() {
+        try {
+            // Require admin role for viewing stats
+            if (!$this->requireRole('admin')) {
+                return;
+            }
+
+            $stats = $this->eventModel->getStats();
+            ResponseHelper::success($stats, 'Event statistics retrieved successfully');
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::stats: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve event statistics');
+        }
+    }
+
+    /**
+     * PATCH /events/{id}/toggle - Toggle event active status
+     */
+    public function toggle($id) {
+        try {
+            // Require admin role for toggling events
+            if (!$this->requireRole('admin')) {
+                return;
+            }
+
+            if (!is_numeric($id)) {
+                ResponseHelper::error('Invalid event ID', 400);
+                return;
+            }
+
+            $event = $this->eventModel->getById($id);
+            if (!$event) {
+                ResponseHelper::notFound('Event not found');
+                return;
+            }
+
+            $newStatus = !$event['is_active'];
+            $updatedEvent = $this->eventModel->update($id, ['is_active' => $newStatus]);
+
+            $action = $newStatus ? 'activated' : 'deactivated';
+            $this->logActivity('toggle_event', ['event_id' => $id, 'action' => $action]);
+            
+            ResponseHelper::updated($updatedEvent, "Event $action successfully");
+
+        } catch (Exception $e) {
+            error_log("Error in EventsController::toggle: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to toggle event status');
+        }
+    }
 }

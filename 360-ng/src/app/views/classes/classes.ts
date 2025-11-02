@@ -37,7 +37,20 @@ export class Classes implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.classes = this.classesService.getClasses();
+    // Using local data for now - to use API, uncomment the following lines:
+    this.classes = this.classesService.getLocalClasses();
+    
+    // To use API instead:
+    // this.classesService.getClasses().subscribe({
+    //   next: (response) => {
+    //     this.classes = response.data;
+    //   },
+    //   error: (error) => {
+    //     console.error('Error loading classes:', error);
+    //     // Fallback to local data
+    //     this.classes = this.classesService.getLocalClasses();
+    //   }
+    // });
   }
 
   scrollToSchedule(): void {

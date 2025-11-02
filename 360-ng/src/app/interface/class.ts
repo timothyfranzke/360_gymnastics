@@ -9,4 +9,5 @@ export interface Class {
     ratio?: string;
     duration?: string;
     url?: string;
+    featured?: boolean;
 }

@@ -78,6 +78,16 @@ export const routes: Routes = [
                 path: 'gallery',
                 loadChildren: () => import('./views/admin/gallery/gallery.routes').then(m => m.GALLERY_ROUTES),
                 canActivate: [staffGuard]
+            },
+            {
+                path: 'camps',
+                loadChildren: () => import('./views/admin/camps/camps.routes').then(m => m.routes),
+                canActivate: [staffGuard]
+            },
+            {
+                path: 'classes',
+                loadChildren: () => import('./views/admin/classes/classes.routes').then(m => m.routes),
+                canActivate: [staffGuard]
             }
         ]
     },
