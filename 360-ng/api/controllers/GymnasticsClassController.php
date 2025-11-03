@@ -118,13 +118,7 @@ class GymnasticsClassController extends BaseController {
      */
     public function create() {
         try {
-            // Check authentication for admin operations
-            if (!$this->isAuthenticated()) {
-                ResponseHelper::unauthorized();
-                return;
-            }
-
-            $input = $this->getJsonInput();
+            $input = $this->getInput();
             
             // Validate required fields
             $errors = $this->validateClassData($input, true);
@@ -160,12 +154,6 @@ class GymnasticsClassController extends BaseController {
      */
     public function update($id) {
         try {
-            // Check authentication for admin operations
-            if (!$this->isAuthenticated()) {
-                ResponseHelper::unauthorized();
-                return;
-            }
-
             if (empty($id)) {
                 ResponseHelper::error('Invalid class ID', 400);
                 return;
@@ -178,7 +166,7 @@ class GymnasticsClassController extends BaseController {
                 return;
             }
 
-            $input = $this->getJsonInput();
+            $input = $this->getInput();
             
             // Validate input data (partial validation for updates)
             $errors = $this->validateClassData($input, false);
@@ -208,12 +196,6 @@ class GymnasticsClassController extends BaseController {
      */
     public function delete($id) {
         try {
-            // Check authentication for admin operations
-            if (!$this->isAuthenticated()) {
-                ResponseHelper::unauthorized();
-                return;
-            }
-
             if (empty($id)) {
                 ResponseHelper::error('Invalid class ID', 400);
                 return;

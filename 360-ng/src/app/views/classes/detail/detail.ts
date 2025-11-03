@@ -98,7 +98,6 @@ export class Detail implements OnInit, OnDestroy {
       const classId = params['id'];
       if (classId) {
         this.loadClassDetail(classId);
-        this.loadJackRabbitSchedule();
         this.notification = this.notificationsService.getNotification("classes", classId) || null;
         console.log(this.notification);
       }
@@ -114,24 +113,43 @@ export class Detail implements OnInit, OnDestroy {
     this.isLoading = true;
     this.error = null;
 
-    // Using local data for now - to use API, uncomment the following lines:
-    this.classData = this.classesService.getLocalClass(classId);
-    this.isLoading = false;
-    
-    // To use API instead:
-    // this.classesService.getClass(classId).subscribe({
-    //   next: (classData) => {
-    //     this.classData = classData;
-    //     this.isLoading = false;
-    //   },
-    //   error: (error) => {
-    //     console.error('Error loading class:', error);
-    //     this.error = 'Failed to load class details. Please try again later.';
-    //     // Fallback to local data
-    //     this.classData = this.classesService.getLocalClass(classId);
-    //     this.isLoading = false;
-    //   }
-    // });
+    // Load from featured classes (public endpoint)
+    this.classesService.getFeaturedClasses()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (classes) => {
+          const foundClass = classes.find(c => c.id === classId);
+          if (foundClass) {
+            this.classData = foundClass;
+            // Load Jackrabbit schedule using the class name (not ID)
+            this.loadJackRabbitSchedule(foundClass.name);
+          } else {
+            this.error = 'Class not found or not available for public viewing.';
+            // Fallback to local data
+            const fallbackClass = this.classesService.getLocalClass(classId);
+            if (fallbackClass && fallbackClass.id) {
+              this.classData = fallbackClass;
+              this.error = null; // Clear error if fallback works
+              // Load Jackrabbit schedule using the class name from fallback
+              this.loadJackRabbitSchedule(fallbackClass.name);
+            }
+          }
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading class:', error);
+          this.error = 'Failed to load class details. Please try again later.';
+          // Fallback to local data
+          const fallbackClass = this.classesService.getLocalClass(classId);
+          if (fallbackClass && fallbackClass.id) {
+            this.classData = fallbackClass;
+            this.error = null; // Clear error if fallback works
+            // Load Jackrabbit schedule using the class name from fallback
+            this.loadJackRabbitSchedule(fallbackClass.name);
+          }
+          this.isLoading = false;
+        }
+      });
   }
 
   scrollToSchedule(): void {
@@ -145,11 +163,12 @@ export class Detail implements OnInit, OnDestroy {
     return 'https://app.jackrabbitclass.com/Openings.asp?id=514082&Cat1=Parent%20Tot&sortcols=Day&hidecols=Class%20Ends,Class%20Starts,Class%20Starts,Description,Session';
   }
 
-  loadJackRabbitSchedule(): void {
+  loadJackRabbitSchedule(className: string): void {
     this.isScheduleLoading = true;
     this.scheduleError = null;
     
-    this.jackrabbitService.getJackrabbitSchedule(this.classData.name)
+    console.log('Class Name:', className);
+    this.jackrabbitService.getJackrabbitSchedule(className)
       .pipe(
         takeUntil(this.destroy$),
         catchError((error) => {
@@ -177,6 +196,6 @@ export class Detail implements OnInit, OnDestroy {
    * Retry loading the schedule in case of errors
    */
   retryLoadSchedule(): void {
-    this.loadJackRabbitSchedule();
+    this.loadJackRabbitSchedule(this.classData.name);
   }
 }

@@ -72,7 +72,7 @@ class AuthMiddleware {
         $method = $_SERVER['REQUEST_METHOD'];
         
         // Skip authentication for excluded routes
-        if ($this->isExcludedRoute($requestUri) || $method === 'OPTIONS') {
+        if ($method === 'GET' || $method === 'OPTIONS') {
             return true;
         }
 
