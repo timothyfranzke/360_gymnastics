@@ -16,48 +16,7 @@ class AuthMiddleware {
         '/api/v1/migrate',
         '/360gym/api/v1/migrate',
         '/migrate',
-        '/360gym/api/migrate',
-        '/api/v1/announcements/active',
-        '/360gym/api/v1/announcements/active',
-        '/announcements/active',
-        '/api/v1/gym-hours/status',
-        '/360gym/api/v1/gym-hours/status',
-        '/gym-hours/status',
-        '/api/v1/gym-hours/check',
-        '/360gym/api/v1/gym-hours/check',
-        '/gym-hours/check',
-        '/api/v1/staff/homepage',
-        '/360gym/api/v1/staff/homepage',
-        '/staff/homepage',
-        '/api/v1/classes/schedule',
-        '/360gym/api/v1/classes/schedule',
-        '/classes/schedule',
-        '/api/v1/classes/featured',
-        '/360gym/api/v1/classes/featured',
-        '/classes/featured',
-        '/api/v1/banner/public',
-        '/360gym/api/v1/banner/public',
-        '/banner/public',
-        '/api/v1/camps/active',
-        '/360gym/api/v1/camps/active',
-        '/camps/active',
-        '/api/v1/camps/upcoming',
-        '/360gym/api/v1/camps/upcoming',
-        '/camps/upcoming',
-        '/api/v1/camps/',
-        '/360gym/api/v1/camps/',
-        '/camps/',
-        '/api/v1/files/staff',
-        '/360gym/api/v1/files/staff',
-        '/files/staff',
-        '/api/v1/files/gallery',
-        '/api/v1/files/uploads/gallery',
-        
-        '/360gym/api/v1/files/gallery',
-        '/files/gallery',
-        '/api/v1/gallery',
-        '/360gym/api/v1/gallery',
-        '/gallery'
+        '/360gym/api/migrate'
     ];
 
     public function __construct($database) {
@@ -72,7 +31,7 @@ class AuthMiddleware {
         $method = $_SERVER['REQUEST_METHOD'];
         
         // Skip authentication for excluded routes
-        if ($method === 'GET' || $method === 'OPTIONS') {
+        if ($method === 'GET' || $method === 'OPTIONS' || $this->isExcludedRoute($requestUri)) {
             return true;
         }
 

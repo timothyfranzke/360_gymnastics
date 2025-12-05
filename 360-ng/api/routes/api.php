@@ -524,6 +524,13 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // Contact routes
+    if ($uri === '/contact') {
+        $controller = new ContactController($db);
+        $controller->submit();
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 

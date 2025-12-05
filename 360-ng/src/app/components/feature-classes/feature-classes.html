@@ -13,7 +13,7 @@
         class="cards-grid-4 gap-6"
       >
         <a 
-          *ngFor="let featuredClass of featuredClasses; let i = index"
+          *ngFor="let featuredClass of featuredClasses; index as i"
           [routerLink]="featuredClass.route"
           class="card-tertiary rounded-xl p-6 text-center transition-all duration-300 text-white card-entrance card-interactive"
           [ngClass]="[featuredClass.bgColor, featuredClass.hoverColor]"
@@ -21,23 +21,24 @@
           [style.animation-delay]="(i * 100) + 'ms'"
           [attr.aria-label]="'View ' + featuredClass.name + ' classes for ' + featuredClass.ageRange"
         >
-          <div class="bg-white w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+          <!-- Icon -->
+          <div class="flex justify-center mb-4">
             <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              class="h-8 w-8"
+              class="w-12 h-12" 
               [ngClass]="featuredClass.iconColor"
               fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
             >
               <path 
                 stroke-linecap="round" 
                 stroke-linejoin="round" 
                 stroke-width="2" 
                 [attr.d]="getIconPath(featuredClass.icon)"
-              />
+              ></path>
             </svg>
           </div>
+          
           <h3 class="card-title-tertiary text-xl font-bold mb-2">{{ featuredClass.name }}</h3>
           <p class="card-description-light text-sm text-white">{{ featuredClass.ageRange }}</p>
         </a>

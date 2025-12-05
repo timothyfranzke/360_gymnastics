@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AssetPathPipe } from '../../pipes/asset-path.pipe';
+import { ClassesService } from '../../services/classes';
+import { Subject, takeUntil } from 'rxjs';
+import { Class } from '../../interface/class';
 
 interface FeaturedClass {
   id: string;
@@ -51,55 +54,80 @@ interface FeaturedClass {
     ])
   ]
 })
-export class FeaturedClasses implements OnInit {
+export class FeaturedClasses implements OnInit, OnDestroy {
   animationState = 'in';
+  featuredClasses: FeaturedClass[] = [];
+  isLoading = true;
   
-  featuredClasses: FeaturedClass[] = [
+  private destroy$ = new Subject<void>();
+  
+  // Predefined styling and icons for featured classes (in order)
+  private readonly classStyles = [
     {
-      id: 'parent-tot',
-      name: 'Parent-Tot',
-      ageRange: 'Ages 18mo-3yrs',
-      bgColor: 'bg-yellow-400',
-      hoverColor: 'hover:bg-yellow-500',
-      iconColor: 'text-yellow-400',
-      icon: 'happy',
-      route: '/classes/parent-tot'
+      bgColor: 'bg-orange-500',
+      hoverColor: 'hover:bg-orange-600',
+      iconColor: 'text-orange-100',
+      icon: 'happy'
     },
     {
-      id: 'beginner-preschool',
-      name: 'Beginner Preschool',
-      ageRange: 'Ages 4-5.99yrs',
-      bgColor: 'bg-cyan-500',
-      hoverColor: 'hover:bg-cyan-600',
-      iconColor: 'text-cyan-500',
-      icon: 'person',
-      route: '/classes/beginner-preschool'
+      bgColor: 'bg-blue-500',
+      hoverColor: 'hover:bg-blue-600',
+      iconColor: 'text-blue-100',
+      icon: 'person'
     },
     {
-      id: 'beginner-boys',
-      name: 'Beginner Boys',
-      ageRange: 'Boys-only basics',
-      bgColor: 'bg-orange-400',
-      hoverColor: 'hover:bg-orange-500',
-      iconColor: 'text-orange-400',
-      icon: 'lightning',
-      route: '/classes/beginner-boys'
+      bgColor: 'bg-green-500',
+      hoverColor: 'hover:bg-green-600',
+      iconColor: 'text-green-100',
+      icon: 'lightning'
     },
     {
-      id: 'adult-gymnastics',
-      name: 'Adult Gymnastics',
-      ageRange: 'All skill levels',
-      bgColor: 'bg-cyan-600',
-      hoverColor: 'hover:bg-cyan-700',
-      iconColor: 'text-cyan-600',
-      icon: 'lightbulb',
-      route: '/classes/adult-gymnastics'
+      bgColor: 'bg-purple-500',
+      hoverColor: 'hover:bg-purple-600',
+      iconColor: 'text-purple-100',
+      icon: 'lightbulb'
     }
   ];
-
+  
+  constructor(
+    private classesService: ClassesService
+  ) {}
+  
   ngOnInit(): void {
-    // Component initialization logic here if needed
+    this.loadFeaturedClasses();
   }
+
+  ngOnDestroy(): void {
+    // Clean up subscriptions
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  
+  loadFeaturedClasses(): void {
+    this.isLoading = true;
+    this.classesService.getFeaturedClasses()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (classes) => {
+          // Take first 4 classes and merge with styling
+          this.featuredClasses = classes
+            .slice(0, 4)
+            .map((classData, index) => ({
+              id: classData.id,
+              name: classData.name,
+              ageRange: classData.ageRange,
+              route: `/classes/${classData.id}`,
+              ...this.classStyles[index]
+            }));
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading featured classes:', error);
+          this.isLoading = false;
+        }
+      });
+  }
+  
 
   getIconPath(iconType: string): string {
     const icons: { [key: string]: string } = {
