@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ViewHeader } from '../../components/view-header/view-header';
+import { ApiService } from '../../services/api.service';
 
 @Component({
   selector: 'app-parties',
@@ -16,7 +17,10 @@ export class Parties implements OnInit {
   submitSuccess = false;
   submitError = '';
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private apiService: ApiService
+  ) {}
 
   ngOnInit(): void {
     this.initializeForm();
@@ -108,24 +112,21 @@ export class Parties implements OnInit {
     this.submitError = '';
     this.submitSuccess = false;
 
-    // Simulate form submission
-    setTimeout(() => {
-      // In a real application, you would send this data to your backend
-      console.log('Party form data:', this.partyForm.value);
-      
-      // Simulate success/error randomly for demo
-      const isSuccess = Math.random() > 0.1; // 90% success rate
-      
-      if (isSuccess) {
+    // Submit form data to API
+    this.apiService.submitPartyRequest(this.partyForm.value).subscribe({
+      next: (response) => {
+        console.log('Party request submitted successfully:', response);
         this.submitSuccess = true;
         this.partyForm.reset();
         this.initializeForm();
-      } else {
-        this.submitError = 'Unable to send your party request. Please try again or contact us directly.';
+        this.isSubmitting = false;
+      },
+      error: (error) => {
+        console.error('Error submitting party request:', error);
+        this.submitError = error.message || 'Unable to send your party request. Please try again or contact us directly.';
+        this.isSubmitting = false;
       }
-      
-      this.isSubmitting = false;
-    }, 2000);
+    });
   }
 
   private markFormGroupTouched(): void {

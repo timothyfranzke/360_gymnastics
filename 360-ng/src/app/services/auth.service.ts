@@ -275,10 +275,10 @@ export class AuthService {
                        window.location.hostname === '127.0.0.1';
     
     if (isLocalhost) {
-      return 'http://localhost:8080/api/v1';
+      return 'https://kc360gym.com/api/v1';
     }
     
-    return '/360gym/api/v1';
+    return '/api/v1';
   }
 
   /**

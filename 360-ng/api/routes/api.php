@@ -386,6 +386,25 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // Party routes
+    if ($uri === '/parties') {
+        $controller = new PartyController($db);
+        $controller->index();
+        return;
+    }
+    
+    if ($uri === '/parties/stats') {
+        $controller = new PartyController($db);
+        $controller->stats();
+        return;
+    }
+    
+    if (preg_match('/^\/parties\/(\d+)$/', $uri, $matches)) {
+        $controller = new PartyController($db);
+        $controller->show($matches[1]);
+        return;
+    }
+
     // If no route matches
     ResponseHelper::notFound('Route not found');
 }
@@ -531,6 +550,13 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // Party routes
+    if ($uri === '/parties') {
+        $controller = new PartyController($db);
+        $controller->submit();
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -617,6 +643,13 @@ function handlePutRoutes($uri, $db) {
     if (preg_match('/^\/gallery\/(\d+)$/', $uri, $matches)) {
         $controller = new GalleryController($db);
         $controller->update($matches[1]);
+        return;
+    }
+
+    // Party routes
+    if (preg_match('/^\/parties\/(\d+)\/status$/', $uri, $matches)) {
+        $controller = new PartyController($db);
+        $controller->updateStatus($matches[1]);
         return;
     }
 
@@ -713,6 +746,13 @@ function handleDeleteRoutes($uri, $db) {
     // Gallery routes
     if (preg_match('/^\/gallery\/(\d+)$/', $uri, $matches)) {
         $controller = new GalleryController($db);
+        $controller->delete($matches[1]);
+        return;
+    }
+
+    // Party routes
+    if (preg_match('/^\/parties\/(\d+)$/', $uri, $matches)) {
+        $controller = new PartyController($db);
         $controller->delete($matches[1]);
         return;
     }

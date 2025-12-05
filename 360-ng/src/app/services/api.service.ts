@@ -696,6 +696,93 @@ export class ApiService {
       .pipe(catchError(this.handleError));
   }
 
+  // ========== PARTY METHODS ==========
+
+  /**
+   * Submit party request
+   */
+  submitPartyRequest(partyData: any): Observable<{ message: string; party_id: number }> {
+    return this.http.post<ApiResponse<{ message: string; party_id: number }>>(
+      `${this.API_BASE}/parties`,
+      partyData
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get all party requests (admin)
+   */
+  getPartyRequests(filters?: any): Observable<PaginatedResponse<any>> {
+    let params = new HttpParams();
+    
+    if (filters) {
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          params = params.set(key, value.toString());
+        }
+      });
+    }
+
+    return this.http.get<ApiResponse<PaginatedResponse<any>>>(
+      `${this.API_BASE}/parties`,
+      { params }
+    ).pipe(
+      map(response => this.handlePaginatedResponse<any>(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get party request by ID (admin)
+   */
+  getPartyRequest(id: number): Observable<any> {
+    return this.http.get<ApiResponse<any>>(
+      `${this.API_BASE}/parties/${id}`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Update party request status (admin)
+   */
+  updatePartyStatus(id: number, status: string): Observable<{ message: string }> {
+    return this.http.put<ApiResponse<{ message: string }>>(
+      `${this.API_BASE}/parties/${id}/status`,
+      { status }
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Delete party request (admin)
+   */
+  deletePartyRequest(id: number): Observable<void> {
+    return this.http.delete<ApiResponse<void>>(
+      `${this.API_BASE}/parties/${id}`
+    ).pipe(
+      map(() => void 0),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get party request statistics (admin)
+   */
+  getPartyStats(): Observable<any> {
+    return this.http.get<ApiResponse<any>>(
+      `${this.API_BASE}/parties/stats`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
   // ========== UTILITY METHODS ==========
 
   /**

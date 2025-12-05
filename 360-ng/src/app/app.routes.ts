@@ -88,6 +88,11 @@ export const routes: Routes = [
                 path: 'classes',
                 loadChildren: () => import('./views/admin/classes/classes.routes').then(m => m.routes),
                 canActivate: [staffGuard]
+            },
+            {
+                path: 'parties',
+                loadChildren: () => import('./views/admin/parties/parties.routes').then(m => m.routes),
+                canActivate: [staffGuard]
             }
         ]
     },

@@ -1,0 +1,296 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Party Requests</h1>
+      <p class="mt-1 text-sm text-gray-500">Manage birthday party booking requests</p>
+    </div>
+    <div class="text-sm text-gray-500">
+      {{ totalItems }} total requests
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <form [formGroup]="filterForm" class="grid grid-cols-1 md:grid-cols-5 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+        <input
+          type="text"
+          formControlName="search"
+          placeholder="Search by name, email, child..."
+          class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+        <select formControlName="status" 
+                class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+          <option value="">All Status</option>
+          <option value="pending">Pending</option>
+          <option value="contacted">Contacted</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Party Type</label>
+        <input
+          type="text"
+          formControlName="party_type"
+          placeholder="Party type..."
+          class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
+        <input
+          type="date"
+          formControlName="date_from"
+          class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+      </div>
+      
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
+        <input
+          type="date"
+          formControlName="date_to"
+          class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+      </div>
+    </form>
+    
+    <div class="mt-4 flex justify-between items-center">
+      <div class="text-sm text-gray-500">
+        Showing {{ partyRequests.length }} of {{ totalItems }} party requests
+      </div>
+      <button (click)="clearFilters()" 
+              class="text-sm text-orange-600 hover:text-orange-500 font-medium">
+        Clear Filters
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoading" class="bg-white rounded-lg shadow p-8">
+    <div class="flex items-center justify-center">
+      <svg class="animate-spin h-8 w-8 text-orange-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span class="ml-2 text-gray-600">Loading party requests...</span>
+    </div>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div class="flex items-center">
+      <svg class="h-5 w-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+      </svg>
+      <p class="text-red-700">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Party Requests List -->
+  <div *ngIf="!isLoading && !error" class="bg-white rounded-lg shadow overflow-hidden">
+    <div *ngIf="partyRequests.length === 0" class="p-8 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+      </svg>
+      <h3 class="mt-4 text-lg font-medium text-gray-900">No party requests found</h3>
+      <p class="mt-2 text-gray-500">No party requests match your current filters.</p>
+    </div>
+
+    <div *ngIf="partyRequests.length > 0" class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Child & Party Details
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Parent Contact
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Requested Date & Time
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Status
+            </th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Submitted
+            </th>
+            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              Actions
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <tr *ngFor="let request of partyRequests" 
+              class="hover:bg-gray-50 transition-colors duration-150">
+            
+            <!-- Child & Party Details -->
+            <td class="px-6 py-4">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                  <div class="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center">
+                    <svg class="h-6 w-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h6m2 5H7a2 2 0 01-2-2V9a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2z"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900">{{ request.child_name }}</div>
+                  <div class="text-sm text-gray-500">
+                    Age {{ request.child_age }} • {{ request.party_type }}
+                  </div>
+                  <div class="text-sm text-gray-500">
+                    {{ request.estimated_children }} children
+                  </div>
+                </div>
+              </div>
+            </td>
+
+            <!-- Parent Contact -->
+            <td class="px-6 py-4">
+              <div class="text-sm font-medium text-gray-900">{{ request.parent_name }}</div>
+              <div class="text-sm text-gray-500">{{ request.email }}</div>
+              <div class="text-sm text-gray-500">
+                {{ request.phone }}
+                <span *ngIf="request.can_text === 'yes'" class="ml-1 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                  Can Text
+                </span>
+              </div>
+              <div class="text-sm text-gray-500">{{ request.city }}</div>
+            </td>
+
+            <!-- Requested Date & Time -->
+            <td class="px-6 py-4">
+              <div class="text-sm font-medium text-gray-900">
+                {{ formatDate(request.requested_date) }}
+              </div>
+              <div class="text-sm text-gray-500">
+                {{ formatTime(request.requested_time) }}
+              </div>
+              <div *ngIf="isUpcoming(request.requested_date)" class="mt-1">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
+                  Upcoming
+                </span>
+              </div>
+              <div *ngIf="isPast(request.requested_date)" class="mt-1">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+                  Past
+                </span>
+              </div>
+            </td>
+
+            <!-- Status -->
+            <td class="px-6 py-4">
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [class]="'bg-' + getStatusColor(request.status) + '-100 text-' + getStatusColor(request.status) + '-800'">
+                {{ request.status | titlecase }}
+              </span>
+              
+              <!-- Quick status update -->
+              <div class="mt-2 flex space-x-1">
+                <button *ngIf="request.status === 'pending'" 
+                        (click)="updateStatus(request, 'contacted')"
+                        class="text-xs px-2 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200">
+                  Mark Contacted
+                </button>
+                <button *ngIf="request.status === 'contacted'" 
+                        (click)="updateStatus(request, 'confirmed')"
+                        class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200">
+                  Confirm
+                </button>
+                <button *ngIf="request.status !== 'cancelled'" 
+                        (click)="updateStatus(request, 'cancelled')"
+                        class="text-xs px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200">
+                  Cancel
+                </button>
+              </div>
+            </td>
+
+            <!-- Submitted -->
+            <td class="px-6 py-4">
+              <div class="text-sm text-gray-900">
+                {{ formatDateTime(request.submitted_at) }}
+              </div>
+            </td>
+
+            <!-- Actions -->
+            <td class="px-6 py-4 text-right text-sm font-medium">
+              <div class="flex justify-end space-x-2">
+                <a [routerLink]="['/admin/parties', request.id]" 
+                   class="text-orange-600 hover:text-orange-900">
+                  View Details
+                </a>
+                <button (click)="deletePartyRequest(request)" 
+                        class="text-red-600 hover:text-red-900">
+                  Delete
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div *ngIf="totalPages > 1" class="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+      <div class="flex-1 flex justify-between sm:hidden">
+        <button (click)="previousPage()" 
+                [disabled]="currentPage <= 1"
+                class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+          Previous
+        </button>
+        <button (click)="nextPage()" 
+                [disabled]="currentPage >= totalPages"
+                class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+          Next
+        </button>
+      </div>
+      <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+        <div>
+          <p class="text-sm text-gray-700">
+            Showing
+            <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
+            to
+            <span class="font-medium">{{ Math.min(currentPage * itemsPerPage, totalItems) }}</span>
+            of
+            <span class="font-medium">{{ totalItems }}</span>
+            results
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
+            <button (click)="previousPage()" 
+                    [disabled]="currentPage <= 1"
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+            
+            <button *ngFor="let page of getPageNumbers()" 
+                    (click)="goToPage(page)"
+                    [class]="page === currentPage ? 'z-10 bg-orange-50 border-orange-500 text-orange-600' : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'"
+                    class="relative inline-flex items-center px-4 py-2 border text-sm font-medium">
+              {{ page }}
+            </button>
+            
+            <button (click)="nextPage()" 
+                    [disabled]="currentPage >= totalPages"
+                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed">
+              <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+              </svg>
+            </button>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
