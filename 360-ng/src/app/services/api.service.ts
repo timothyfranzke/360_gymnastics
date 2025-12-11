@@ -34,7 +34,9 @@ import {
   ClassScheduleResponse,
   Banner,
   UpdateBannerRequest,
-  ApiEndpoints
+  ApiEndpoints,
+  User,
+  RegisterRequest
 } from '../interfaces/api';
 
 @Injectable({
@@ -842,6 +844,71 @@ export class ApiService {
         has_previous_page: response.pagination?.has_prev_page || response.pagination?.has_previous_page || false
       }
     };
+  }
+
+  // ========== USER MANAGEMENT METHODS ==========
+
+  /**
+   * Get users with pagination and filtering
+   */
+  getUsers(filters: any = {}): Observable<PaginatedResponse<User>> {
+    let params = new HttpParams();
+    
+    Object.keys(filters).forEach(key => {
+      if (filters[key] !== undefined && filters[key] !== '') {
+        params = params.append(key, filters[key].toString());
+      }
+    });
+
+    return this.http.get<any>(`${this.API_BASE}/users`, { params })
+      .pipe(
+        map(response => this.handlePaginatedResponse<User>(response)),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Get single user by ID
+   */
+  getUser(id: number): Observable<User> {
+    return this.http.get<ApiResponse<{ user: User }>>(`${this.API_BASE}/users/${id}`)
+      .pipe(
+        map(response => this.handleResponse(response).user),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Create new user (uses auth service register method)
+   */
+  registerUser(userData: RegisterRequest): Observable<User> {
+    return this.http.post<ApiResponse<{ user: User }>>(`${this.API_BASE}/auth/register`, userData)
+      .pipe(
+        map(response => this.handleResponse(response).user),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Update user
+   */
+  updateUser(id: number, userData: any): Observable<User> {
+    return this.http.put<ApiResponse<{ user: User }>>(`${this.API_BASE}/users/${id}`, userData)
+      .pipe(
+        map(response => this.handleResponse(response).user),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Delete user
+   */
+  deleteUser(id: number): Observable<void> {
+    return this.http.delete<ApiResponse>(`${this.API_BASE}/users/${id}`)
+      .pipe(
+        map(response => this.handleResponse(response)),
+        catchError(this.handleError)
+      );
   }
 
   /**

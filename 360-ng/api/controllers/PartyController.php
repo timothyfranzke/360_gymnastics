@@ -330,7 +330,7 @@ class PartyController extends BaseController {
         $message .= "IP Address: " . $data['ip_address'] . "\n";
         $message .= "User Agent: " . $data['user_agent'] . "\n";
 
-        $headers = "From: noreply@360gym.com\r\n";
+        $headers = "From: noreply@kc360gym.com\r\n";
         $headers .= "Reply-To: " . $data['email'] . "\r\n";
         $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
         $headers .= "X-Mailer: 360 Gym Party Request Form\r\n";
@@ -361,5 +361,19 @@ class PartyController extends BaseController {
         }
         
         return $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    }
+
+    public function getNewCount() {
+        try {
+            $sql = "SELECT COUNT(*) FROM party_requests WHERE status = 'pending'";
+            $stmt = $this->db->execute($sql);
+            $count = $stmt->fetchColumn();
+            
+            ResponseHelper::success(['count' => intval($count)], 'New party requests count retrieved successfully');
+            
+        } catch (Exception $e) {
+            error_log("Get new party requests count error: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve new party requests count');
+        }
     }
 }

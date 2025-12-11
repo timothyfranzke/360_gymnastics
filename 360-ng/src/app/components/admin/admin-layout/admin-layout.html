@@ -28,8 +28,8 @@
         <li *ngFor="let item of getFilteredNavigation()">
           <a [routerLink]="item.route"
              routerLinkActive="bg-orange-50 text-orange-700 border-r-2 border-orange-500"
-             (click)="closeSidebar()"
-             class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ease-in-out hover:bg-gray-50 hover:text-gray-900">
+             (click)="closeSidebar(); onNavigationClick(item.route)"
+             class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors duration-150 ease-in-out hover:bg-gray-50 hover:text-gray-900 relative">
             <svg
                  class="mr-3 h-5 w-5 text-gray-400 group-hover:text-gray-500" 
                  fill="none" 
@@ -37,7 +37,12 @@
                  viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="item.icon"></path>
             </svg>
-            {{ item.name }}
+            <span class="flex-1">{{ item.name }}</span>
+            <!-- Badge for notifications -->
+            <span *ngIf="getBadgeCount(item.route) > 0" 
+                  class="inline-flex items-center justify-center h-5 w-5 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
+              {{ getBadgeCount(item.route) }}
+            </span>
           </a>
         </li>
       </ul>

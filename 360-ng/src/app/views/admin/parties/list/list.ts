@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ApiService } from '../../../../services/api.service';
 import { AuthService } from '../../../../services/auth.service';
+import { BadgeNotificationsService } from '../../../../services/badge-notifications';
 import { PartyRequest, PartyRequestFilters } from '../../../../interfaces/party';
 import { PaginatedResponse, User } from '../../../../interfaces/api';
 
@@ -36,7 +37,8 @@ export class PartyRequestList implements OnInit, OnDestroy {
   constructor(
     private apiService: ApiService,
     private authService: AuthService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private badgeNotificationsService: BadgeNotificationsService
   ) {
     this.filterForm = this.fb.group({
       search: [''],
@@ -48,6 +50,9 @@ export class PartyRequestList implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Mark parties as viewed when user visits this page
+    this.badgeNotificationsService.markPartiesAsViewed();
+
     this.authService.currentUser$
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => {

@@ -54,6 +54,159 @@ class ContactController extends BaseController {
         }
     }
 
+    public function getContacts() {
+        try {
+            $page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
+            $limit = isset($_GET['limit']) ? min(50, max(1, intval($_GET['limit']))) : 10;
+            $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+            $status = isset($_GET['status']) ? $_GET['status'] : '';
+            
+            $offset = ($page - 1) * $limit;
+            
+            $whereConditions = [];
+            $params = [];
+            
+            if (!empty($search)) {
+                $whereConditions[] = "(name LIKE ? OR email LIKE ? OR subject LIKE ? OR message LIKE ?)";
+                $searchTerm = "%$search%";
+                $params = array_merge($params, [$searchTerm, $searchTerm, $searchTerm, $searchTerm]);
+            }
+            
+            if (!empty($status) && in_array($status, ['new', 'read', 'responded'])) {
+                $whereConditions[] = "status = ?";
+                $params[] = $status;
+            }
+            
+            $whereClause = empty($whereConditions) ? '' : 'WHERE ' . implode(' AND ', $whereConditions);
+            
+            // Get total count
+            $countSql = "SELECT COUNT(*) FROM contact_submissions $whereClause";
+            $countStmt = $this->db->execute($countSql, $params);
+            $totalItems = $countStmt->fetchColumn();
+            
+            // Get paginated data
+            $sql = "SELECT * FROM contact_submissions $whereClause ORDER BY submitted_at DESC LIMIT ? OFFSET ?";
+            $params[] = $limit;
+            $params[] = $offset;
+            
+            $contactsStmt = $this->db->execute($sql, $params);
+            $contacts = $contactsStmt->fetchAll();
+            
+            ResponseHelper::paginated(
+                $contacts,
+                $totalItems,
+                $page,
+                $limit,
+                'Contacts retrieved successfully'
+            );
+            
+        } catch (Exception $e) {
+            error_log("Get contacts error: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve contacts');
+        }
+    }
+
+    public function getContact($id) {
+        try {
+            if (empty($id) || !is_numeric($id)) {
+                ResponseHelper::badRequest('Invalid contact ID');
+                return;
+            }
+            
+            $sql = "SELECT * FROM contact_submissions WHERE id = ?";
+            $stmt = $this->db->execute($sql, [$id]);
+            $result = $stmt->fetchAll();
+            
+            if (empty($result)) {
+                ResponseHelper::notFound('Contact not found');
+                return;
+            }
+            
+            ResponseHelper::success($result[0], 'Contact retrieved successfully');
+            
+        } catch (Exception $e) {
+            error_log("Get contact error: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve contact');
+        }
+    }
+
+    public function updateContact($id) {
+        try {
+            if (empty($id) || !is_numeric($id)) {
+                ResponseHelper::badRequest('Invalid contact ID');
+                return;
+            }
+            
+            $input = json_decode(file_get_contents('php://input'), true);
+            
+            if (!isset($input['status']) || !in_array($input['status'], ['new', 'read', 'responded'])) {
+                ResponseHelper::badRequest('Valid status is required (new, read, responded)');
+                return;
+            }
+            
+            // Check if contact exists
+            $checkSql = "SELECT id FROM contact_submissions WHERE id = ?";
+            $stmt = $this->db->execute($checkSql, [$id]);
+            $exists = $stmt->fetchAll();
+            
+            if (empty($exists)) {
+                ResponseHelper::notFound('Contact not found');
+                return;
+            }
+            
+            $sql = "UPDATE contact_submissions SET status = ?, updated_at = NOW() WHERE id = ?";
+            $this->db->execute($sql, [$input['status'], $id]);
+            
+            ResponseHelper::success(['id' => $id, 'status' => $input['status']], 'Contact status updated successfully');
+            
+        } catch (Exception $e) {
+            error_log("Update contact error: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to update contact');
+        }
+    }
+
+    public function deleteContact($id) {
+        try {
+            if (empty($id) || !is_numeric($id)) {
+                ResponseHelper::badRequest('Invalid contact ID');
+                return;
+            }
+            
+            // Check if contact exists
+            $checkSql = "SELECT id FROM contact_submissions WHERE id = ?";
+            $stmt = $this->db->execute($checkSql, [$id]);
+            $exists = $stmt->fetchAll();
+            
+            if (empty($exists)) {
+                ResponseHelper::notFound('Contact not found');
+                return;
+            }
+            
+            $sql = "DELETE FROM contact_submissions WHERE id = ?";
+            $this->db->execute($sql, [$id]);
+            
+            ResponseHelper::success(['id' => $id], 'Contact deleted successfully');
+            
+        } catch (Exception $e) {
+            error_log("Delete contact error: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to delete contact');
+        }
+    }
+
+    public function getNewCount() {
+        try {
+            $sql = "SELECT COUNT(*) FROM contact_submissions WHERE status = 'new'";
+            $stmt = $this->db->execute($sql);
+            $count = $stmt->fetchColumn();
+            
+            ResponseHelper::success(['count' => intval($count)], 'New contacts count retrieved successfully');
+            
+        } catch (Exception $e) {
+            error_log("Get new contacts count error: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to retrieve new contacts count');
+        }
+    }
+
     private function saveContactSubmission($data) {
         $sql = "INSERT INTO contact_submissions (name, email, subject, message, phone, user_agent, ip_address, submitted_at) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)";

@@ -399,8 +399,83 @@ function handleGetRoutes($uri, $db) {
         return;
     }
     
+    if ($uri === '/parties/new-count') {
+        $controller = new PartyController($db);
+        $controller->getNewCount();
+        return;
+    }
+    
     if (preg_match('/^\/parties\/(\d+)$/', $uri, $matches)) {
         $controller = new PartyController($db);
+        $controller->show($matches[1]);
+        return;
+    }
+
+    // Open Gym routes
+    if ($uri === '/open-gym') {
+        $controller = new OpenGymController($db);
+        $controller->getAll();
+        return;
+    }
+    
+    if ($uri === '/open-gym/main') {
+        $controller = new OpenGymController($db);
+        $controller->getMainConfig();
+        return;
+    }
+    
+    if ($uri === '/open-gym/structured') {
+        $controller = new OpenGymController($db);
+        $controller->getStructuredConfig();
+        return;
+    }
+    
+    if ($uri === '/open-gym/age-groups') {
+        $controller = new OpenGymController($db);
+        $controller->getAgeGroups();
+        return;
+    }
+    
+    if (preg_match('/^\/open-gym\/age-groups\/(\d+)$/', $uri, $matches)) {
+        $controller = new OpenGymController($db);
+        $controller->getAgeGroup($matches[1]);
+        return;
+    }
+
+    // Contact routes
+    if ($uri === '/contacts') {
+        $controller = new ContactController($db);
+        $controller->getContacts();
+        return;
+    }
+    
+    if ($uri === '/contacts/new-count') {
+        $controller = new ContactController($db);
+        $controller->getNewCount();
+        return;
+    }
+    
+    if (preg_match('/^\/contacts\/(\d+)$/', $uri, $matches)) {
+        $controller = new ContactController($db);
+        $controller->getContact($matches[1]);
+        return;
+    }
+
+    // User management routes
+    if ($uri === '/users') {
+        $controller = new UserController($db);
+        $controller->index();
+        return;
+    }
+    
+    if ($uri === '/users/stats') {
+        $controller = new UserController($db);
+        $controller->stats();
+        return;
+    }
+    
+    if (preg_match('/^\/users\/(\d+)$/', $uri, $matches)) {
+        $controller = new UserController($db);
         $controller->show($matches[1]);
         return;
     }
@@ -543,6 +618,13 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // Open Gym routes
+    if ($uri === '/open-gym/age-groups') {
+        $controller = new OpenGymController($db);
+        $controller->createAgeGroup();
+        return;
+    }
+
     // Contact routes
     if ($uri === '/contact') {
         $controller = new ContactController($db);
@@ -554,6 +636,19 @@ function handlePostRoutes($uri, $db) {
     if ($uri === '/parties') {
         $controller = new PartyController($db);
         $controller->submit();
+        return;
+    }
+
+    // User management routes
+    if ($uri === '/users') {
+        $controller = new UserController($db);
+        $controller->create();
+        return;
+    }
+    
+    if (preg_match('/^\/users\/(\d+)\/reset-password$/', $uri, $matches)) {
+        $controller = new UserController($db);
+        $controller->resetPassword($matches[1]);
         return;
     }
 
@@ -650,6 +745,39 @@ function handlePutRoutes($uri, $db) {
     if (preg_match('/^\/parties\/(\d+)\/status$/', $uri, $matches)) {
         $controller = new PartyController($db);
         $controller->updateStatus($matches[1]);
+        return;
+    }
+
+    // Contact routes
+    if (preg_match('/^\/contacts\/(\d+)$/', $uri, $matches)) {
+        $controller = new ContactController($db);
+        $controller->updateContact($matches[1]);
+        return;
+    }
+
+    // Open Gym routes
+    if ($uri === '/open-gym/main') {
+        $controller = new OpenGymController($db);
+        $controller->updateMainConfig();
+        return;
+    }
+    
+    if ($uri === '/open-gym/structured') {
+        $controller = new OpenGymController($db);
+        $controller->updateStructuredConfig();
+        return;
+    }
+    
+    if (preg_match('/^\/open-gym\/age-groups\/(\d+)$/', $uri, $matches)) {
+        $controller = new OpenGymController($db);
+        $controller->updateAgeGroup($matches[1]);
+        return;
+    }
+
+    // User management routes
+    if (preg_match('/^\/users\/(\d+)$/', $uri, $matches)) {
+        $controller = new UserController($db);
+        $controller->update($matches[1]);
         return;
     }
 
@@ -753,6 +881,27 @@ function handleDeleteRoutes($uri, $db) {
     // Party routes
     if (preg_match('/^\/parties\/(\d+)$/', $uri, $matches)) {
         $controller = new PartyController($db);
+        $controller->delete($matches[1]);
+        return;
+    }
+
+    // Contact routes
+    if (preg_match('/^\/contacts\/(\d+)$/', $uri, $matches)) {
+        $controller = new ContactController($db);
+        $controller->deleteContact($matches[1]);
+        return;
+    }
+
+    // Open Gym routes
+    if (preg_match('/^\/open-gym\/age-groups\/(\d+)$/', $uri, $matches)) {
+        $controller = new OpenGymController($db);
+        $controller->deleteAgeGroup($matches[1]);
+        return;
+    }
+
+    // User management routes
+    if (preg_match('/^\/users\/(\d+)$/', $uri, $matches)) {
+        $controller = new UserController($db);
         $controller->delete($matches[1]);
         return;
     }

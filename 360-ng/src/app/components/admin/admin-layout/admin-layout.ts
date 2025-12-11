@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AuthService } from '../../../services/auth.service';
+import { BadgeNotificationsService, NotificationCounts } from '../../../services/badge-notifications';
 import { User } from '../../../interfaces/api';
 
 interface NavigationItem {
@@ -10,6 +11,7 @@ interface NavigationItem {
   icon: string;
   route: string;
   adminOnly?: boolean;
+  badgeCount?: number;
 }
 
 @Component({
@@ -22,6 +24,7 @@ export class AdminLayout implements OnInit, OnDestroy {
   currentUser: User | null = null;
   isSidebarOpen = false;
   isMobile = false;
+  notificationCounts: NotificationCounts = { contacts: 0, parties: 0 };
   
   private destroy$ = new Subject<void>();
 
@@ -41,6 +44,11 @@ export class AdminLayout implements OnInit, OnDestroy {
       icon: 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z',
       route: '/admin/staff',
       adminOnly: true
+    },
+    {
+      name: 'User Management',
+      icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z',
+      route: '/admin/users'
     },
     {
       name: 'Gym Hours',
@@ -74,15 +82,26 @@ export class AdminLayout implements OnInit, OnDestroy {
       route: '/admin/classes'
     },
     {
+      name: 'Open Gym Management',
+      icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10',
+      route: '/admin/open-gym'
+    },
+    {
       name: 'Party Requests',
       icon: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
       route: '/admin/parties'
+    },
+    {
+      name: 'Contact Submissions',
+      icon: 'M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+      route: '/admin/contacts'
     }
   ];
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private badgeNotificationsService: BadgeNotificationsService
   ) {}
 
   ngOnInit(): void {
@@ -91,6 +110,17 @@ export class AdminLayout implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(user => {
         this.currentUser = user;
+        // Start polling for notifications when user is authenticated
+        if (user) {
+          this.badgeNotificationsService.startPolling();
+        }
+      });
+
+    // Subscribe to notification counts
+    this.badgeNotificationsService.counts$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(counts => {
+        this.notificationCounts = counts;
       });
 
     // Check for mobile view
@@ -101,6 +131,7 @@ export class AdminLayout implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    this.badgeNotificationsService.stopPolling();
     window.removeEventListener('resize', () => this.checkMobileView());
   }
 
@@ -160,5 +191,24 @@ export class AdminLayout implements OnInit, OnDestroy {
   getRoleDisplayName(): string {
     if (!this.currentUser) return '';
     return this.currentUser.role === 'admin' ? 'Administrator' : 'Staff Member';
+  }
+
+  getBadgeCount(route: string): number {
+    if (route === '/admin/contacts') {
+      return this.notificationCounts.contacts;
+    }
+    if (route === '/admin/parties') {
+      return this.notificationCounts.parties;
+    }
+    return 0;
+  }
+
+  onNavigationClick(route: string): void {
+    // Mark items as viewed when user clicks on them
+    if (route === '/admin/contacts') {
+      this.badgeNotificationsService.markContactsAsViewed();
+    } else if (route === '/admin/parties') {
+      this.badgeNotificationsService.markPartiesAsViewed();
+    }
   }
 }

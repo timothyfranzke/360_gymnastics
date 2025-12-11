@@ -80,14 +80,6 @@ class AuthController extends BaseController {
             return;
         }
 
-        // Only admins can create admin/staff accounts
-        if (isset($data['role']) && in_array($data['role'], ['admin', 'staff'])) {
-            if (!$this->hasRole('admin')) {
-                ResponseHelper::forbidden('Only administrators can create admin or staff accounts');
-                return;
-            }
-        }
-
         try {
             $user = $this->userModel->create($data);
             

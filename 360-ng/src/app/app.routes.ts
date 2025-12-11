@@ -90,8 +90,23 @@ export const routes: Routes = [
                 canActivate: [staffGuard]
             },
             {
+                path: 'open-gym',
+                loadChildren: () => import('./views/admin/open-gym/open-gym.routes').then(m => m.routes),
+                canActivate: [staffGuard]
+            },
+            {
                 path: 'parties',
                 loadChildren: () => import('./views/admin/parties/parties.routes').then(m => m.routes),
+                canActivate: [staffGuard]
+            },
+            {
+                path: 'contacts',
+                loadChildren: () => import('./views/admin/contacts/contacts.routes').then(m => m.CONTACTS_ROUTES),
+                canActivate: [staffGuard]
+            },
+            {
+                path: 'users',
+                loadChildren: () => import('./views/admin/users/users.routes').then(m => m.routes),
                 canActivate: [staffGuard]
             }
         ]

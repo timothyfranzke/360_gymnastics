@@ -1,6 +1,6 @@
 import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
+import { catchError, throwError, switchMap, filter, take } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
 /**
@@ -27,10 +27,31 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
       // Handle authentication errors
-      if (error.status === 401) {
-        // Token is invalid or expired
-        authService.forceLogout('Session expired. Please login again.');
-        return throwError(() => new Error('Authentication failed'));
+      if (error.status === 401 && !req.url.includes('/auth/login') && !req.url.includes('/auth/refresh')) {
+        // Try to refresh token first (only if we have a token and aren't already trying to refresh)
+        if (authService.getToken()) {
+          return authService.refreshAuthToken().pipe(
+            switchMap(() => {
+              // Retry the original request with new token
+              const newToken = authService.getToken();
+              const retryReq = req.clone({
+                setHeaders: {
+                  Authorization: `Bearer ${newToken}`
+                }
+              });
+              return next(retryReq);
+            }),
+            catchError(() => {
+              // If refresh fails, logout
+              authService.forceLogout('Session expired. Please login again.');
+              return throwError(() => new Error('Authentication failed'));
+            })
+          );
+        } else {
+          // No token, just logout
+          authService.forceLogout('Session expired. Please login again.');
+          return throwError(() => new Error('Authentication failed'));
+        }
       }
       
       // Handle forbidden errors

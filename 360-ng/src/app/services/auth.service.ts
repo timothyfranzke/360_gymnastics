@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError, timer } from 'rxjs';
-import { map, catchError, tap, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import {
   ApiResponse,
@@ -154,6 +154,13 @@ export class AuthService {
   }
 
   /**
+   * Manually refresh token (for public use)
+   */
+  refreshAuthToken(): Observable<void> {
+    return this.refreshToken();
+  }
+
+  /**
    * Set authentication session
    */
   private setSession(authResult: LoginResponse): void {
@@ -256,15 +263,22 @@ export class AuthService {
    * Refresh authentication token
    */
   private refreshToken(): Observable<void> {
-    // Since the API doesn't have a refresh endpoint, we'll get the profile
-    // which will validate the token and return fresh user data
-    return this.getProfile().pipe(
-      map(() => void 0),
-      catchError(() => {
-        this.forceLogout('Session expired');
-        return throwError(() => new Error('Token refresh failed'));
-      })
-    );
+    return this.http.post<ApiResponse<LoginResponse>>(`${this.API_BASE}/auth/refresh`, {})
+      .pipe(
+        map(response => {
+          if (!response.success || !response.data) {
+            throw new Error(response.message || 'Token refresh failed');
+          }
+          
+          // Update session with new token
+          this.setSession(response.data);
+          return void 0;
+        }),
+        catchError(() => {
+          this.forceLogout('Session expired');
+          return throwError(() => new Error('Token refresh failed'));
+        })
+      );
   }
 
   /**
@@ -275,7 +289,7 @@ export class AuthService {
                        window.location.hostname === '127.0.0.1';
     
     if (isLocalhost) {
-      return 'https://kc360gym.com/api/v1';
+      return 'http://localhost:8080/api/v1';
     }
     
     return '/api/v1';

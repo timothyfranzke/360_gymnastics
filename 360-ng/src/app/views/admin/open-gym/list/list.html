@@ -1,0 +1,223 @@
+<div class="bg-white shadow">
+  <div class="px-4 py-5 sm:p-6">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Open Gym Management</h1>
+        <p class="text-gray-600">Manage open gym configurations and age groups</p>
+      </div>
+      <div class="flex space-x-3">
+        <a 
+          routerLink="config" 
+          class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+          </svg>
+          Edit Configurations
+        </a>
+        <a 
+          routerLink="age-groups/create" 
+          class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+          <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+          </svg>
+          Add Age Group
+        </a>
+      </div>
+    </div>
+
+    <!-- Notification -->
+    <div 
+      *ngIf="notification" 
+      class="mb-4 p-4 rounded-md"
+      [ngClass]="{
+        'bg-green-50 border border-green-200': notification.type === 'success',
+        'bg-red-50 border border-red-200': notification.type === 'error'
+      }">
+      <div class="flex justify-between">
+        <p class="text-sm font-medium"
+           [ngClass]="{
+             'text-green-800': notification.type === 'success',
+             'text-red-800': notification.type === 'error'
+           }">
+          {{ notification.message }}
+        </p>
+        <button 
+          (click)="dismissNotification()" 
+          class="text-gray-400 hover:text-gray-600">
+          <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+      <span class="ml-2 text-gray-600">Loading open gym data...</span>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error && !isLoading" class="bg-red-50 border border-red-200 rounded-md p-4">
+      <div class="flex">
+        <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+        </svg>
+        <div class="ml-3">
+          <h3 class="text-sm font-medium text-red-800">Error loading data</h3>
+          <div class="mt-2 text-sm text-red-700">{{ error }}</div>
+          <div class="mt-4">
+            <button 
+              (click)="loadData()" 
+              class="bg-red-100 px-2 py-1 rounded text-red-800 hover:bg-red-200">
+              Try Again
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Content -->
+    <div *ngIf="openGymData && !isLoading && !error">
+      <!-- Configuration Status Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <!-- Main Configuration Card -->
+        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-medium text-blue-900">Main Configuration</h3>
+              <p class="text-sm text-blue-700 mt-1">
+                {{ openGymData.mainConfig ? 'Configured' : 'Not configured' }}
+              </p>
+              <p class="text-xs text-blue-600 mt-2" *ngIf="openGymData.mainConfig?.updated_at">
+                Last updated: {{ openGymData.mainConfig?.updated_at | date:'short' }}
+              </p>
+            </div>
+            <div class="flex items-center">
+              <span 
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [ngClass]="openGymData.mainConfig ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+                {{ openGymData.mainConfig ? 'Active' : 'Needs Setup' }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Structured Configuration Card -->
+        <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg p-6 border border-purple-200">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-medium text-purple-900">Structured Configuration</h3>
+              <p class="text-sm text-purple-700 mt-1">
+                {{ openGymData.structuredConfig ? 'Configured' : 'Not configured' }}
+              </p>
+              <p class="text-xs text-purple-600 mt-2" *ngIf="openGymData.structuredConfig?.updated_at">
+                Last updated: {{ openGymData.structuredConfig?.updated_at | date:'short' }}
+              </p>
+            </div>
+            <div class="flex items-center">
+              <span 
+                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                [ngClass]="openGymData.structuredConfig ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'">
+                {{ openGymData.structuredConfig ? 'Active' : 'Needs Setup' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Age Groups Section -->
+      <div class="bg-white">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-semibold text-gray-900">
+            Age Groups ({{ openGymData.ageGroups?.length || 0 }})
+          </h2>
+        </div>
+
+        <!-- Age Groups Grid -->
+        <div 
+          *ngIf="openGymData.ageGroups && openGymData.ageGroups.length > 0"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div 
+            *ngFor="let ageGroup of getSortedAgeGroups()"
+            class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <div class="p-6">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center space-x-2">
+                  <span 
+                    class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+                    [ngClass]="getColorBadgeClass(ageGroup.colorTheme || 'cyan')">
+                    {{ ageGroup.colorTheme || 'cyan' }}
+                  </span>
+                  <span class="text-sm text-gray-500">#{{ ageGroup.sortOrder || 0 }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                  <a 
+                    [routerLink]="['age-groups', ageGroup.id, 'edit']"
+                    class="text-indigo-600 hover:text-indigo-900 text-sm font-medium">
+                    Edit
+                  </a>
+                  <button 
+                    (click)="deleteAgeGroup(ageGroup)"
+                    class="text-red-600 hover:text-red-900 text-sm font-medium">
+                    Delete
+                  </button>
+                </div>
+              </div>
+              
+              <h3 class="text-lg font-medium text-gray-900 mb-2">{{ ageGroup.title }}</h3>
+              <p class="text-sm text-gray-600 mb-3" *ngIf="ageGroup.subtitle">{{ ageGroup.subtitle }}</p>
+              
+              <div class="space-y-2 text-sm text-gray-600">
+                <div *ngIf="ageGroup.days" class="flex items-center">
+                  <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  {{ ageGroup.days }}
+                </div>
+                <div *ngIf="ageGroup.time" class="flex items-center">
+                  <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  {{ ageGroup.time }}
+                </div>
+                <div *ngIf="ageGroup.price" class="flex items-center">
+                  <svg class="h-4 w-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                  </svg>
+                  ${{ ageGroup.price }} {{ ageGroup.priceUnit }}
+                </div>
+              </div>
+              
+              <p class="text-sm text-gray-500 mt-3 line-clamp-2" *ngIf="ageGroup.notes">
+                {{ ageGroup.notes }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div 
+          *ngIf="!openGymData.ageGroups || openGymData.ageGroups.length === 0"
+          class="text-center py-12">
+          <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+          </svg>
+          <h3 class="mt-2 text-sm font-medium text-gray-900">No age groups</h3>
+          <p class="mt-1 text-sm text-gray-500">Get started by creating a new age group.</p>
+          <div class="mt-6">
+            <a 
+              routerLink="age-groups/create"
+              class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+              <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              </svg>
+              Add Age Group
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

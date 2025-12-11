@@ -1,0 +1,208 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Add User</h1>
+      <p class="mt-1 text-sm text-gray-500">Create a new user account for admin dashboard access</p>
+    </div>
+    <nav class="flex" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-4">
+        <li>
+          <a routerLink="/admin/users" class="text-gray-400 hover:text-gray-500">
+            Users
+          </a>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="flex-shrink-0 h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
+            </svg>
+            <span class="ml-4 text-sm font-medium text-gray-500">Add User</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div class="flex items-center">
+      <svg class="h-5 w-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+      </svg>
+      <p class="text-red-700">{{ error }}</p>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="space-y-8">
+    <!-- Personal Information -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-6">Personal Information</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- First Name -->
+        <div>
+          <label for="first_name" class="block text-sm font-medium text-gray-700 mb-2">
+            First Name *
+          </label>
+          <input
+            type="text"
+            id="first_name"
+            formControlName="first_name"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                    (isFieldInvalid('first_name') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')"
+            placeholder="Enter first name">
+          <p *ngIf="isFieldInvalid('first_name')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('first_name') }}
+          </p>
+        </div>
+
+        <!-- Last Name -->
+        <div>
+          <label for="last_name" class="block text-sm font-medium text-gray-700 mb-2">
+            Last Name *
+          </label>
+          <input
+            type="text"
+            id="last_name"
+            formControlName="last_name"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                    (isFieldInvalid('last_name') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')"
+            placeholder="Enter last name">
+          <p *ngIf="isFieldInvalid('last_name')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('last_name') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Account Information -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-6">Account Information</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Username -->
+        <div>
+          <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+            Username *
+          </label>
+          <input
+            type="text"
+            id="username"
+            formControlName="username"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                    (isFieldInvalid('username') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')"
+            placeholder="Enter username">
+          <p *ngIf="isFieldInvalid('username')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('username') }}
+          </p>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+            Email *
+          </label>
+          <input
+            type="email"
+            id="email"
+            formControlName="email"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                    (isFieldInvalid('email') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')"
+            placeholder="Enter email address">
+          <p *ngIf="isFieldInvalid('email')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('email') }}
+          </p>
+        </div>
+
+        <!-- Role -->
+        <div class="md:col-span-2">
+          <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
+            Role *
+          </label>
+          <select
+            id="role"
+            formControlName="role"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                    (isFieldInvalid('role') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')">
+            <option value="staff">Staff</option>
+            <option value="admin">Admin</option>
+          </select>
+          <p class="mt-1 text-sm text-gray-500">
+            Staff users can view data but have limited permissions. Admin users have full access.
+          </p>
+          <p *ngIf="isFieldInvalid('role')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('role') }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Information -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-6">Password</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            Password *
+          </label>
+          <input
+            type="password"
+            id="password"
+            formControlName="password"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                    (isFieldInvalid('password') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')"
+            placeholder="Enter password">
+          <p *ngIf="isFieldInvalid('password')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('password') }}
+          </p>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+            Confirm Password *
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                    (isFieldInvalid('confirmPassword') || userForm.errors?.['passwordMismatch'] ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')"
+            placeholder="Confirm password">
+          <p *ngIf="isFieldInvalid('confirmPassword')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('confirmPassword') }}
+          </p>
+        </div>
+      </div>
+      
+      <div class="mt-4">
+        <p class="text-sm text-gray-500">
+          Password must be at least 6 characters long.
+        </p>
+      </div>
+    </div>
+
+    <!-- Form Actions -->
+    <div class="flex justify-end space-x-4">
+      <button type="button" 
+              (click)="cancel()" 
+              class="btn-secondary"
+              [disabled]="isLoading">
+        Cancel
+      </button>
+      <button type="submit" 
+              class="btn-primary"
+              [disabled]="isLoading || userForm.invalid">
+        <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        {{ isLoading ? 'Creating...' : 'Create User' }}
+      </button>
+    </div>
+  </form>
+</div>
