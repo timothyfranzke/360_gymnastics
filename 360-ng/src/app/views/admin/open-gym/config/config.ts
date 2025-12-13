@@ -12,10 +12,8 @@ import { OpenGymService, OpenGymData, OpenGymConfig as IOpenGymConfig } from '..
   imports: [CommonModule, ReactiveFormsModule]
 })
 export class OpenGymConfigComponent implements OnInit, OnDestroy {
-  mainConfigForm: FormGroup;
   structuredConfigForm: FormGroup;
   isLoading = true;
-  isSubmittingMain = false;
   isSubmittingStructured = false;
   error: string | null = null;
   notification: { message: string; type: 'success' | 'error' } | null = null;
@@ -28,7 +26,6 @@ export class OpenGymConfigComponent implements OnInit, OnDestroy {
     private openGymService: OpenGymService,
     private router: Router
   ) {
-    this.mainConfigForm = this.createConfigForm();
     this.structuredConfigForm = this.createConfigForm();
   }
 
@@ -72,17 +69,6 @@ export class OpenGymConfigComponent implements OnInit, OnDestroy {
   }
 
   populateForms(data: OpenGymData): void {
-    // Populate main config form
-    if (data.mainConfig) {
-      this.mainConfigForm.patchValue({
-        title: data.mainConfig.title || '',
-        subtitle: data.mainConfig.subtitle || '',
-        description: data.mainConfig.description || ''
-      });
-      this.setFormArrayValues(this.mainConfigForm, 'features', data.mainConfig.features || []);
-      this.setFormArrayValues(this.mainConfigForm, 'importantInfo', data.mainConfig.importantInfo || []);
-    }
-
     // Populate structured config form
     if (data.structuredConfig) {
       this.structuredConfigForm.patchValue({
@@ -130,33 +116,6 @@ export class OpenGymConfigComponent implements OnInit, OnDestroy {
   }
 
   // Submit handlers
-  onSubmitMainConfig(): void {
-    if (this.mainConfigForm.invalid) {
-      this.markFormGroupTouched(this.mainConfigForm);
-      return;
-    }
-
-    this.isSubmittingMain = true;
-    this.error = null;
-
-    const formData = this.prepareFormData(this.mainConfigForm);
-
-    this.openGymService.updateMainConfig(formData)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.showNotification('Main configuration updated successfully', 'success');
-          this.loadData(); // Reload to get updated data
-          this.isSubmittingMain = false;
-        },
-        error: (error) => {
-          console.error('Failed to update main configuration', error);
-          this.error = error.message || 'Failed to update main configuration';
-          this.isSubmittingMain = false;
-        }
-      });
-  }
-
   onSubmitStructuredConfig(): void {
     if (this.structuredConfigForm.invalid) {
       this.markFormGroupTouched(this.structuredConfigForm);

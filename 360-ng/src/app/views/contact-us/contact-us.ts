@@ -7,6 +7,7 @@ import { ViewHeader } from '../../components/view-header/view-header';
 
 @Component({
   selector: 'app-contact-us',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ViewHeader],
   templateUrl: './contact-us.html',
   styleUrl: './contact-us.scss'
@@ -23,7 +24,7 @@ export class ContactUs implements OnInit {
     address: '431 N Lindenwood Dr, Olathe, KS 66062',
     phone: '(913) 782-3300',
     email: 'kc360gym@gmail.com',
-    mapEmbedUrl: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3147.3!2d-94.791!3d38.884!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2s431%20N%20Lindenwood%20Dr%2C%20Olathe%2C%20KS%2066062!5e0!3m2!1sen!2sus!4v1697000000000!5m2!1sen!2sus'
+    mapEmbedUrl: '//www.google.com/maps/embed?key=AIzaSyAZbRFom6vvd3Hqu4uHskG2jTcbof8KSfQ&pb=!1m18!1m12!1m3!1d3147.386395385617!2d-94.79383152389985!3d38.88406507178297!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x87c0bb5e5b6b5b5b%3A0x1f2f3f4f5f6f7f8f!2s431%20N%20Lindenwood%20Dr%2C%20Olathe%2C%20KS%2066062!5e0!3m2!1sen!2sus!4v1639000000000!5m2!1sen!2sus'
   };
 
   constructor(

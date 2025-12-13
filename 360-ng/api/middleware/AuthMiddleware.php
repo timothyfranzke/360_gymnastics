@@ -11,6 +11,7 @@ class AuthMiddleware {
         '/360gym/api/v1/auth/login',
         '/api/v1/contact',
         '/360gym/api/v1/contact',
+        '/api/v1/parties',
         '/api/v1/auth/register',
         '/360gym/api/v1/auth/register',
         '/api/v1/migrate',

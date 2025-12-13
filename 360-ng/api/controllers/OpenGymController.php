@@ -69,12 +69,12 @@ class OpenGymController extends BaseController {
         $this->requireRole('admin');
 
         $rules = [
-            'title' => ['string', 'max' => [200]],
-            'subtitle' => ['string', 'max' => [500]],
-            'description' => ['string'],
-            'schedule' => ['array'],
-            'features' => ['array'],
-            'importantInfo' => ['array']
+            'title' => ['maxLength' => 200],
+            'subtitle' => ['maxLength' => 500],
+            'description' => [],
+            'schedule' => [],
+            'features' => [],
+            'importantInfo' => []
         ];
 
         $data = $this->validate($rules);
@@ -102,12 +102,12 @@ class OpenGymController extends BaseController {
         $this->requireRole('admin');
 
         $rules = [
-            'title' => ['string', 'max' => [200]],
-            'subtitle' => ['string', 'max' => [500]],
-            'description' => ['string'],
-            'schedule' => ['array'],
-            'features' => ['array'],
-            'importantInfo' => ['array']
+            'title' => ['maxLength' => 200],
+            'subtitle' => ['maxLength' => 500],
+            'description' => [],
+            'schedule' => [],
+            'features' => [],
+            'importantInfo' => []
         ];
 
         $data = $this->validate($rules);
@@ -172,15 +172,15 @@ class OpenGymController extends BaseController {
         $this->requireRole('admin');
 
         $rules = [
-            'title' => ['required', 'string', 'max' => [100]],
-            'subtitle' => ['string', 'max' => [200]],
-            'days' => ['string', 'max' => [100]],
-            'time' => ['string', 'max' => [100]],
-            'price' => ['numeric', 'min' => [0]],
-            'priceUnit' => ['string', 'max' => [50]],
-            'notes' => ['string'],
-            'sortOrder' => ['numeric', 'min' => [0]],
-            'colorTheme' => ['string', 'max' => [50]]
+            'title' => ['required', 'maxLength' => 100],
+            'subtitle' => ['maxLength' => 200],
+            'days' => ['maxLength' => 100],
+            'time' => ['maxLength' => 100],
+            'price' => ['numeric', 'min' => 0],
+            'priceUnit' => ['maxLength' => 50],
+            'notes' => [],
+            'sortOrder' => ['numeric', 'min' => 0],
+            'colorTheme' => ['maxLength' => 50]
         ];
 
         $data = $this->validate($rules);
@@ -220,15 +220,15 @@ class OpenGymController extends BaseController {
         }
 
         $rules = [
-            'title' => ['string', 'max' => [100]],
-            'subtitle' => ['string', 'max' => [200]],
-            'days' => ['string', 'max' => [100]],
-            'time' => ['string', 'max' => [100]],
-            'price' => ['numeric', 'min' => [0]],
-            'priceUnit' => ['string', 'max' => [50]],
-            'notes' => ['string'],
-            'sortOrder' => ['numeric', 'min' => [0]],
-            'colorTheme' => ['string', 'max' => [50]]
+            'title' => ['maxLength' => 100],
+            'subtitle' => ['maxLength' => 200],
+            'days' => ['maxLength' => 100],
+            'time' => ['maxLength' => 100],
+            'price' => ['numeric', 'min' => 0],
+            'priceUnit' => ['maxLength' => 50],
+            'notes' => [],
+            'sortOrder' => ['numeric', 'min' => 0],
+            'colorTheme' => ['maxLength' => 50]
         ];
 
         $data = $this->validate($rules);

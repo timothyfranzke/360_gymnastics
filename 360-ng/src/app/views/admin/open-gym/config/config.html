@@ -60,163 +60,23 @@
     <!-- Content -->
     <div *ngIf="!isLoading && !error" class="space-y-8">
       
-      <!-- Main Configuration -->
-      <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-blue-900 mb-4">Main Configuration</h2>
-        <p class="text-blue-700 mb-6">Configure the general open gym information displayed on the page.</p>
-        
-        <form [formGroup]="mainConfigForm" (ngSubmit)="onSubmitMainConfig()" class="space-y-6">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <!-- Title -->
-            <div>
-              <label for="main-title" class="block text-sm font-medium text-gray-700">Title</label>
-              <input
-                type="text"
-                id="main-title"
-                formControlName="title"
-                placeholder="e.g., Open Gym"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                [class.border-red-300]="getFieldError(mainConfigForm, 'title')">
-              <p *ngIf="getFieldError(mainConfigForm, 'title')" class="mt-2 text-sm text-red-600">
-                {{ getFieldError(mainConfigForm, 'title') }}
-              </p>
-            </div>
-
-            <!-- Subtitle -->
-            <div>
-              <label for="main-subtitle" class="block text-sm font-medium text-gray-700">Subtitle</label>
-              <input
-                type="text"
-                id="main-subtitle"
-                formControlName="subtitle"
-                placeholder="e.g., Schedule and pricing information"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                [class.border-red-300]="getFieldError(mainConfigForm, 'subtitle')">
-              <p *ngIf="getFieldError(mainConfigForm, 'subtitle')" class="mt-2 text-sm text-red-600">
-                {{ getFieldError(mainConfigForm, 'subtitle') }}
-              </p>
-            </div>
-          </div>
-
-          <!-- Description -->
-          <div>
-            <label for="main-description" class="block text-sm font-medium text-gray-700">Description</label>
-            <textarea
-              id="main-description"
-              formControlName="description"
-              rows="3"
-              placeholder="Main description for the open gym page..."
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              [class.border-red-300]="getFieldError(mainConfigForm, 'description')">
-            </textarea>
-            <p *ngIf="getFieldError(mainConfigForm, 'description')" class="mt-2 text-sm text-red-600">
-              {{ getFieldError(mainConfigForm, 'description') }}
-            </p>
-          </div>
-
-          <!-- Features -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Features</label>
-            <div formArrayName="features" class="space-y-3">
-              <div 
-                *ngFor="let feature of getFeaturesFormArray(mainConfigForm).controls; let i = index"
-                class="flex items-center space-x-3">
-                <input
-                  type="text"
-                  [formControlName]="i"
-                  placeholder="Enter a feature..."
-                  class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  [class.border-red-300]="getArrayFieldError(getFeaturesFormArray(mainConfigForm), i)">
-                <button
-                  type="button"
-                  (click)="removeFeature(mainConfigForm, i)"
-                  class="text-red-600 hover:text-red-800">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                  </svg>
-                </button>
-                <p *ngIf="getArrayFieldError(getFeaturesFormArray(mainConfigForm), i)" class="text-sm text-red-600">
-                  {{ getArrayFieldError(getFeaturesFormArray(mainConfigForm), i) }}
-                </p>
-              </div>
-              <button
-                type="button"
-                (click)="addFeature(mainConfigForm)"
-                class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                + Add Feature
-              </button>
-            </div>
-          </div>
-
-          <!-- Important Info -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Important Information</label>
-            <div formArrayName="importantInfo" class="space-y-3">
-              <div 
-                *ngFor="let info of getImportantInfoFormArray(mainConfigForm).controls; let i = index"
-                class="flex items-center space-x-3">
-                <input
-                  type="text"
-                  [formControlName]="i"
-                  placeholder="Enter important information..."
-                  class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  [class.border-red-300]="getArrayFieldError(getImportantInfoFormArray(mainConfigForm), i)">
-                <button
-                  type="button"
-                  (click)="removeImportantInfo(mainConfigForm, i)"
-                  class="text-red-600 hover:text-red-800">
-                  <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                    <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                  </svg>
-                </button>
-                <p *ngIf="getArrayFieldError(getImportantInfoFormArray(mainConfigForm), i)" class="text-sm text-red-600">
-                  {{ getArrayFieldError(getImportantInfoFormArray(mainConfigForm), i) }}
-                </p>
-              </div>
-              <button
-                type="button"
-                (click)="addImportantInfo(mainConfigForm)"
-                class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
-                + Add Information
-              </button>
-            </div>
-          </div>
-
-          <div class="flex justify-end">
-            <button
-              type="submit"
-              [disabled]="mainConfigForm.invalid || isSubmittingMain"
-              class="bg-blue-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50">
-              <span *ngIf="!isSubmittingMain">Update Main Configuration</span>
-              <span *ngIf="isSubmittingMain" class="flex items-center">
-                <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                Updating...
-              </span>
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Structured Configuration -->
+      <!-- Page Content -->
       <div class="bg-purple-50 border border-purple-200 rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-purple-900 mb-4">Structured Configuration</h2>
-        <p class="text-purple-700 mb-6">Configure the structured open gym session information.</p>
+        <h2 class="text-xl font-semibold text-purple-900 mb-4">Page Content</h2>
+        <p class="text-purple-700 mb-6">Configure the open gym page content and information.</p>
         
         <form [formGroup]="structuredConfigForm" (ngSubmit)="onSubmitStructuredConfig()" class="space-y-6">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <!-- Title -->
             <div>
-              <label for="structured-title" class="block text-sm font-medium text-gray-700">Title</label>
+              <label for="structured-title" class="block text-sm font-medium text-gray-700 mb-2">Title</label>
               <input
                 type="text"
                 id="structured-title"
                 formControlName="title"
                 placeholder="e.g., Structured Open Gym"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                [class.border-red-300]="getFieldError(structuredConfigForm, 'title')">
+                [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                        (getFieldError(structuredConfigForm, 'title') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')">
               <p *ngIf="getFieldError(structuredConfigForm, 'title')" class="mt-2 text-sm text-red-600">
                 {{ getFieldError(structuredConfigForm, 'title') }}
               </p>
@@ -224,14 +84,14 @@
 
             <!-- Subtitle -->
             <div>
-              <label for="structured-subtitle" class="block text-sm font-medium text-gray-700">Subtitle</label>
+              <label for="structured-subtitle" class="block text-sm font-medium text-gray-700 mb-2">Subtitle</label>
               <input
                 type="text"
                 id="structured-subtitle"
                 formControlName="subtitle"
                 placeholder="e.g., Sundays 5:30-7:00 PM"
-                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                [class.border-red-300]="getFieldError(structuredConfigForm, 'subtitle')">
+                [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                        (getFieldError(structuredConfigForm, 'subtitle') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')">
               <p *ngIf="getFieldError(structuredConfigForm, 'subtitle')" class="mt-2 text-sm text-red-600">
                 {{ getFieldError(structuredConfigForm, 'subtitle') }}
               </p>
@@ -240,14 +100,14 @@
 
           <!-- Description -->
           <div>
-            <label for="structured-description" class="block text-sm font-medium text-gray-700">Description</label>
+            <label for="structured-description" class="block text-sm font-medium text-gray-700 mb-2">Description</label>
             <textarea
               id="structured-description"
               formControlName="description"
-              rows="3"
+              rows="4"
               placeholder="Description for structured open gym sessions..."
-              class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              [class.border-red-300]="getFieldError(structuredConfigForm, 'description')">
+              [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                      (getFieldError(structuredConfigForm, 'description') ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')">
             </textarea>
             <p *ngIf="getFieldError(structuredConfigForm, 'description')" class="mt-2 text-sm text-red-600">
               {{ getFieldError(structuredConfigForm, 'description') }}
@@ -265,8 +125,8 @@
                   type="text"
                   [formControlName]="i"
                   placeholder="Enter a feature..."
-                  class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  [class.border-red-300]="getArrayFieldError(getFeaturesFormArray(structuredConfigForm), i)">
+                  [class]="'flex-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                          (getArrayFieldError(getFeaturesFormArray(structuredConfigForm), i) ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')">
                 <button
                   type="button"
                   (click)="removeFeature(structuredConfigForm, i)"
@@ -282,7 +142,7 @@
               <button
                 type="button"
                 (click)="addFeature(structuredConfigForm)"
-                class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                class="text-orange-600 hover:text-orange-800 text-sm font-medium">
                 + Add Feature
               </button>
             </div>
@@ -299,8 +159,8 @@
                   type="text"
                   [formControlName]="i"
                   placeholder="Enter important information..."
-                  class="flex-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  [class.border-red-300]="getArrayFieldError(getImportantInfoFormArray(structuredConfigForm), i)">
+                  [class]="'flex-1 px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 ' + 
+                          (getArrayFieldError(getImportantInfoFormArray(structuredConfigForm), i) ? 'border-red-300 focus:border-red-500' : 'border-gray-300 focus:border-orange-500')">
                 <button
                   type="button"
                   (click)="removeImportantInfo(structuredConfigForm, i)"
@@ -316,7 +176,7 @@
               <button
                 type="button"
                 (click)="addImportantInfo(structuredConfigForm)"
-                class="text-indigo-600 hover:text-indigo-800 text-sm font-medium">
+                class="text-orange-600 hover:text-orange-800 text-sm font-medium">
                 + Add Information
               </button>
             </div>
@@ -326,10 +186,10 @@
             <button
               type="submit"
               [disabled]="structuredConfigForm.invalid || isSubmittingStructured"
-              class="bg-purple-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50">
-              <span *ngIf="!isSubmittingStructured">Update Structured Configuration</span>
-              <span *ngIf="isSubmittingStructured" class="flex items-center">
-                <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+              class="px-6 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200">
+              <span *ngIf="!isSubmittingStructured">Update Page Content</span>
+              <span *ngIf="isSubmittingStructured" class="inline-flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -345,7 +205,7 @@
         <button
           type="button"
           (click)="onCancel()"
-          class="bg-gray-600 py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+          class="px-6 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200">
           Back to Open Gym Management
         </button>
       </div>
