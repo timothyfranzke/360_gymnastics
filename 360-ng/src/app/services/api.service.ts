@@ -911,6 +911,105 @@ export class ApiService {
       );
   }
 
+  // ========== FAQ METHODS ==========
+
+  /**
+   * Get all FAQs with optional filters
+   */
+  getFaqs(params?: any): Observable<any> {
+    let httpParams = new HttpParams();
+    if (params) {
+      Object.keys(params).forEach(key => {
+        if (params[key] !== null && params[key] !== '') {
+          httpParams = httpParams.set(key, params[key].toString());
+        }
+      });
+    }
+    
+    return this.http.get<ApiResponse<any[]>>(`${this.API_BASE}/faqs`, { params: httpParams })
+      .pipe(
+        map(response => this.handleResponse(response)),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Get FAQ by ID
+   */
+  getFaq(id: number): Observable<any> {
+    return this.http.get<ApiResponse<any>>(`${this.API_BASE}/faqs/${id}`)
+      .pipe(
+        map(response => ({ data: this.handleResponse(response) })),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Create new FAQ
+   */
+  createFaq(faqData: any): Observable<any> {
+    return this.http.post<ApiResponse<any>>(`${this.API_BASE}/faqs`, faqData)
+      .pipe(
+        map(response => this.handleResponse(response)),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Update FAQ
+   */
+  updateFaq(id: number, faqData: any): Observable<any> {
+    return this.http.put<ApiResponse<any>>(`${this.API_BASE}/faqs/${id}`, faqData)
+      .pipe(
+        map(response => this.handleResponse(response)),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Toggle FAQ active status
+   */
+  toggleFaq(id: number): Observable<any> {
+    return this.http.patch<ApiResponse<any>>(`${this.API_BASE}/faqs/${id}/toggle`, {})
+      .pipe(
+        map(response => this.handleResponse(response)),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Delete FAQ
+   */
+  deleteFaq(id: number): Observable<void> {
+    return this.http.delete<ApiResponse>(`${this.API_BASE}/faqs/${id}`)
+      .pipe(
+        map(response => this.handleResponse(response)),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Get FAQ categories
+   */
+  getFaqCategories(): Observable<any> {
+    return this.http.get<ApiResponse<string[]>>(`${this.API_BASE}/faqs/categories`)
+      .pipe(
+        map(response => ({ data: this.handleResponse(response) })),
+        catchError(this.handleError)
+      );
+  }
+
+  /**
+   * Get FAQ statistics
+   */
+  getFaqStats(): Observable<any> {
+    return this.http.get<ApiResponse<any>>(`${this.API_BASE}/faqs/stats`)
+      .pipe(
+        map(response => ({ data: this.handleResponse(response) })),
+        catchError(this.handleError)
+      );
+  }
+
   /**
    * Handle API errors
    */

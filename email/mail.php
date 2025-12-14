@@ -1,24 +1,27 @@
 <?php
 // Import PHPMailer classes, load Composer autoloader, and create a PHPMailer instance
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 require 'vendor/autoload.php';
 $mail = new PHPMailer(true);
 
 try {
-    // Configure server settings (debug, SMTP, host, auth, username, password, security, port)
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-    $mail->isSMTP();
-    $mail->Host = 'franzketechnologies.com';
-    $mail->SMTPAuth = false;
-    // $mail->Username = 'noreply@franzketechnologies.com';
-    // $mail->Password = 'XJt=l{wTT^WgAn&$';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-    $mail->Port = 465;
+    // --- ⚠️ KEY CHANGE ⚠️ ---
+    // Use the local mail function (sendmail) instead of SMTP
+    $mail->isMail(); 
+    // $mail->isSMTP(); // REMOVE OR COMMENT OUT THIS LINE
+
+    // --- ⚠️ OPTIONAL: REMOVE SMTP SETTINGS ⚠️ ---
+    // These settings are now unnecessary as we are not using SMTP
+    $mail->SMTPDebug = 0; // Set to 0 to turn off debugging
+    // $mail->Host = 'localhost'; // Remove
+    // $mail->SMTPAuth = false; // Remove
+    // $mail->SMTPSecure = false; // Remove
+    // $mail->Port = 25; // Remove
 
     // Set recipients (from, addAddress, addReplyTo)
-    $mail->setFrom('noreply@franzketechnologies.com', 'Mailer');
+    // IMPORTANT: The 'from' address must often be an email address that exists on your cPanel account for delivery to work reliably.
+    $mail->setFrom('noreply@kc360gym.com', 'Mailer');
     $mail->addAddress('timothyfranzke@gmail.net', 'Joe User');
 
     // Configure email content (HTML format, subject, body, alternative body)

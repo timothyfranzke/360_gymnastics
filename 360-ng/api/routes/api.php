@@ -461,6 +461,31 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // FAQ routes
+    if ($uri === '/faqs') {
+        $controller = new FaqController($db);
+        $controller->index();
+        return;
+    }
+    
+    if ($uri === '/faqs/categories') {
+        $controller = new FaqController($db);
+        $controller->getCategories();
+        return;
+    }
+    
+    if ($uri === '/faqs/stats') {
+        $controller = new FaqController($db);
+        $controller->stats();
+        return;
+    }
+    
+    if (preg_match('/^\/faqs\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->show($matches[1]);
+        return;
+    }
+
     // User management routes
     if ($uri === '/users') {
         $controller = new UserController($db);
@@ -632,6 +657,13 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // FAQ routes
+    if ($uri === '/faqs') {
+        $controller = new FaqController($db);
+        $controller->create();
+        return;
+    }
+
     // Party routes
     if ($uri === '/parties') {
         $controller = new PartyController($db);
@@ -755,6 +787,13 @@ function handlePutRoutes($uri, $db) {
         return;
     }
 
+    // FAQ routes
+    if (preg_match('/^\/faqs\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->update($matches[1]);
+        return;
+    }
+
     // Open Gym routes
     if ($uri === '/open-gym/main') {
         $controller = new OpenGymController($db);
@@ -812,6 +851,13 @@ function handlePatchRoutes($uri, $db) {
     // Events routes
     if (preg_match('/^\/events\/(\d+)\/toggle$/', $uri, $matches)) {
         $controller = new EventsController($db);
+        $controller->toggle($matches[1]);
+        return;
+    }
+
+    // FAQ routes
+    if (preg_match('/^\/faqs\/(\d+)\/toggle$/', $uri, $matches)) {
+        $controller = new FaqController($db);
         $controller->toggle($matches[1]);
         return;
     }
@@ -889,6 +935,13 @@ function handleDeleteRoutes($uri, $db) {
     if (preg_match('/^\/contacts\/(\d+)$/', $uri, $matches)) {
         $controller = new ContactController($db);
         $controller->deleteContact($matches[1]);
+        return;
+    }
+
+    // FAQ routes
+    if (preg_match('/^\/faqs\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->delete($matches[1]);
         return;
     }
 

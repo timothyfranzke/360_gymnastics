@@ -410,7 +410,13 @@ export enum ApiEndpoints {
   CONTACT = '/contact',
   
   // Gallery
-  GALLERY = '/gallery'
+  GALLERY = '/gallery',
+  
+  // FAQ
+  FAQS = '/faqs',
+  FAQS_STATS = '/faqs/stats',
+  FAQS_CATEGORIES = '/faqs/categories',
+  FAQS_TOGGLE = '/faqs/toggle'
 }
 
 // Class interfaces
@@ -465,4 +471,49 @@ export interface GalleryImage {
 export interface GalleryResponse {
   images: GalleryImage[];
   total: number;
+}
+
+// FAQ interfaces
+export interface FAQ {
+  id: number;
+  question: string;
+  answer: string;
+  category: string;
+  display_order: number;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateFaqRequest {
+  question: string;
+  answer: string;
+  category?: string;
+  display_order?: number;
+  is_active?: boolean;
+}
+
+export interface UpdateFaqRequest {
+  question?: string;
+  answer?: string;
+  category?: string;
+  display_order?: number;
+  is_active?: boolean;
+}
+
+export interface FaqFilters {
+  category?: string;
+  active_only?: boolean;
+  search?: string;
+  page?: number;
+  limit?: number;
+  sort_by?: 'display_order' | 'created_at' | 'question';
+  sort_order?: 'ASC' | 'DESC';
+}
+
+export interface FaqStats {
+  total: number;
+  active: number;
+  inactive: number;
+  categories: number;
 }

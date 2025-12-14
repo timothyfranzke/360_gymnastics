@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { AssetPathService } from '../../services/asset-path.service';
+import { ApiService } from '../../services/api.service';
 
 interface NavigationItem {
   name: string;
@@ -52,21 +53,24 @@ interface NavigationItem {
 export class Header implements OnInit, OnDestroy {
   isScrolled = false;
   isMobileMenuOpen = false;
+  hasActiveFaqs = false;
   
   private destroy$ = new Subject<void>();
 
-  constructor(private assetPathService: AssetPathService) {}
+  constructor(
+    private assetPathService: AssetPathService,
+    private apiService: ApiService
+  ) {}
 
-  desktopNavItems: NavigationItem[] = [
+  baseDesktopNavItems: NavigationItem[] = [
     { name: 'Home', href: '/' },
     { name: 'Classes', href: '/classes' },
-    
     { name: 'Open Gym', href: '/open-gym' },
     { name: 'Parties', href: '/parties' },
     { name: 'Contact', href: '/contact-us' }
   ];
 
-  mobileNavItems: NavigationItem[] = [
+  baseMobileNavItems: NavigationItem[] = [
     { name: 'Home', href: '/' },
     { name: 'Classes', href: '/classes' },
     { name: 'Camps/Events', href: '/camps' },
@@ -74,9 +78,30 @@ export class Header implements OnInit, OnDestroy {
     { name: 'Contact', href: '/contact-us' }
   ];
 
+  get desktopNavItems(): NavigationItem[] {
+    const items = [...this.baseDesktopNavItems];
+    if (this.hasActiveFaqs) {
+      // Insert FAQs before Contact
+      items.splice(-1, 0, { name: 'FAQs', href: '/faqs' });
+    }
+    return items;
+  }
+
+  get mobileNavItems(): NavigationItem[] {
+    const items = [...this.baseMobileNavItems];
+    if (this.hasActiveFaqs) {
+      // Insert FAQs before Contact
+      items.splice(-1, 0, { name: 'FAQs', href: '/faqs' });
+    }
+    return items;
+  }
+
   ngOnInit(): void {
     // Initial scroll check
     this.checkScrollPosition();
+    
+    // Check if there are active FAQs
+    this.checkActiveFaqs();
   }
 
   ngOnDestroy(): void {
@@ -156,5 +181,20 @@ export class Header implements OnInit, OnDestroy {
 
   getLogoPath(): string {
     return this.assetPathService.getImagePath('/images/logo.jpg');
+  }
+
+  private checkActiveFaqs(): void {
+    this.apiService.getFaqs({ active_only: true })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          const faqs = response || [];
+          this.hasActiveFaqs = faqs.length > 0;
+        },
+        error: (error) => {
+          console.error('Failed to check active FAQs:', error);
+          this.hasActiveFaqs = false;
+        }
+      });
   }
 }

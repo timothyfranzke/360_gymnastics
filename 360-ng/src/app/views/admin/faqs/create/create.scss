@@ -1,0 +1,59 @@
+// FAQ Create Page Styles - using standard CSS instead of Tailwind @apply
+
+// Textarea auto-resize
+textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+// Custom datalist styling
+datalist {
+  display: none;
+}
+
+// Loading spinner animation
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+// Form validation styles
+.ng-invalid.ng-touched {
+  border-color: #fca5a5;
+}
+
+.ng-invalid.ng-touched:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+.ng-valid.ng-touched {
+  border-color: #86efac;
+}
+
+.ng-valid.ng-touched:focus {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+// Character count styling
+.character-count {
+  font-variant-numeric: tabular-nums;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.character-count.near-limit {
+  color: #ea580c;
+}
+
+.character-count.at-limit {
+  color: #dc2626;
+  font-weight: 500;
+}

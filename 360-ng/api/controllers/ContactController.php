@@ -236,16 +236,13 @@ class ContactController extends BaseController {
         $mail = new PHPMailer(true);
 
         try {
-            // Configure server settings
-            $mail->isSMTP();
-            $mail->Host = 'kc360gym.com';
-            $mail->SMTPAuth = false;
-            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-            $mail->Port = 465;
+            // Configure server settings - use local mail function
+            $mail->isMail();
+            $mail->SMTPDebug = 0;
 
             // Set recipients
             $mail->setFrom('noreply@kc360gym.com', '360 Gym Contact Form');
-            $mail->addAddress('timothyfranzke@gmail.com', 'Timothy Franzke');
+            $mail->addAddress('360birthday@gmail.com ', '360 Gymnastics');
             $mail->addReplyTo($data['email'], $data['name']);
 
             // Configure email content

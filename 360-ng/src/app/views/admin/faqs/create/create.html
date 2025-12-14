@@ -1,0 +1,163 @@
+<div class="space-y-6">
+  <!-- Notification Toast -->
+  <div *ngIf="notification" 
+       [class]="'fixed top-4 right-4 z-50 p-4 rounded-md shadow-lg transition-all duration-300 ' +
+                (notification.type === 'success' ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200')">
+    <div class="flex items-center">
+      <div class="flex-shrink-0">
+        <svg *ngIf="notification.type === 'success'" class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <svg *ngIf="notification.type === 'error'" class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="ml-3 flex-1">
+        <p [class]="'text-sm font-medium ' + (notification.type === 'success' ? 'text-green-800' : 'text-red-800')">{{ notification.message }}</p>
+      </div>
+      <div class="ml-4 flex-shrink-0">
+        <button (click)="dismissNotification()" 
+                [class]="'rounded-md text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 ' +
+                         (notification.type === 'success' ? 'text-green-500 hover:text-green-600 focus:ring-green-500' : 'text-red-500 hover:text-red-600 focus:ring-red-500')">
+          <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Create FAQ</h1>
+      <p class="mt-1 text-sm text-gray-500">Add a new frequently asked question</p>
+    </div>
+    <a routerLink="/admin/faqs" 
+       class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors">
+      Cancel
+    </a>
+  </div>
+
+  <!-- Form -->
+  <div class="bg-white rounded-lg shadow">
+    <form [formGroup]="faqForm" (ngSubmit)="onSubmit()" class="space-y-6 p-6">
+      
+      <!-- Question Field -->
+      <div>
+        <label for="question" class="block text-sm font-medium text-gray-700 mb-1">
+          Question <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          id="question"
+          formControlName="question"
+          rows="3"
+          placeholder="Enter the frequently asked question..."
+          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+        ></textarea>
+        <div *ngIf="getFieldError('question')" class="mt-1 text-sm text-red-600">
+          {{ getFieldError('question') }}
+        </div>
+        <p class="mt-1 text-sm text-gray-500">
+          Character count: {{ faqForm.get('question')?.value?.length || 0 }}/1000
+        </p>
+      </div>
+
+      <!-- Answer Field -->
+      <div>
+        <label for="answer" class="block text-sm font-medium text-gray-700 mb-1">
+          Answer <span class="text-red-500">*</span>
+        </label>
+        <textarea
+          id="answer"
+          formControlName="answer"
+          rows="6"
+          placeholder="Enter the detailed answer..."
+          class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+        ></textarea>
+        <div *ngIf="getFieldError('answer')" class="mt-1 text-sm text-red-600">
+          {{ getFieldError('answer') }}
+        </div>
+        <p class="mt-1 text-sm text-gray-500">
+          Character count: {{ faqForm.get('answer')?.value?.length || 0 }}/5000
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Category Field -->
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+          <div class="relative">
+            <input
+              list="categories"
+              id="category"
+              formControlName="category"
+              placeholder="Enter or select category..."
+              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+            />
+            <datalist id="categories">
+              <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+              <option value="General">General</option>
+              <option value="Membership">Membership</option>
+              <option value="Classes">Classes</option>
+              <option value="Hours">Hours</option>
+              <option value="Policies">Policies</option>
+            </datalist>
+          </div>
+          <div *ngIf="getFieldError('category')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('category') }}
+          </div>
+        </div>
+
+        <!-- Display Order Field -->
+        <div>
+          <label for="display_order" class="block text-sm font-medium text-gray-700 mb-1">Display Order</label>
+          <input
+            type="number"
+            id="display_order"
+            formControlName="display_order"
+            min="0"
+            placeholder="0"
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          />
+          <div *ngIf="getFieldError('display_order')" class="mt-1 text-sm text-red-600">
+            {{ getFieldError('display_order') }}
+          </div>
+          <p class="mt-1 text-sm text-gray-500">Lower numbers appear first</p>
+        </div>
+
+        <!-- Status Field -->
+        <div>
+          <label for="is_active" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+          <select
+            id="is_active"
+            formControlName="is_active"
+            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+          >
+            <option [value]="true">Active</option>
+            <option [value]="false">Inactive</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Submit Buttons -->
+      <div class="flex items-center justify-end space-x-4 pt-6 border-t border-gray-200">
+        <a routerLink="/admin/faqs" 
+           class="bg-white hover:bg-gray-50 text-gray-700 font-medium py-2 px-4 border border-gray-300 rounded-md transition-colors">
+          Cancel
+        </a>
+        <button
+          type="submit"
+          [disabled]="isSubmitting || !faqForm.valid"
+          class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+        >
+          <svg *ngIf="isSubmitting" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          {{ isSubmitting ? 'Creating...' : 'Create FAQ' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

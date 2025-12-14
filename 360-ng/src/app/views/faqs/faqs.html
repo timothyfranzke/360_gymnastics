@@ -1,0 +1,99 @@
+<app-view-header
+  title="Frequently Asked Questions"
+  subtitle="Find answers to commonly asked questions about 360 Gymnastics"
+></app-view-header>
+
+<main class="faq-container" [@fadeInUp]="animationState">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Loading FAQs...</p>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="error && !isLoading" class="error-container">
+    <p class="error-message">{{ error }}</p>
+    <button class="retry-btn" (click)="loadFaqs()">Try Again</button>
+  </div>
+
+  <!-- Content -->
+  <div *ngIf="!isLoading && !error" class="faq-content">
+    <!-- Filter Controls -->
+    <div class="filter-section">
+      <form [formGroup]="filterForm" class="filter-form">
+        <div class="filter-row">
+          <div class="filter-group">
+            <label for="category">Filter by Category:</label>
+            <select id="category" formControlName="category" class="filter-select">
+              <option value="">All Categories</option>
+              <option *ngFor="let category of categories" [value]="category">
+                {{ category }}
+              </option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label for="search">Search Questions:</label>
+            <input
+              id="search"
+              type="text"
+              formControlName="search"
+              placeholder="Search FAQs..."
+              class="filter-input"
+            />
+          </div>
+          
+          <button
+            type="button"
+            class="clear-btn"
+            (click)="clearFilters()"
+            [disabled]="!filterForm.value.category && !filterForm.value.search"
+          >
+            Clear Filters
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- FAQ Content -->
+    <div class="faq-sections">
+      <div *ngIf="faqs.length === 0" class="no-results">
+        <p>No FAQs found matching your criteria.</p>
+      </div>
+
+      <div *ngFor="let category of getFilteredCategories()" class="category-section">
+        <h2 class="category-title">{{ category }}</h2>
+        
+        <div class="faq-list">
+          <div
+            *ngFor="let faq of getFaqsByCategory()[category]; trackBy: trackByFaqId"
+            class="faq-item"
+            [class.expanded]="isFaqExpanded(faq.id)"
+          >
+            <button
+              class="faq-question"
+              (click)="toggleFaq(faq.id)"
+              [attr.aria-expanded]="isFaqExpanded(faq.id)"
+              [attr.aria-controls]="'answer-' + faq.id"
+            >
+              <span class="question-text">{{ faq.question }}</span>
+              <span class="expand-icon" [class.rotated]="isFaqExpanded(faq.id)">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                  <path d="M7 10l5 5 5-5z" fill="currentColor"/>
+                </svg>
+              </span>
+            </button>
+            
+            <div
+              class="faq-answer"
+              [id]="'answer-' + faq.id"
+              [@expandCollapse]="getExpandedState(faq.id)"
+            >
+              <div class="answer-content" [innerHTML]="faq.answer"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

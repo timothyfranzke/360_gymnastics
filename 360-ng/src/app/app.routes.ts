@@ -31,6 +31,10 @@ export const routes: Routes = [
         loadChildren: () => import('./views/parties/parties.routes').then(m => m.partiesRoutes)
     },
     {
+        path: 'faqs',
+        loadChildren: () => import('./views/faqs/faqs.routes').then(m => m.faqsRoutes)
+    },
+    {
         path: 'admin/login',
         component: AdminLogin
     },
@@ -102,6 +106,11 @@ export const routes: Routes = [
             {
                 path: 'contacts',
                 loadChildren: () => import('./views/admin/contacts/contacts.routes').then(m => m.CONTACTS_ROUTES),
+                canActivate: [staffGuard]
+            },
+            {
+                path: 'faqs',
+                loadChildren: () => import('./views/admin/faqs/faqs.routes').then(m => m.faqRoutes),
                 canActivate: [staffGuard]
             },
             {
