@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import {
   trigger,
@@ -26,7 +27,7 @@ interface NotificationItem {
 @Component({
   selector: 'app-class-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './detail.html',
   styleUrls: ['./detail.scss'],
   animations: [
@@ -113,26 +114,17 @@ export class Detail implements OnInit, OnDestroy {
     this.isLoading = true;
     this.error = null;
 
-    // Load from featured classes (public endpoint)
-    this.classesService.getFeaturedClasses()
+    // Load from all classes (public endpoint)
+    this.classesService.getClasses()
       .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (classes) => {
-          const foundClass = classes.find(c => c.id === classId);
+        next: (response) => {
+          const classes = response.data;
+          const foundClass = classes.find((c: Class) => c.id === classId);
           if (foundClass) {
             this.classData = foundClass;
             // Load Jackrabbit schedule using the class name (not ID)
             this.loadJackRabbitSchedule(foundClass.name);
-          } else {
-            this.error = 'Class not found or not available for public viewing.';
-            // Fallback to local data
-            const fallbackClass = this.classesService.getLocalClass(classId);
-            if (fallbackClass && fallbackClass.id) {
-              this.classData = fallbackClass;
-              this.error = null; // Clear error if fallback works
-              // Load Jackrabbit schedule using the class name from fallback
-              this.loadJackRabbitSchedule(fallbackClass.name);
-            }
           }
           this.isLoading = false;
         },

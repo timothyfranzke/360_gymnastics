@@ -45,9 +45,9 @@
     </div>
 
     <!-- Open Gym Options Grid -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" 
+        <div class="flex flex-wrap justify-center gap-8 mb-12"
          *ngIf="data.ageGroups && data.ageGroups.length > 0">
-      <div class="bg-white rounded-xl shadow-lg p-8 relative overflow-hidden" 
+            <div class="bg-white rounded-xl shadow-lg p-8 relative overflow-hidden w-full md:w-[45%] lg:w-[30%]" 
            *ngFor="let ageGroup of data.ageGroups">
         <div class="decorative-blur" 
              [ngClass]="'decorative-blur-' + (ageGroup.colorTheme || 'cyan')"></div>
@@ -183,11 +183,10 @@
       </div>
       
       <!-- JackRabbit Calendar Iframe -->
-      <div class="overflow-hidden rounded-lg border border-gray-200">
+      <div class="overflow-hidden rounded-lg border border-gray-200 flex justify-center">
         <iframe 
-          class="w-full" 
           src="https://app.jackrabbitclass.com/eventcalendar.asp?orgid=514082" 
-          width="100%" 
+          width="980" 
           height="650" 
           frameborder="0" 
           scrolling="yes"

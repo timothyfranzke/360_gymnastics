@@ -59,7 +59,7 @@ $brand-white: #ffffff;
 // Secondary button (critical for navigation)
 .btn-secondary {
   @extend %btn-base;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 191, 0, 0.4);
   color: $brand-white;
   border: 2px solid $brand-white;
   padding: 0.75rem 1.5rem;

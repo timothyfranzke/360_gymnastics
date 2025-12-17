@@ -266,29 +266,6 @@
     }
   }
   
-  // Dark mode preparation
-  @media (prefers-color-scheme: dark) {
-    .announcement-card {
-      background-color: #1f2937;
-      border-color: rgba(252, 121, 0, 0.2);
-    }
-    
-    .announcement-title {
-      color: #e5e7eb;
-    }
-    
-    p {
-      color: #d1d5db;
-    }
-    
-    .carousel-controls button {
-      background-color: rgba(31, 41, 55, 0.8);
-      
-      &:hover:not(:disabled) {
-        background-color: rgba(31, 41, 55, 0.95);
-      }
-    }
-  }
   
   // Reduced motion for accessibility
   @media (prefers-reduced-motion: reduce) {

@@ -333,13 +333,15 @@ $brand-gray-hover: #4b5563;
   
   // Dark background variant
   &.btn-secondary-dark {
-    background: $brand-white;
-    color: $brand-blue;
-    border-color: $brand-blue;
+    background: transparent;
+    color: $brand-gray;
+    border-color: $brand-gray;
     
     &:hover:not(:disabled):not(.disabled) {
-      background: rgba(2, 38, 255, 0.1);
-      color: $brand-blue-hover;
+      background: $brand-gray;
+      color: $brand-white;
+      border-color: $brand-gray-hover;
+      transform: translateY(-2px) scale(1.02);
     }
   }
   
