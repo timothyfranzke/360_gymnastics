@@ -9,10 +9,11 @@ import { SocialFeed } from '../../components/social-feed/social-feed';
 import { StaffDisplay } from '../../components/staff-display/staff-display';
 import { FooterDivider } from '../../components/footer-divider/footer-divider';
 import { Gallery } from '../../components/gallery/gallery';
+import { TodayEventsComponent } from '../../components/today-events/today-events';
 
 @Component({
   selector: 'app-home',
-  imports: [Hero, Announcement, HoursQuickLinks, WhyChooseUs, FeaturedClasses, MainActivities, StaffDisplay, SocialFeed, FooterDivider, Gallery],
+  imports: [Hero, Announcement, HoursQuickLinks, WhyChooseUs, FeaturedClasses, MainActivities, StaffDisplay, SocialFeed, FooterDivider, Gallery, TodayEventsComponent],
   templateUrl: './home.html',
   styleUrl: './home.scss'
 })

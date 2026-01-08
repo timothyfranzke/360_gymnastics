@@ -1,0 +1,418 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>360 Gymnastics Events Calendar</TITLE>
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+<meta name="description" content="Online Events Calendar - Click an Event to Register for an Event"/>
+
+<!--The uEdition is sometimes null/empty here, and we want to be sure we use the Spring 2014 presentation
+    so we're passing in the COLOR_SELCTION_DEFAULT_EDITION const as the edition here to force it. -->
+<script type="text/javascript" src="js/jquery-1.7.min.js"></script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,900,400italic,700italic" type="text/css" /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" /><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700" /><link rel="stylesheet" href="https://app.jackrabbitclass.com/jr3.0/Content/Css/Spring2014/jr-spring-2014.css?rev=3.0.9111" type="text/css"/><link rel="stylesheet" href="https://app.jackrabbitclass.com/jr3.0/Content/Css/App/assets/sass/main.css?rev=3.0.9111" /><link rel="stylesheet" href="https://app.jackrabbitclass.com/jr3.0/Content/Css/Spring2014/Icons.css?rev=3.0.9111" type="text/css"/>
+    <link rel="stylesheet" href="/jr3.0/Content/Css/vendor/fontawesome/v6.1.1/css/all.min.css">
+<script type="text/javascript">var jr_css_path='https://app.jackrabbitclass.com/jr3.0/Content/Css/Spring2014/jr-spring-2014.css?rev=3.0.9111'</script><script type="text/javascript">var jquery_ui_css_path='https://app.jackrabbitclass.com/jr3.0/Content/themes/custom/Spring2014/jquery-ui-1.10.4.custom.css?rev=3.0.9111'</script>
+<script type="text/javascript" src="https://app.jackrabbitclass.com/jr3.0/ts/modules/code-utils/migration.js?rev=3.0.9119"></script>
+<script type="text/javascript" src="https://app.jackrabbitclass.com/jr3.0/Scripts/jrStorage.js?rev=3.0.9119"></script>
+    <script type="text/javascript" src="/jr3.0/Home/NavConfig?rev=3.0.9111"></script>
+    <script type="text/javascript">
+
+        
+        // This object will never work because the u vars aren't inited until CheckUserSession is called after this
+        jackrabbit = {
+            edition : 'class',
+            freeTrial: false,
+                userName: '',
+                    processor: '',
+                    countryCode: '',
+                    state: ''
+        };
+
+        parent.jackrabbit = jackrabbit;
+
+        window.JrScriptPathing = {
+            BasePath: '/',
+            NetPath: 'jr3.0/'
+        };
+
+    </script>
+
+<style>
+	.jr-powered-by-container {
+		position: fixed;
+		bottom: 25px;
+		left: 50%;
+		transform: translate(-50%, 0);
+	}
+	.jr-powered-by {
+		height: 52px;
+		width: 200px;
+		background-image: url("images/JR-Brand.svg");
+		background-size: contain;
+		background-repeat: no-repeat;
+	}
+</style>
+</HEAD>
+<BODY bgcolor="#efefef">
+<SCRIPT type="text/javascript"><!--
+try {
+	if(window.opener && window.opener.PageName) {
+		var ParentPagename = window.opener.PageName;
+		if (ParentPagename) {
+			//document.write ('<center><b><font size=5>Calendar for '+ParentPagename+'</font><b/></center>');
+			}
+		}
+	}
+catch (error) {}
+
+function goto(url) {
+	//alert(url);
+	if (window.opener){
+		if (window.opener.parent && window.opener.parent.frames['display']) {
+			//alert('loading url into frame');
+			window.opener.parent.frames['display'].location.href = url;
+			window.close();
+		}
+	}
+}
+
+function openreg(evid) {
+	var parms = "toolbar=0,scrollbars=1,resizable=1,left=0,top=0,width=800,height=600";
+	var p = '';
+	var np = '';
+
+	if (!np || np === '0') {
+	    
+            var eventwin = window.open("https://app.jackrabbitclass.com/regevent.asp?xID=" + evid + "&orgid=514082&PortalSession=", "", parms);
+	    
+	}
+	else {
+	    window.opener.$(window.opener.document).trigger('event-calendar/selected',{id: evid});
+        //switch back to opener.
+	    var p = window.open('',window.opener.name);
+	    p.focus();
+	}
+	
+	return false;
+}
+
+function jt_ev(id){
+	document.location.href='jr4.0/Event/EventDetail/'+id; return false;	
+}
+
+function jt_c(id){
+    document.location.href = JrSiteNavURLs.CLASS_DETAIL + '?xID=' + id; return false;
+}
+
+//window.resizeTo(750,700);
+//--> </SCRIPT>
+
+<div style="font-family:verdana;font-size:7pt;color:eaeaea;">Powered by <a href="http://www.JackrabbitClass.com/" style="color:eaeaea;" target="_blank">Jackrabbit Class</a></div>
+		<div style="margin-bottom: 10px;">
+			<h3 style="display:inline-block;margin-right:10px;" id="CalendarDisplayLabel">Calendar View</h3> 
+			<select name="CalendarDisplay" id="CalendarDisplay">
+				<option value="Open"  >Open Events</option>
+				<option value=""  selected  >All Events</option>
+				<option value="Booked"  >Booked Events</option>
+				<option value="Hold"  >Hold Events</option>
+				<option value="Unavailable"  >Unavailable Events</option>
+				<option value="Notice"  >Notices</option>
+			</select>
+		</div>
+		
+	<div id="calendar" style="top: 0px; left: 0px; position: relative; z-index: 1">
+<table class="MonthlyCal" border="1" xwidth="980" xheight="600" cellspacing="0">
+<tr><td colspan="7" height="10" class="Month" xbgcolor="#333366">
+	<table border="0" width="100%" cellspacing=0>
+	<tr>
+	<td align="left"><a style="text-decoration: none; xcolor: white;" href="/eventcalendar.asp?id=&key=&clabel=&date=11%2F30%2F2025&orgid=514082"><font face="Arial" size="2"><b>&nbsp;<< Previous Month</b></font></a></td>
+	<td align="center"><font size="2" face="Arial" xcolor="white"><b>December 2025</b></font></td>
+	<td align="right"><a style="text-decoration: none; xcolor: white;" href="/eventcalendar.asp?id=&key=&clabel=&date=1%2F31%2F2026&orgid=514082"><font face="Arial" size="2"><b>Next Month >> &nbsp;</b></font></a></td>
+	</tr>
+	</table>
+</td></tr>
+<tr>
+<td height="20" width="140" align="center" class="MonthlyCal_DayOfWeek"><small>Sunday</small></td>
+<td height="20" width="140" align="center" class="MonthlyCal_DayOfWeek"><small>Monday</small></td>
+<td height="20" width="140" align="center" class="MonthlyCal_DayOfWeek"><small>Tuesday</small></td>
+<td height="20" width="140" align="center" class="MonthlyCal_DayOfWeek"><small>Wednesday</small></td>
+<td height="20" width="140" align="center" class="MonthlyCal_DayOfWeek"><small>Thursday</small></td>
+<td height="20" width="140" align="center" class="MonthlyCal_DayOfWeek"><small>Friday</small></td>
+<td height="20" width="140" align="center" class="MonthlyCal_DayOfWeek"><small>Saturday</small></td>
+</tr>
+<tr>
+<td height="104" width="140" class="MonthlyCal_NotInMonth">&nbsp;</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>1</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>2</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>3</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>4</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>5</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>6</small></td>
+</tr>
+</table>
+</td>
+</tr><tr>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>7</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>8</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>9</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>10</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>11</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>12</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>13</small></td>
+</tr>
+</table>
+</td>
+</tr><tr>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>14</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>15</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>16</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>17</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>18</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>19</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>20</small></td>
+</tr>
+</table>
+</td>
+</tr><tr>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>21</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>22</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>23</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>24</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>25</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>26</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>27</small></td>
+</tr>
+</table>
+</td>
+</tr><tr>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>28</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>29</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_InMonth">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>30</small></td>
+</tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_Today">
+<table width="100%" border="0" cellspacing="1" cellpadding="1">
+<tr><td align="left" valign="top"><small>31</small></td>
+</tr>
+<tr><td oheight="16" sort="<!--00:00-->" bgcolor="#CC3300"><!--00:00--><a href="#" onclick="openreg(7687858); return false;" class="NavLink" title="Enroll in this event"> CLOSED- NO REGULAR CLASSES (0)</a></td></tr>
+<tr><td oheight="16" sort="<!--10:00-->" bgcolor="#0099CC"><!--10:00--><a href="#" onclick="openreg(7754392); return false;" class="NavLink" title="Enroll in this event"><b>10:00a</b> NINJA CAMP - 6 yrs and UP (3)</a></td></tr>
+<tr><td oheight="16" sort="<!--10:00-->" bgcolor="#ffffcc"><!--10:00--><a href="#" onclick="openreg(7754451); return false;" class="NavLink" title="Enroll in this event"><b>10:00a</b> CHEER CLINIC (NO TUMBLING)- 6 and UP (6)</a></td></tr>
+<tr><td oheight="16" sort="<!--12:00-->" bgcolor="#00CC00"><!--12:00--><a href="#" onclick="openreg(7687847); return false;" class="NavLink" title="Enroll in this event"><b>12:00p</b> Open Gym (23)</a></td></tr>
+</table>
+</td>
+<td height="104" width="140" class="MonthlyCal_NotInMonth">&nbsp;</td>
+<td height="104" width="140" class="MonthlyCal_NotInMonth">&nbsp;</td>
+<td height="104" width="140" class="MonthlyCal_NotInMonth">&nbsp;</td>
+</tr>
+<tr><td height="30" colspan="7" align="center">
+	<form id=frmGO name=frmGO>
+	<table border="0" style="FONT-FAMILY: Verdana, Arial, Helvetica, sans-serif; FONT-SIZE: 8pt;">
+	<tr>
+	<td><select name="month">
+<option value="1">Jan</option>
+<option value="2">Feb</option>
+<option value="3">Mar</option>
+<option value="4">Apr</option>
+<option value="5">May</option>
+<option value="6">Jun</option>
+<option value="7">Jul</option>
+<option value="8">Aug</option>
+<option value="9">Sep</option>
+<option value="10">Oct</option>
+<option value="11">Nov</option>
+<option value="12" selected>Dec</option>
+	</select></td>
+	<td><select name="year">
+<option value="2021">2021</option>
+<option value="2022">2022</option>
+<option value="2023">2023</option>
+<option value="2024">2024</option>
+<option value="2025" selected>2025</option>
+<option value="2026">2026</option>
+<option value="2027">2027</option>
+<option value="2028">2028</option>
+<option value="2029">2029</option>
+<option value="2030">2030</option>
+<option value="2031">2031</option>
+	</select></td>
+	<td><input type="button" Value="Go" onclick="document.location='/eventcalendar.asp?key=&clabel=&orgid=514082&date='+this.form.month.options[this.form.month.selectedIndex].value+'/1/'+this.form.year.options[this.form.year.selectedIndex].value;" id=1 name=1></td>
+	</form>
+	</tr></table>
+</td></tr>
+</table>
+</div>
+
+    </div>
+    <!--removing this for now
+    <div class="jr-powered-by-container">
+        <div class="jr-powered-by" style="cursor: pointer;">&nbsp;</div>
+    </div>
+        -->
+	
+		<script>
+			//bind to calendar view drop down
+			$('#CalendarDisplay').on('change', function () {
+				//base url
+				var url = "/eventcalendar.asp"
+
+				//determine internal flag
+				
+					url += "?orgid=514082"
+				
+
+				//grab additional value from selection option
+				var val = $(this).val();
+
+				//if set then add status parameter
+				if (val) {
+					url += '&status=' + val;
+				}
+
+				//go go go
+				window.location.assign(url);
+			});
+
+             
+                $('#CalendarDisplay').hide();
+                $('#CalendarDisplayLabel').hide();
+              
+
+		</script>
+	
+</BODY>
+</HTML>

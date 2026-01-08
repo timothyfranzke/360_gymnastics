@@ -263,11 +263,8 @@ class GymnasticsClassController extends BaseController {
             $errors['description'] = 'Description must be less than 2000 characters';
         }
 
-        if (isset($data['url']) && !empty($data['url'])) {
-            if (!filter_var($data['url'], FILTER_VALIDATE_URL) && !preg_match('/^\/[a-zA-Z0-9\-_\/]*$/', $data['url'])) {
-                $errors['url'] = 'URL must be a valid URL or relative path';
-            }
-        }
+        // URL validation is optional and allows any string value
+        // No validation needed for URL field as it can be any descriptive text
 
         if (isset($data['ratio']) && !empty($data['ratio']) && strlen($data['ratio']) > 20) {
             $errors['ratio'] = 'Ratio must be less than 20 characters';

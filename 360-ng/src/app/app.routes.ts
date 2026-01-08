@@ -3,6 +3,7 @@ import { Home } from './views/home/home';
 import { AdminLogin } from './views/admin/login/login';
 import { AdminLayout } from './components/admin/admin-layout/admin-layout';
 import { AdminDashboard } from './views/admin/dashboard/dashboard';
+import { StaffView } from './views/staff/staff';
 import { authGuard, adminGuard, staffGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
@@ -29,6 +30,10 @@ export const routes: Routes = [
     {
         path: 'parties',
         loadChildren: () => import('./views/parties/parties.routes').then(m => m.partiesRoutes)
+    },
+    {
+        path: 'staff',
+        component: StaffView
     },
     {
         path: 'admin/login',

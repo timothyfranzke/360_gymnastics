@@ -1,0 +1,124 @@
+<div class="calendar-container" [class.compact]="compact">
+  <!-- Header -->
+  <div class="calendar-header" *ngIf="showHeader">
+    <div class="calendar-controls">
+      <button class="btn-nav" (click)="previousMonth()" [disabled]="loading">
+        <span class="icon">‹</span>
+      </button>
+      
+      <div class="month-year">
+        <h3>{{ getCurrentMonthName() }} {{ currentYear }}</h3>
+      </div>
+      
+      <button class="btn-nav" (click)="nextMonth()" [disabled]="loading">
+        <span class="icon">›</span>
+      </button>
+    </div>
+
+    <div class="calendar-actions">
+      <button class="btn-today" (click)="goToToday()" [disabled]="loading">
+        Today
+      </button>
+      
+      <button class="btn-refresh" (click)="refresh()" [disabled]="loading" title="Refresh calendar">
+        <span class="icon">↻</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter -->
+  <div class="calendar-filter" *ngIf="showHeader && hasFilters()">
+    <select [(ngModel)]="selectedFilter" (change)="onFilterChange(selectedFilter)" [disabled]="loading">
+      <option *ngFor="let filter of calendarData?.filters" [value]="filter.type">
+        {{ filter.label }}
+      </option>
+    </select>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-state" *ngIf="loading">
+    <div class="spinner"></div>
+    <p>Loading calendar...</p>
+  </div>
+
+  <!-- Error State -->
+  <div class="error-state" *ngIf="error && !loading">
+    <div class="error-icon">⚠</div>
+    <p>{{ error }}</p>
+    <button class="btn-retry" (click)="refresh()">Try Again</button>
+  </div>
+
+  <!-- Calendar Grid -->
+  <div class="calendar-grid" *ngIf="calendarData && !loading && !error">
+    <!-- Day Headers -->
+    <div class="day-header" *ngFor="let dayName of dayNames">
+      {{ dayName }}
+    </div>
+
+    <!-- Calendar Days -->
+    <ng-container *ngFor="let week of calendarData?.calendar?.weeks">
+      <div 
+        *ngFor="let day of week.days" 
+        class="calendar-day"
+        [class.in-month]="day.isInMonth"
+        [class.today]="day.isToday"
+        [class.not-in-month]="!day.isInMonth"
+        [class.has-events]="day.events.length > 0">
+        
+        <div class="day-number">{{ day.day }}</div>
+        
+        <div class="day-events" *ngIf="day.events.length > 0">
+          <!-- Visible Events -->
+          <div 
+            *ngFor="let event of getVisibleEvents(day.events)"
+            class="event"
+            [class]="getEventTypeClass(event)"
+            [class.available]="isEventAvailable(event)"
+            [class.full]="!isEventAvailable(event)"
+            [title]="event.title + (event.time ? ' at ' + event.time : '') + (event.spotsAvailable > 0 ? ' (' + event.spotsAvailable + ' spots)' : '')"
+            (click)="openEventRegistration(event)">
+            
+            <div class="event-time" *ngIf="event.time && !compact">
+              {{ formatTime(event.time) }}
+            </div>
+            
+            <div class="event-title">
+              {{ event.title }}
+            </div>
+            
+            <div class="event-spots" *ngIf="event.spotsAvailable > 0 && !compact">
+              {{ event.spotsAvailable }} spots
+            </div>
+          </div>
+
+          <!-- More Events Indicator -->
+          <div class="more-events" *ngIf="getHiddenEventsCount(day.events) > 0">
+            +{{ getHiddenEventsCount(day.events) }} more
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <!-- Calendar Footer (for compact mode) -->
+  <div class="calendar-footer" *ngIf="compact && calendarData">
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-color event-open-gym"></div>
+        <span>Open Gym</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color event-camp"></div>
+        <span>Camps</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color event-clinic"></div>
+        <span>Clinics</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-color event-closed"></div>
+        <span>Closed</span>
+      </div>
+    </div>
+  </div>
+</div>

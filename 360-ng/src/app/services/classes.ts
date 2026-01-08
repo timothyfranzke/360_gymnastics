@@ -385,9 +385,12 @@ export class ClassesService {
    * Create new class
    */
   createClass(classData: CreateClassRequest): Observable<Class> {
+    // Transform camelCase fields to snake_case for API
+    const apiData = this.transformToApiFormat(classData);
+    
     return this.http.post<ApiResponse<Class>>(
       `${this.API_BASE}${ApiEndpoints.CLASSES}`,
-      classData
+      apiData
     ).pipe(
       map(response => this.handleResponse(response)),
       catchError(this.handleError)
@@ -398,9 +401,12 @@ export class ClassesService {
    * Update class
    */
   updateClass(id: string, classData: UpdateClassRequest): Observable<Class> {
+    // Transform camelCase fields to snake_case for API
+    const apiData = this.transformToApiFormat(classData);
+    
     return this.http.put<ApiResponse<Class>>(
       `${this.API_BASE}${ApiEndpoints.CLASSES}/${id}`,
-      classData
+      apiData
     ).pipe(
       map(response => this.handleResponse(response)),
       catchError(this.handleError)
@@ -453,6 +459,21 @@ export class ClassesService {
   }
 
   // ========== UTILITY METHODS ==========
+
+  /**
+   * Transform frontend camelCase format to API snake_case format
+   */
+  private transformToApiFormat(data: any): any {
+    const transformed = { ...data };
+    
+    // Transform ageRange to age_range
+    if (transformed.ageRange !== undefined) {
+      transformed.age_range = transformed.ageRange;
+      delete transformed.ageRange;
+    }
+    
+    return transformed;
+  }
 
   /**
    * Handle successful API responses

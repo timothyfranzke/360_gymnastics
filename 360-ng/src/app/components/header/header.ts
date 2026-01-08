@@ -63,6 +63,7 @@ export class Header implements OnInit, OnDestroy {
     
     { name: 'Open Gym', href: '/open-gym' },
     { name: 'Parties', href: '/parties' },
+    { name: 'Staff', href: '/staff' },
     { name: 'Contact', href: '/contact-us' }
   ];
 
@@ -71,6 +72,7 @@ export class Header implements OnInit, OnDestroy {
     { name: 'Classes', href: '/classes' },
     { name: 'Camps/Events', href: '/camps' },
     { name: 'Parties', href: '/parties' },
+    { name: 'Staff', href: '/staff' },
     { name: 'Contact', href: '/contact-us' }
   ];
 

@@ -1,0 +1,71 @@
+<div *ngIf="hasUpcomingEvents" class="bg-white rounded-2xl shadow-xl relative overflow-hidden mb-8">
+  <!-- Decorative gradient header -->
+  <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-orange-500 to-blue-600" style="background: linear-gradient(90deg, #fc7900 0%, #0226ff 100%);"></div>
+
+  <div class="px-6 py-6 border-b border-gray-100 flex flex-col md:flex-row justify-between items-center bg-white mt-2 gap-4">
+    <div>
+      <h3 class="text-xl font-bold text-gray-900 flex items-center">
+        <div class="w-10 h-10 rounded-lg flex items-center justify-center mr-3 bg-blue-50 text-blue-600">
+           <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+           </svg>
+        </div>
+        What's Happening Today
+      </h3>
+      <p class="mt-1 text-sm text-gray-500 ml-14">
+        {{ currentDate | date:'fullDate' }}
+      </p>
+    </div>
+
+    <a routerLink="/open-gym" class="inline-flex items-center px-4 py-2 border border-blue-600 shadow-sm text-sm font-medium rounded-md text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
+      <svg class="mr-2 -ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+      </svg>
+      See Full Calendar
+    </a>
+  </div>
+
+  <div class="px-6 pb-6">
+    <ul class="space-y-3">
+      <li *ngFor="let event of upcomingEvents" 
+          (click)="openEventRegistration(event)"
+          class="bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md hover:border-blue-200 transition-all duration-200 cursor-pointer overflow-hidden group">
+        <div class="p-4 flex items-center justify-between">
+          <div class="flex items-center min-w-0 flex-1">
+             <div class="flex-shrink-0 bg-orange-50 text-orange-600 rounded-lg p-3 font-bold text-center min-w-[4.5rem] group-hover:bg-orange-100 transition-colors">
+               <ng-container *ngIf="event.time; else allDay">
+                 <span class="block text-lg leading-none">{{ event.time.replace('a','').replace('p','') }}<span class="text-xs font-normal align-top">{{ event.time.slice(-1) }}m</span></span>
+               </ng-container>
+               <ng-template #allDay>
+                 <span class="block text-md leading-tight mt-1">All<br>Day</span>
+               </ng-template>
+             </div>
+             <div class="ml-4 truncate">
+                <h4 class="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors truncate">{{ event.title }}</h4>
+                <div class="flex items-center mt-1">
+                   <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                       [ngClass]="{
+                         'bg-green-100 text-green-800': event.spotsAvailable >= 5,
+                         'bg-yellow-100 text-yellow-800': event.spotsAvailable > 0 && event.spotsAvailable < 5,
+                         'bg-red-100 text-red-800': event.spotsAvailable === 0
+                       }">
+                     <svg class="mr-1 h-3 w-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
+                     </svg>
+                     {{ event.spotsAvailable }} spots available
+                   </span>
+                </div>
+             </div>
+          </div>
+          <div class="ml-4 flex-shrink-0">
+             <span class="inline-flex items-center justify-center h-10 w-10 rounded-full bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+             </span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -280,6 +280,13 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // Calendar routes
+    if ($uri === '/calendar') {
+        $controller = new CalendarController($db);
+        $controller->index();
+        return;
+    }
+
     // Gymnastics Classes routes
     if ($uri === '/classes') {
         $controller = new GymnasticsClassController($db);

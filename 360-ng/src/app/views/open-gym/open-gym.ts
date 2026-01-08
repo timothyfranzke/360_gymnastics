@@ -1,12 +1,13 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ViewHeader } from '../../components/view-header/view-header';
+import { CalendarComponent } from '../../components/calendar/calendar';
 import { OpenGymService, OpenGymData, AgeGroup, OpenGymConfig } from '../../services/open-gym';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-open-gym',
-  imports: [CommonModule, ViewHeader],
+  imports: [CommonModule, ViewHeader, CalendarComponent],
   templateUrl: './open-gym.html',
   styleUrl: './open-gym.scss'
 })

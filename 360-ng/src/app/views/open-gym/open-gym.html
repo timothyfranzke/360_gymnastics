@@ -182,16 +182,9 @@
         <p class="text-gray-600 text-lg">Click on available dates to register for open gym sessions</p>
       </div>
       
-      <!-- JackRabbit Calendar Iframe -->
-      <div class="overflow-hidden rounded-lg border border-gray-200 flex justify-center">
-        <iframe 
-          src="https://app.jackrabbitclass.com/eventcalendar.asp?orgid=514082" 
-          width="980" 
-          height="650" 
-          frameborder="0" 
-          scrolling="yes"
-          title="Open Gym Calendar - Register for Sessions">
-        </iframe>
+      <!-- Native Calendar Component -->
+      <div class="calendar-wrapper">
+        <app-calendar [compact]="false" [maxEventsPerDay]="5"></app-calendar>
       </div>
     </div>
 

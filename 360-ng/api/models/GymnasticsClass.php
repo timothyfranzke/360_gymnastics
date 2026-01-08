@@ -155,7 +155,7 @@ class GymnasticsClass {
         return $stmt->execute([
             $data['id'],
             $data['name'],
-            $data['ageRange'], // Fix field name to match interface
+            $data['age_range'], // Use snake_case as transformed by frontend
             $data['description'],
             json_encode($data['skills'] ?? []),
             json_encode($data['structure'] ?? []),
@@ -163,7 +163,7 @@ class GymnasticsClass {
             $data['ratio'] ?? null,
             $data['duration'] ?? null,
             $data['url'] ?? null,
-            $data['featured'] ?? false
+            $this->convertToBoolean($data['featured'] ?? false)
         ]);
     }
 
@@ -177,7 +177,7 @@ class GymnasticsClass {
         // Field mapping from frontend to database
         $fieldMapping = [
             'name' => 'name',
-            'ageRange' => 'age_range',
+            'age_range' => 'age_range', // Now using snake_case from frontend transformation
             'description' => 'description',
             'skills' => 'skills',
             'structure' => 'structure',
@@ -193,6 +193,9 @@ class GymnasticsClass {
                 if (in_array($dbField, ['skills', 'structure', 'prerequisites'])) {
                     $fields[] = "{$dbField} = ?";
                     $values[] = json_encode($data[$frontendField] ?? []);
+                } elseif ($dbField === 'featured') {
+                    $fields[] = "{$dbField} = ?";
+                    $values[] = $this->convertToBoolean($data[$frontendField]);
                 } else {
                     $fields[] = "{$dbField} = ?";
                     $values[] = $data[$frontendField];
@@ -288,6 +291,30 @@ class GymnasticsClass {
         $stmt->execute([$id]);
         
         return $stmt->fetch(PDO::FETCH_ASSOC)['count'] > 0;
+    }
+
+    /**
+     * Convert various boolean representations to integer for database
+     */
+    private function convertToBoolean($value) {
+        // Handle string representations
+        if (is_string($value)) {
+            $value = strtolower(trim($value));
+            if ($value === 'true' || $value === '1') {
+                return 1;
+            }
+            if ($value === 'false' || $value === '0' || $value === '') {
+                return 0;
+            }
+        }
+        
+        // Handle actual boolean values
+        if (is_bool($value)) {
+            return $value ? 1 : 0;
+        }
+        
+        // Handle numeric values
+        return (int)(bool)$value;
     }
 
     /**
