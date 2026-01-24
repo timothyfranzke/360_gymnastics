@@ -287,6 +287,12 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    if ($uri === '/calendar/camps-clinics') {
+        $controller = new CalendarController($db);
+        $controller->campsAndClinics();
+        return;
+    }
+
     // Gymnastics Classes routes
     if ($uri === '/classes') {
         $controller = new GymnasticsClassController($db);
@@ -474,16 +480,72 @@ function handleGetRoutes($uri, $db) {
         $controller->index();
         return;
     }
-    
+
     if ($uri === '/users/stats') {
         $controller = new UserController($db);
         $controller->stats();
         return;
     }
-    
+
     if (preg_match('/^\/users\/(\d+)$/', $uri, $matches)) {
         $controller = new UserController($db);
         $controller->show($matches[1]);
+        return;
+    }
+
+    // FAQ routes (public)
+    if ($uri === '/faqs') {
+        $controller = new FaqController($db);
+        $controller->index();
+        return;
+    }
+
+    if ($uri === '/faqs/search') {
+        $controller = new FaqController($db);
+        $controller->search();
+        return;
+    }
+
+    if ($uri === '/faqs/all') {
+        $controller = new FaqController($db);
+        $controller->all();
+        return;
+    }
+
+    if ($uri === '/faqs/stats') {
+        $controller = new FaqController($db);
+        $controller->stats();
+        return;
+    }
+
+    if (preg_match('/^\/faqs\/category\/([a-z0-9-]+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->byCategory($matches[1]);
+        return;
+    }
+
+    if (preg_match('/^\/faqs\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->show($matches[1]);
+        return;
+    }
+
+    // FAQ Category routes
+    if ($uri === '/faq-categories') {
+        $controller = new FaqController($db);
+        $controller->categories();
+        return;
+    }
+
+    if ($uri === '/faq-categories/all') {
+        $controller = new FaqController($db);
+        $controller->allCategories();
+        return;
+    }
+
+    if (preg_match('/^\/faq-categories\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->showCategory($matches[1]);
         return;
     }
 
@@ -659,6 +721,32 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // FAQ routes
+    if ($uri === '/faqs') {
+        $controller = new FaqController($db);
+        $controller->create();
+        return;
+    }
+
+    if ($uri === '/faqs/reorder') {
+        $controller = new FaqController($db);
+        $controller->reorder();
+        return;
+    }
+
+    // FAQ Category routes
+    if ($uri === '/faq-categories') {
+        $controller = new FaqController($db);
+        $controller->createCategory();
+        return;
+    }
+
+    if ($uri === '/faq-categories/reorder') {
+        $controller = new FaqController($db);
+        $controller->reorderCategories();
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -788,6 +876,20 @@ function handlePutRoutes($uri, $db) {
         return;
     }
 
+    // FAQ routes
+    if (preg_match('/^\/faqs\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->update($matches[1]);
+        return;
+    }
+
+    // FAQ Category routes
+    if (preg_match('/^\/faq-categories\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->updateCategory($matches[1]);
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -820,6 +922,20 @@ function handlePatchRoutes($uri, $db) {
     if (preg_match('/^\/events\/(\d+)\/toggle$/', $uri, $matches)) {
         $controller = new EventsController($db);
         $controller->toggle($matches[1]);
+        return;
+    }
+
+    // FAQ routes
+    if (preg_match('/^\/faqs\/(\d+)\/toggle$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->toggle($matches[1]);
+        return;
+    }
+
+    // FAQ Category routes
+    if (preg_match('/^\/faq-categories\/(\d+)\/toggle$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->toggleCategory($matches[1]);
         return;
     }
 
@@ -910,6 +1026,20 @@ function handleDeleteRoutes($uri, $db) {
     if (preg_match('/^\/users\/(\d+)$/', $uri, $matches)) {
         $controller = new UserController($db);
         $controller->delete($matches[1]);
+        return;
+    }
+
+    // FAQ routes
+    if (preg_match('/^\/faqs\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->delete($matches[1]);
+        return;
+    }
+
+    // FAQ Category routes
+    if (preg_match('/^\/faq-categories\/(\d+)$/', $uri, $matches)) {
+        $controller = new FaqController($db);
+        $controller->deleteCategory($matches[1]);
         return;
     }
 

@@ -13,6 +13,27 @@ export interface Camp {
   updated_at: string;
 }
 
+// Calendar-based camp/clinic from Jackrabbit
+export interface CalendarEvent {
+  id: string;
+  title: string;
+  time: string;
+  spotsAvailable: number;
+  backgroundColor: string;
+  registrationUrl: string;
+  dates: string[];
+  type: 'camp' | 'clinic';
+  dateRange: string;
+  firstDate: string | null;
+}
+
+export interface CampsAndClinicsResponse {
+  camps: CalendarEvent[];
+  clinics: CalendarEvent[];
+  all: CalendarEvent[];
+  monthsSearched: number;
+}
+
 export interface CreateCampRequest {
   title: string;
   date: string;

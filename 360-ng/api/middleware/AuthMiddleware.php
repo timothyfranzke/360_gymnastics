@@ -12,6 +12,7 @@ class AuthMiddleware {
         '/api/v1/contact',
         '/360gym/api/v1/contact',
         '/api/v1/auth/register',
+        '/api/v1/parties',
         '/360gym/api/v1/auth/register',
         '/api/v1/migrate',
         '/360gym/api/v1/migrate',
@@ -29,29 +30,38 @@ class AuthMiddleware {
     public function handle() {
         $requestUri = $_SERVER['REQUEST_URI'];
         $method = $_SERVER['REQUEST_METHOD'];
-        
-        // Skip authentication for excluded routes
-        if ($method === 'GET' || $method === 'OPTIONS' || $this->isExcludedRoute($requestUri)) {
+
+        // Skip authentication for OPTIONS requests and excluded routes
+        if ($method === 'OPTIONS' || $this->isExcludedRoute($requestUri)) {
             return true;
         }
 
         try {
             $token = $this->getTokenFromRequest();
-            
+
+            // For GET requests, token is optional but we'll validate if provided
             if (!$token) {
+                if ($method === 'GET') {
+                    // Allow GET requests without token (public endpoints)
+                    return true;
+                }
                 ResponseHelper::unauthorized('Token not provided');
                 return false;
             }
 
             $payload = $this->jwtHandler->validateToken($token);
-            
+
             // Set user data for controllers
             $_SESSION['user'] = $payload['data'];
             $_SESSION['token_jti'] = $payload['jti'];
-            
+
             return true;
-            
+
         } catch (Exception $e) {
+            // For GET requests with invalid token, allow through (public endpoints)
+            if ($method === 'GET') {
+                return true;
+            }
             ResponseHelper::unauthorized($e->getMessage());
             return false;
         }

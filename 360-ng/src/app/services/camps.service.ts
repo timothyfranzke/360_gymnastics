@@ -3,12 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { ApiService } from './api.service';
-import { 
-  Camp, 
-  CreateCampRequest, 
-  UpdateCampRequest, 
-  CampFilters, 
-  CampStats 
+import {
+  Camp,
+  CreateCampRequest,
+  UpdateCampRequest,
+  CampFilters,
+  CampStats,
+  CalendarEvent,
+  CampsAndClinicsResponse
 } from '../interfaces/camp';
 import { ApiResponse, PaginatedResponse } from '../interfaces/api';
 
@@ -141,6 +143,31 @@ export class CampsService {
     ).pipe(
       map(response => this.handleResponse(response)),
       catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get camps and clinics from Jackrabbit calendar
+   * This fetches live data from the calendar system
+   */
+  getCampsAndClinicsFromCalendar(monthsAhead: number = 3): Observable<CampsAndClinicsResponse> {
+    let params = new HttpParams().set('months', monthsAhead.toString());
+
+    return this.http.get<ApiResponse<CampsAndClinicsResponse>>(
+      `${this.API_BASE}/calendar/camps-clinics`,
+      { params }
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(error => {
+        console.warn('Failed to fetch camps from calendar:', error);
+        // Return empty response on error
+        return of({
+          camps: [],
+          clinics: [],
+          all: [],
+          monthsSearched: monthsAhead
+        });
+      })
     );
   }
 

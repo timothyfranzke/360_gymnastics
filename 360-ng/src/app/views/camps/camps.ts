@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { CampsService } from '../../services/camps.service';
-import { Camp } from '../../interfaces/camp';
+import { CalendarEvent } from '../../interfaces/camp';
 import { ViewHeader } from '../../components/view-header/view-header';
 
 @Component({
   selector: 'app-camps',
-  imports: [CommonModule, ViewHeader],
+  imports: [CommonModule, RouterLink, ViewHeader],
   templateUrl: './camps.html',
   styleUrl: './camps.scss',
   animations: [
@@ -36,92 +37,100 @@ import { ViewHeader } from '../../components/view-header/view-header';
 })
 export class Camps implements OnInit {
   animationState = 'in';
-  camps: Camp[] = [];
+  camps: CalendarEvent[] = [];
+  clinics: CalendarEvent[] = [];
   loading = true;
   error: string | null = null;
+  activeTab: 'camps' | 'clinics' = 'camps';
 
   constructor(private campsService: CampsService) { }
 
   ngOnInit(): void {
-    this.loadCamps();
+    this.loadCampsAndClinics();
   }
 
-  private loadCamps(): void {
+  private loadCampsAndClinics(): void {
     this.loading = true;
     this.error = null;
 
-    this.campsService.getActiveCamps().subscribe({
-      next: (camps) => {
-        this.camps = camps;
+    this.campsService.getCampsAndClinicsFromCalendar(6).subscribe({
+      next: (response) => {
+        this.camps = response.camps;
+        this.clinics = response.clinics;
         this.loading = false;
       },
       error: (error) => {
         console.error('Error loading camps:', error);
-        this.error = 'Failed to load camps. Please try again later.';
+        this.error = 'Failed to load camps and clinics. Please try again later.';
         this.loading = false;
       }
     });
   }
 
   /**
-   * Format date for display
+   * Switch between camps and clinics tabs
    */
-  formatDate(dateString: string): string {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
+  switchTab(tab: 'camps' | 'clinics'): void {
+    this.activeTab = tab;
   }
 
   /**
-   * Format cost for display
+   * Get current items based on active tab
    */
-  formatCost(cost: number | string): string {
-    const numericCost = typeof cost === 'string' ? parseFloat(cost) : cost;
-    if (isNaN(numericCost)) {
-      return '$0.00'; // Or some other default/error display
-    }
-    return `$${numericCost.toFixed(2)}`;
+  get currentItems(): CalendarEvent[] {
+    return this.activeTab === 'camps' ? this.camps : this.clinics;
   }
 
   /**
    * Open registration link in new tab
    */
-  openRegistration(registrationLink: string): void {
-    window.open(registrationLink, '_blank', 'noopener,noreferrer');
+  openRegistration(registrationUrl: string): void {
+    window.open(registrationUrl, '_blank', 'noopener,noreferrer');
   }
 
   /**
-   * Retry loading camps
+   * Retry loading
    */
   retryLoad(): void {
-    this.loadCamps();
+    this.loadCampsAndClinics();
   }
 
   /**
-   * Check if camp is upcoming (future date)
+   * Check if event is upcoming (future date)
    */
-  isUpcoming(dateString: string): boolean {
-    const campDate = new Date(dateString);
+  isUpcoming(firstDate: string | null): boolean {
+    if (!firstDate) return false;
+    const eventDate = new Date(firstDate);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return campDate >= today;
+    return eventDate >= today;
   }
 
   /**
-   * Get camp status badge
+   * Get spots status text
    */
-  getCampStatus(dateString: string): string {
-    return this.isUpcoming(dateString) ? 'Upcoming' : 'Past';
+  getSpotsStatus(spots: number): string {
+    if (spots === 0) return 'Full';
+    if (spots <= 5) return `${spots} spots left`;
+    return `${spots} spots available`;
   }
 
   /**
-   * Get camp status class
+   * Get spots status class
    */
-  getCampStatusClass(dateString: string): string {
-    return this.isUpcoming(dateString) ? 'status-upcoming' : 'status-past';
+  getSpotsClass(spots: number): string {
+    if (spots === 0) return 'text-red-600 bg-red-100';
+    if (spots <= 5) return 'text-orange-600 bg-orange-100';
+    return 'text-green-600 bg-green-100';
+  }
+
+  /**
+   * Get gradient class based on event type and color
+   */
+  getGradientClass(event: CalendarEvent): string {
+    if (event.type === 'camp') {
+      return 'from-blue-500 to-purple-600';
+    }
+    return 'from-orange-500 to-pink-600';
   }
 }

@@ -20,26 +20,39 @@ class JackrabbitController extends BaseController {
     public function schedule() {
         try {
             error_log("JackrabbitController::schedule() called");
-            
+
             // Validate input
             $input = $this->getInput();
             error_log("Input received: " . json_encode($input));
-            
+
             // Validate cat1 parameter
             if (!isset($input['cat1']) || empty(trim($input['cat1']))) {
                 error_log("Missing cat1 parameter");
                 ResponseHelper::validationError(['cat1' => 'Category parameter (cat1) is required']);
                 return;
             }
-            
+
             $cat1 = trim($input['cat1']);
-            
+
             // Sanitize the cat1 parameter to prevent injection
             if (!$this->isValidCategory($cat1)) {
                 ResponseHelper::validationError(['cat1' => 'Invalid category parameter']);
                 return;
             }
-            
+
+            // Return static data for adult gymnastics (not set up with JackRabbit)
+            $cat1Lower = strtolower($cat1);
+            if ($cat1Lower === 'adult' || $cat1Lower === 'adult class' || $cat1Lower === 'adult gymnastics' || $cat1Lower === 'adult-gymnastics' || $cat1Lower === 'adult open gym') {
+                $adultScheduleData = $this->getAdultGymnasticsStaticData();
+                ResponseHelper::json([
+                    'success' => true,
+                    'message' => 'Schedule retrieved successfully',
+                    'data' => $adultScheduleData,
+                    'timestamp' => date('c')
+                ], 200);
+                return;
+            }
+
             // Check cache first (temporarily disabled for debugging)
             $cacheKey = "jackrabbit_schedule_" . md5($cat1);
             
@@ -429,5 +442,42 @@ class JackrabbitController extends BaseController {
             @unlink($cacheFile);
             error_log("Cache cleared for key: " . $key);
         }
+    }
+
+    /**
+     * Get static data for Adult Gymnastics class
+     * Adult Class is held as an Open Gym style/walk-in, not listed with enrollment on JackRabbit
+     */
+    private function getAdultGymnasticsStaticData() {
+        return [
+            [
+                'id' => 'adult-thursday',
+                'className' => 'Adult Gymnastics',
+                'day' => 'Thu',
+                'time' => '8:00 PM - 9:30 PM',
+                'gender' => 'All',
+                'ages' => '18+',
+                'openings' => null,
+                'tuition' => 10.00,
+                'registrationButton' => [
+                    'text' => 'Walk-in / No pre-registration necessary',
+                    'href' => null
+                ]
+            ],
+            [
+                'id' => 'adult-sunday',
+                'className' => 'Adult Gymnastics',
+                'day' => 'Sun',
+                'time' => '7:00 PM - 9:00 PM',
+                'gender' => 'All',
+                'ages' => '18+',
+                'openings' => null,
+                'tuition' => 10.00,
+                'registrationButton' => [
+                    'text' => 'Walk-in / No pre-registration necessary',
+                    'href' => null
+                ]
+            ]
+        ];
     }
 }

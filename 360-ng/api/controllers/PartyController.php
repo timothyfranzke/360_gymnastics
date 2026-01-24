@@ -1,5 +1,9 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 class PartyController extends BaseController {
     
     public function __construct($database) {
@@ -301,41 +305,89 @@ class PartyController extends BaseController {
     }
 
     private function sendPartyEmail($data) {
-        $to = 'timothyfranzke@gmail.com';
-        $subject = '[360 Gym Party Request] ' . $data['child_name'] . "'s Birthday Party";
-        
-        $message = "New birthday party request from 360 Gym website:\n\n";
-        $message .= "PARENT INFORMATION:\n";
-        $message .= "Name: " . $data['parent_name'] . "\n";
-        $message .= "Email: " . $data['email'] . "\n";
-        $message .= "Phone: " . $data['phone'] . "\n";
-        $message .= "Can text: " . ucfirst($data['can_text']) . "\n";
-        $message .= "City: " . $data['city'] . "\n\n";
-        
-        $message .= "PARTY DETAILS:\n";
-        $message .= "Child's Name: " . $data['child_name'] . "\n";
-        $message .= "Child's Age: " . $data['child_age'] . "\n";
-        $message .= "Party Type: " . $data['party_type'] . "\n";
-        $message .= "Requested Date: " . date('F j, Y', strtotime($data['requested_date'])) . "\n";
-        $message .= "Requested Time: " . date('g:i A', strtotime($data['requested_time'])) . "\n";
-        $message .= "Estimated Children: " . $data['estimated_children'] . "\n\n";
-        
-        if ($data['additional_details']) {
-            $message .= "ADDITIONAL DETAILS:\n" . $data['additional_details'] . "\n\n";
+        require_once __DIR__ . '/../vendor/autoload.php';
+        $mail = new PHPMailer(true);
+
+        try {
+            // Configure server settings - use local mail function
+            $mail->isMail();
+            $mail->SMTPDebug = 0;
+
+            // Set recipients
+            $mail->setFrom('noreply@kc360gym.com', '360 Gym Party Request Form');
+            $mail->addAddress('360birthday@gmail.com', '360 Gymnastics');
+            $mail->addReplyTo($data['email'], $data['parent_name']);
+
+            // Configure email content
+            $mail->isHTML(true);
+            $mail->Subject = '[360 Gym Party Request] ' . $data['child_name'] . "'s Birthday Party";
+            
+            // HTML body
+            $mail->Body = "
+                <h3>New birthday party request from 360 Gym website</h3>
+                
+                <h4>PARENT INFORMATION:</h4>
+                <p><strong>Name:</strong> " . htmlspecialchars($data['parent_name']) . "</p>
+                <p><strong>Email:</strong> " . htmlspecialchars($data['email']) . "</p>
+                <p><strong>Phone:</strong> " . htmlspecialchars($data['phone']) . "</p>
+                <p><strong>Can text:</strong> " . ucfirst(htmlspecialchars($data['can_text'])) . "</p>
+                <p><strong>City:</strong> " . htmlspecialchars($data['city']) . "</p>
+                
+                <h4>PARTY DETAILS:</h4>
+                <p><strong>Child's Name:</strong> " . htmlspecialchars($data['child_name']) . "</p>
+                <p><strong>Child's Age:</strong> " . $data['child_age'] . "</p>
+                <p><strong>Party Type:</strong> " . htmlspecialchars($data['party_type']) . "</p>
+                <p><strong>Requested Date:</strong> " . date('F j, Y', strtotime($data['requested_date'])) . "</p>
+                <p><strong>Requested Time:</strong> " . date('g:i A', strtotime($data['requested_time'])) . "</p>
+                <p><strong>Estimated Children:</strong> " . $data['estimated_children'] . "</p>";
+            
+            if ($data['additional_details']) {
+                $mail->Body .= "<h4>ADDITIONAL DETAILS:</h4><p>" . nl2br(htmlspecialchars($data['additional_details'])) . "</p>";
+            }
+            
+            $mail->Body .= "
+                <hr>
+                <p><small>
+                    <strong>Request ID:</strong> " . $data['id'] . "<br>
+                    <strong>Submitted:</strong> " . $data['submitted_at'] . "<br>
+                    <strong>IP Address:</strong> " . $data['ip_address'] . "<br>
+                    <strong>User Agent:</strong> " . htmlspecialchars($data['user_agent']) . "
+                </small></p>";
+
+            // Alternative body for non-HTML clients
+            $altBody = "New birthday party request from 360 Gym website:\n\n";
+            $altBody .= "PARENT INFORMATION:\n";
+            $altBody .= "Name: " . $data['parent_name'] . "\n";
+            $altBody .= "Email: " . $data['email'] . "\n";
+            $altBody .= "Phone: " . $data['phone'] . "\n";
+            $altBody .= "Can text: " . ucfirst($data['can_text']) . "\n";
+            $altBody .= "City: " . $data['city'] . "\n\n";
+            $altBody .= "PARTY DETAILS:\n";
+            $altBody .= "Child's Name: " . $data['child_name'] . "\n";
+            $altBody .= "Child's Age: " . $data['child_age'] . "\n";
+            $altBody .= "Party Type: " . $data['party_type'] . "\n";
+            $altBody .= "Requested Date: " . date('F j, Y', strtotime($data['requested_date'])) . "\n";
+            $altBody .= "Requested Time: " . date('g:i A', strtotime($data['requested_time'])) . "\n";
+            $altBody .= "Estimated Children: " . $data['estimated_children'] . "\n\n";
+            
+            if ($data['additional_details']) {
+                $altBody .= "ADDITIONAL DETAILS:\n" . $data['additional_details'] . "\n\n";
+            }
+            
+            $altBody .= "---\n";
+            $altBody .= "Request ID: " . $data['id'] . "\n";
+            $altBody .= "Submitted: " . $data['submitted_at'] . "\n";
+            $altBody .= "IP Address: " . $data['ip_address'] . "\n";
+            $altBody .= "User Agent: " . $data['user_agent'] . "\n";
+            
+            $mail->AltBody = $altBody;
+
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            error_log("PHPMailer error: " . $mail->ErrorInfo);
+            return false;
         }
-        
-        $message .= "---\n";
-        $message .= "Request ID: " . $data['id'] . "\n";
-        $message .= "Submitted: " . $data['submitted_at'] . "\n";
-        $message .= "IP Address: " . $data['ip_address'] . "\n";
-        $message .= "User Agent: " . $data['user_agent'] . "\n";
-
-        $headers = "From: noreply@kc360gym.com\r\n";
-        $headers .= "Reply-To: " . $data['email'] . "\r\n";
-        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-        $headers .= "X-Mailer: 360 Gym Party Request Form\r\n";
-
-        return mail($to, $subject, $message, $headers);
     }
 
     private function validatePhoneNumber($phone) {

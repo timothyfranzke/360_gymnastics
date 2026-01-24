@@ -60,10 +60,9 @@ export class Header implements OnInit, OnDestroy {
   desktopNavItems: NavigationItem[] = [
     { name: 'Home', href: '/' },
     { name: 'Classes', href: '/classes' },
-    
+    { name: 'Camps', href: '/camps' },
     { name: 'Open Gym', href: '/open-gym' },
     { name: 'Parties', href: '/parties' },
-    { name: 'Staff', href: '/staff' },
     { name: 'Contact', href: '/contact-us' }
   ];
 

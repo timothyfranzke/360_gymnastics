@@ -20,6 +20,10 @@ export const routes: Routes = [
         loadChildren: () => import('./views/classes/classes.routes').then(m => m.classesRoutes)
     },
     {
+        path: 'teams',
+        loadChildren: () => import('./views/teams/teams.routes').then(m => m.teamsRoutes)
+    },
+    {
         path: 'open-gym',
         loadChildren: () => import('./views/open-gym/open-gym.routes').then(m => m.openGymRoutes)
     },
@@ -30,6 +34,10 @@ export const routes: Routes = [
     {
         path: 'parties',
         loadChildren: () => import('./views/parties/parties.routes').then(m => m.partiesRoutes)
+    },
+    {
+        path: 'faq',
+        loadChildren: () => import('./views/faq/faq.routes').then(m => m.faqRoutes)
     },
     {
         path: 'staff',
@@ -113,6 +121,11 @@ export const routes: Routes = [
                 path: 'users',
                 loadChildren: () => import('./views/admin/users/users.routes').then(m => m.routes),
                 canActivate: [staffGuard]
+            },
+            {
+                path: 'faqs',
+                loadChildren: () => import('./views/admin/faqs/faqs.routes').then(m => m.routes),
+                canActivate: [authGuard]
             }
         ]
     },

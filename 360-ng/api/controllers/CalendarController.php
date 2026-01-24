@@ -343,4 +343,147 @@ class CalendarController extends BaseController
             'currentFilter' => $currentFilter
         ];
     }
+
+    /**
+     * Get camps and clinics from calendar data
+     * Fetches multiple months and filters for CAMP/CLINIC events
+     */
+    public function campsAndClinics()
+    {
+        try {
+            // Get how many months to look ahead (default 3)
+            $monthsAhead = min(6, max(1, intval($_GET['months'] ?? 3)));
+
+            $seenEvents = []; // Track by event ID to avoid duplicates
+
+            // Fetch current month and next N months
+            $currentDate = new DateTime();
+
+            for ($i = 0; $i < $monthsAhead; $i++) {
+                $targetDate = clone $currentDate;
+                $targetDate->modify("+{$i} months");
+
+                $month = $targetDate->format('n'); // 1-12
+                $year = $targetDate->format('Y');
+
+                // Build URL
+                $params = [
+                    'orgid' => self::ORG_ID,
+                    'date' => $month . '/1/' . $year
+                ];
+
+                $url = self::JACKRABBIT_CALENDAR_URL . '?' . http_build_query($params);
+
+                try {
+                    $html = $this->fetchHtml($url);
+                    $calendarData = $this->parseCalendarHtml($html);
+
+                    // Extract camps and clinics from this month
+                    foreach ($calendarData['calendar']['weeks'] as $week) {
+                        foreach ($week['days'] as $day) {
+                            if (empty($day['events']) || !$day['isInMonth']) {
+                                continue;
+                            }
+
+                            foreach ($day['events'] as $event) {
+                                $title = strtoupper($event['title']);
+
+                                // Check if it's a camp or clinic
+                                if (strpos($title, 'CAMP') !== false || strpos($title, 'CLINIC') !== false) {
+                                    $eventId = $event['id'];
+
+                                    // Track unique events but collect all dates
+                                    if (!isset($seenEvents[$eventId])) {
+                                        $seenEvents[$eventId] = [
+                                            'id' => $event['id'],
+                                            'title' => $event['title'],
+                                            'time' => $event['time'],
+                                            'spotsAvailable' => $event['spotsAvailable'],
+                                            'backgroundColor' => $event['backgroundColor'],
+                                            'registrationUrl' => $event['registrationUrl'],
+                                            'dates' => [],
+                                            'type' => strpos($title, 'CAMP') !== false ? 'camp' : 'clinic'
+                                        ];
+                                    }
+
+                                    // Add this date
+                                    if (!empty($day['date']) && !in_array($day['date'], $seenEvents[$eventId]['dates'])) {
+                                        $seenEvents[$eventId]['dates'][] = $day['date'];
+                                    }
+
+                                    // Update spots (use latest/lowest)
+                                    $seenEvents[$eventId]['spotsAvailable'] = min(
+                                        $seenEvents[$eventId]['spotsAvailable'] ?: PHP_INT_MAX,
+                                        $event['spotsAvailable']
+                                    );
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception $e) {
+                    error_log("Failed to fetch month {$month}/{$year}: " . $e->getMessage());
+                    // Continue to next month even if one fails
+                }
+            }
+
+            // Convert to array and sort by first date
+            $events = array_values($seenEvents);
+            usort($events, function($a, $b) {
+                $dateA = !empty($a['dates']) ? $a['dates'][0] : '9999-99-99';
+                $dateB = !empty($b['dates']) ? $b['dates'][0] : '9999-99-99';
+                return strcmp($dateA, $dateB);
+            });
+
+            // Format dates nicely for display
+            foreach ($events as &$event) {
+                sort($event['dates']);
+                $event['dateRange'] = $this->formatDateRange($event['dates']);
+                $event['firstDate'] = !empty($event['dates']) ? $event['dates'][0] : null;
+            }
+
+            // Separate camps and clinics
+            $camps = array_values(array_filter($events, fn($e) => $e['type'] === 'camp'));
+            $clinics = array_values(array_filter($events, fn($e) => $e['type'] === 'clinic'));
+
+            ResponseHelper::success([
+                'camps' => $camps,
+                'clinics' => $clinics,
+                'all' => $events,
+                'monthsSearched' => $monthsAhead
+            ], 'Camps and clinics retrieved successfully');
+
+        } catch (Exception $e) {
+            error_log("Camps/Clinics fetch error: " . $e->getMessage());
+            ResponseHelper::serverError('Failed to fetch camps and clinics: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Format an array of dates into a human-readable range
+     */
+    private function formatDateRange(array $dates): string
+    {
+        if (empty($dates)) {
+            return '';
+        }
+
+        if (count($dates) === 1) {
+            return date('M j, Y', strtotime($dates[0]));
+        }
+
+        // Check if dates are consecutive
+        $first = $dates[0];
+        $last = end($dates);
+
+        $firstDate = new DateTime($first);
+        $lastDate = new DateTime($last);
+
+        // If same month
+        if ($firstDate->format('F Y') === $lastDate->format('F Y')) {
+            return $firstDate->format('M j') . '-' . $lastDate->format('j, Y');
+        }
+
+        // Different months
+        return $firstDate->format('M j') . ' - ' . $lastDate->format('M j, Y');
+    }
 }

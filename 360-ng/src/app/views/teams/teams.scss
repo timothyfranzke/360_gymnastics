@@ -1,0 +1,73 @@
+$brand-orange: #fc7900;
+$brand-blue: #0226ff;
+
+.teams-page {
+  min-height: 100vh;
+  background-color: #f9fafb;
+  padding-top: 6rem;
+  padding-bottom: 6rem;
+}
+
+.bg-gradient-orange {
+  background: linear-gradient(135deg, $brand-orange 0%, darken($brand-orange, 10%) 100%);
+}
+
+.bg-gradient-blue {
+  background: linear-gradient(135deg, $brand-blue 0%, darken($brand-blue, 10%) 100%);
+}
+
+.team-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.team-header {
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 60%;
+    height: 200%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: rotate(15deg);
+    pointer-events: none;
+  }
+}
+
+// Table styling
+table {
+  border-collapse: collapse;
+
+  td {
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .team-header {
+    .flex-wrap {
+      gap: 0.5rem;
+    }
+  }
+
+  table {
+    font-size: 0.875rem;
+
+    td {
+      padding: 0.5rem !important;
+    }
+  }
+}
