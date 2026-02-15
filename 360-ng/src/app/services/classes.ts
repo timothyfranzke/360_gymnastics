@@ -10,6 +10,7 @@ import {
   CreateClassRequest,
   UpdateClassRequest,
   ClassFilters,
+  ClassPageSettings,
   ApiEndpoints
 } from '../interfaces/api';
 
@@ -448,10 +449,49 @@ export class ClassesService {
     if (limit) {
       params = params.set('limit', limit.toString());
     }
-    
+
     return this.http.get<ApiResponse<Class[]>>(
       `${this.API_BASE}${ApiEndpoints.CLASSES}/search`,
       { params }
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  // ========== CLASS PAGE SETTINGS METHODS ==========
+
+  /**
+   * Get class page settings (public)
+   */
+  getClassPageSettings(): Observable<ClassPageSettings> {
+    return this.http.get<ApiResponse<ClassPageSettings>>(
+      `${this.API_BASE}/class-page-settings/public`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get class page settings (admin)
+   */
+  getClassPageSettingsAdmin(): Observable<ClassPageSettings> {
+    return this.http.get<ApiResponse<ClassPageSettings>>(
+      `${this.API_BASE}/class-page-settings`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Update class page settings
+   */
+  updateClassPageSettings(settings: Partial<ClassPageSettings>): Observable<ClassPageSettings> {
+    return this.http.put<ApiResponse<ClassPageSettings>>(
+      `${this.API_BASE}/class-page-settings`,
+      settings
     ).pipe(
       map(response => this.handleResponse(response)),
       catchError(this.handleError)

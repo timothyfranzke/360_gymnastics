@@ -39,6 +39,7 @@ export class ClassesEdit implements OnInit, OnDestroy {
       duration: ['', [Validators.maxLength(100)]],
       url: ['', [this.urlValidator]],
       featured: [false],
+      category: ['', [Validators.maxLength(100)]],
       skills: this.fb.array([]),
       structure: this.fb.array([]),
       prerequisites: this.fb.array([])
@@ -94,7 +95,8 @@ export class ClassesEdit implements OnInit, OnDestroy {
       ratio: classData.ratio || '',
       duration: classData.duration || '',
       url: classData.url || '',
-      featured: classData.featured || false
+      featured: classData.featured || false,
+      category: classData.category || ''
     });
 
     // Populate skills

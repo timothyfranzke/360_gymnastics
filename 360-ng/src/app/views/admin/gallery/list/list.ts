@@ -25,6 +25,19 @@ interface GalleryImage {
   thumbnail_url: string;
   created_at: string;
   updated_at?: string;
+  screenAssignments?: ScreenAssignment[];
+}
+
+interface ScreenAssignment {
+  id: number;
+  screen_key: string;
+  position_key: string;
+  is_active: boolean;
+}
+
+interface ScreenPosition {
+  key: string;
+  label: string;
 }
 
 interface PaginatedGalleryResponse {
@@ -50,21 +63,40 @@ export class GalleryList implements OnInit, OnDestroy {
   images: GalleryImage[] = [];
   isLoading = true;
   error: string | null = null;
-  
+
   // Pagination
   currentPage = 1;
   totalPages = 1;
   totalItems = 0;
   itemsPerPage = 12;
-  
+
   // Filters
   filterForm: FormGroup;
-  
+
   Math = Math;
-  
+
   // Drag and drop state
   isReordering = false;
-  
+
+  // Screen assignment
+  screenPositions: Record<string, ScreenPosition[]> = {
+    parties: [
+      { key: 'parties-1', label: 'Private Party Image' },
+      { key: 'parties-2', label: 'Open Gym Party Image' }
+    ],
+    camps: [
+      { key: 'camps-1', label: 'Camps Hero Image' },
+      { key: 'camps-2', label: 'Camps Section Image' }
+    ],
+    home: [
+      { key: 'home-1', label: 'Home Featured 1' },
+      { key: 'home-2', label: 'Home Featured 2' },
+      { key: 'home-3', label: 'Home Featured 3' }
+    ]
+  };
+  activeDropdownId: number | null = null;
+  assigningImageId: number | null = null;
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -282,7 +314,7 @@ export class GalleryList implements OnInit, OnDestroy {
 
   private saveImageOrder(): void {
     this.isReordering = true;
-    
+
     // Create order mapping: image_id -> new_order_index
     const pageOffset = (this.currentPage - 1) * this.itemsPerPage;
     const imageOrders: { [key: number]: number } = {};
@@ -304,5 +336,97 @@ export class GalleryList implements OnInit, OnDestroy {
           this.loadImages();
         }
       });
+  }
+
+  // Screen assignment methods
+  toggleScreenDropdown(imageId: number, event: Event): void {
+    event.stopPropagation();
+    if (this.activeDropdownId === imageId) {
+      this.activeDropdownId = null;
+    } else {
+      this.activeDropdownId = imageId;
+      // Load current assignments for this image
+      this.loadImageAssignments(imageId);
+    }
+  }
+
+  closeScreenDropdown(): void {
+    this.activeDropdownId = null;
+  }
+
+  loadImageAssignments(imageId: number): void {
+    this.apiService.getGalleryScreenAssignments(imageId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          const image = this.images.find(img => img.id === imageId);
+          if (image) {
+            image.screenAssignments = response.assignments;
+          }
+        },
+        error: (error) => {
+          console.error('Failed to load image assignments:', error);
+        }
+      });
+  }
+
+  isAssignedToPosition(image: GalleryImage, positionKey: string): boolean {
+    return image.screenAssignments?.some(a => a.position_key === positionKey) || false;
+  }
+
+  assignToScreen(image: GalleryImage, screenKey: string, positionKey: string, event: Event): void {
+    event.stopPropagation();
+    this.assigningImageId = image.id;
+
+    this.apiService.assignScreenImage({
+      screen_key: screenKey,
+      position_key: positionKey,
+      gallery_id: image.id
+    })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.assigningImageId = null;
+          this.loadImageAssignments(image.id);
+          // Show success message
+          console.log(`Image assigned to ${positionKey}`);
+        },
+        error: (error: any) => {
+          this.assigningImageId = null;
+          console.error('Failed to assign image:', error);
+          alert('Failed to assign image: ' + (error.message || 'Unknown error'));
+        }
+      });
+  }
+
+  removeFromScreen(image: GalleryImage, positionKey: string, event: Event): void {
+    event.stopPropagation();
+    const assignment = image.screenAssignments?.find(a => a.position_key === positionKey);
+    if (!assignment) return;
+
+    this.assigningImageId = image.id;
+
+    this.apiService.removeScreenImage(assignment.id)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: () => {
+          this.assigningImageId = null;
+          this.loadImageAssignments(image.id);
+          console.log(`Image removed from ${positionKey}`);
+        },
+        error: (error: any) => {
+          this.assigningImageId = null;
+          console.error('Failed to remove assignment:', error);
+          alert('Failed to remove assignment: ' + (error.message || 'Unknown error'));
+        }
+      });
+  }
+
+  getScreenKeys(): string[] {
+    return Object.keys(this.screenPositions);
+  }
+
+  formatScreenName(key: string): string {
+    return key.charAt(0).toUpperCase() + key.slice(1);
   }
 }

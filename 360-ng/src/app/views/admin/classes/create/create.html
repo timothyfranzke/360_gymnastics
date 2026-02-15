@@ -119,11 +119,31 @@
             id="url"
             formControlName="url"
             placeholder="e.g., /classes/level-1"
-            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' + 
+            [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' +
                     (isFieldInvalid('url') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
           />
           <p *ngIf="isFieldInvalid('url')" class="mt-1 text-sm text-red-600">
             {{ getFieldError('url') }}
+          </p>
+        </div>
+
+        <!-- Category -->
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+          <select
+            id="category"
+            formControlName="category"
+            class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+          >
+            <option value="">Select a category</option>
+            <option value="PRESCHOOL">Preschool</option>
+            <option value="LEVEL CLASSES">Level Classes</option>
+            <option value="BOYS CLASSES">Boys Classes</option>
+            <option value="TUMBLING">Tumbling</option>
+            <option value="OTHER">Other</option>
+          </select>
+          <p class="mt-1 text-sm text-gray-500">
+            Classes will be grouped by category on the website
           </p>
         </div>
 

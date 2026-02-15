@@ -36,7 +36,12 @@ import {
   UpdateBannerRequest,
   ApiEndpoints,
   User,
-  RegisterRequest
+  RegisterRequest,
+  ScreenImagesResponse,
+  ScreenImage,
+  AssignScreenImageRequest,
+  ScreenPositionsResponse,
+  GalleryAssignmentsResponse
 } from '../interfaces/api';
 
 @Injectable({
@@ -909,6 +914,71 @@ export class ApiService {
         map(response => this.handleResponse(response)),
         catchError(this.handleError)
       );
+  }
+
+  // ========== SCREEN IMAGES METHODS ==========
+
+  /**
+   * Get screen images for a specific screen (public endpoint)
+   */
+  getScreenImages(screen: string): Observable<ScreenImagesResponse> {
+    const params = new HttpParams().set('screen', screen);
+    return this.http.get<ApiResponse<ScreenImagesResponse>>(
+      `${this.API_BASE}${ApiEndpoints.SCREEN_IMAGES}`,
+      { params }
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get available screen positions (admin endpoint)
+   */
+  getScreenPositions(): Observable<ScreenPositionsResponse> {
+    return this.http.get<ApiResponse<ScreenPositionsResponse>>(
+      `${this.API_BASE}${ApiEndpoints.SCREEN_IMAGES_POSITIONS}`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Assign an image to a screen position (admin endpoint)
+   */
+  assignScreenImage(data: AssignScreenImageRequest): Observable<ScreenImage> {
+    return this.http.post<ApiResponse<{ assignment: ScreenImage }>>(
+      `${this.API_BASE}${ApiEndpoints.SCREEN_IMAGES}`,
+      data
+    ).pipe(
+      map(response => this.handleResponse(response).assignment),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Remove a screen image assignment (admin endpoint)
+   */
+  removeScreenImage(id: number): Observable<void> {
+    return this.http.delete<ApiResponse>(
+      `${this.API_BASE}${ApiEndpoints.SCREEN_IMAGES}/${id}`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get screen assignments for a gallery image
+   */
+  getGalleryScreenAssignments(galleryId: number): Observable<GalleryAssignmentsResponse> {
+    return this.http.get<ApiResponse<GalleryAssignmentsResponse>>(
+      `${this.API_BASE}${ApiEndpoints.SCREEN_IMAGES}/gallery/${galleryId}`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
   }
 
   /**

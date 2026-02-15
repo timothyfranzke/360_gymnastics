@@ -10,4 +10,5 @@ export interface Class {
     duration?: string;
     url?: string;
     featured?: boolean;
+    category?: string;
 }

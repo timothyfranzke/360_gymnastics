@@ -11,53 +11,134 @@
           <div class="text-center mb-12">
             <h2 class="text-4xl font-bold text-indigo-800 mb-4">Our Gymnastics Classes</h2>
             <p class="text-lg text-gray-600 max-w-3xl mx-auto">
-              We offer a variety of classes for all ages and skill levels. Our experienced instructors provide a fun, 
-              no-pressure atmosphere while teaching the fundamentals of gymnastics, social skills, and life skills.
+              {{ pageDescription }}
             </p>
             <div class="mt-6 space-y-2 text-center">
-              <p class="text-indigo-700 font-semibold">50 minute class – $69/month</p>
-              <p class="text-indigo-700 font-semibold">55 minute class – $74/month</p>
-              <p class="text-indigo-700 font-semibold">60 minute class – $82/month</p>
-              <p class="text-indigo-700 font-semibold">90 minute class – $97/month</p>
-              <p class="text-indigo-700 font-semibold mt-4">$15 annual registration fee per person ($30 max per family)</p>
+              <p *ngFor="let tier of pricingTiers" class="text-indigo-700 font-semibold">
+                {{ tier.duration }} - {{ tier.price }}
+              </p>
+              <p *ngIf="registrationFee" class="text-indigo-700 font-semibold mt-4">{{ registrationFee }}</p>
               <p class="text-gray-600 mt-4 font-bold">All classes meet once per week</p>
             </div>
           </div>
-  
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div 
-              *ngFor="let gymClass of classes; let i = index" 
-              class="camp-card bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col"
-            >
-              <!-- Card Header -->
-              <div class="camp-header bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white relative overflow-hidden">
-                <div class="absolute top-0 right-0 w-20 h-20 bg-white bg-opacity-20 rounded-full -mr-10 -mt-10"></div>
-                <div class="relative z-10">
-                  <h3 class="text-xl font-bold mb-1">{{ gymClass.name }}</h3>
-                  <p class="text-blue-100">{{ gymClass.ageRange }}</p>
+
+          <!-- Search and Filter Section -->
+          <div class="bg-gray-50 rounded-xl p-6 mb-12 shadow-sm">
+            <div class="flex flex-col md:flex-row gap-4">
+              <!-- Search Input -->
+              <div class="flex-1">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search Classes</label>
+                <div class="relative">
+                  <input
+                    type="text"
+                    id="search"
+                    [(ngModel)]="searchTerm"
+                    (ngModelChange)="applyFilters()"
+                    placeholder="Search by name, age, description..."
+                    class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  />
+                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
 
-              <!-- Card Body -->
-              <div class="p-6 flex flex-col flex-grow">
-                <p class="text-gray-700 mb-6 leading-relaxed">{{ gymClass.description }}</p>
-                
-                <div class="flex justify-between items-center mt-4 text-sm text-gray-600 mb-6">
-                  <p *ngIf="gymClass.ratio">
-                    <span class="font-semibold">Class Ratio:</span> {{ gymClass.ratio }}
-                  </p>
-                  <p>
-                    <span class="font-semibold">Duration:</span> {{ gymClass.duration }}
-                  </p>
+              <!-- Category Filter -->
+              <div class="md:w-64">
+                <label for="category" class="block text-sm font-medium text-gray-700 mb-1">Filter by Category</label>
+                <select
+                  id="category"
+                  [(ngModel)]="selectedCategory"
+                  (ngModelChange)="applyFilters()"
+                  class="block w-full px-3 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">All Categories</option>
+                  <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+                </select>
+              </div>
+
+              <!-- Clear Filters Button -->
+              <div class="flex items-end">
+                <button
+                  *ngIf="hasActiveFilters"
+                  type="button"
+                  (click)="clearFilters()"
+                  class="w-full md:w-auto px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition-colors"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            </div>
+
+            <!-- Results Count -->
+            <div *ngIf="hasActiveFilters" class="mt-4 text-sm text-gray-600">
+              Showing {{ totalResults }} {{ totalResults === 1 ? 'class' : 'classes' }}
+              <span *ngIf="searchTerm"> matching "{{ searchTerm }}"</span>
+              <span *ngIf="selectedCategory"> in {{ selectedCategory }}</span>
+            </div>
+          </div>
+
+          <!-- No Results Message -->
+          <div *ngIf="groupedClasses.length === 0 && hasActiveFilters" class="text-center py-12 bg-gray-50 rounded-xl">
+            <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <h3 class="mt-4 text-lg font-medium text-gray-900">No classes found</h3>
+            <p class="mt-2 text-gray-500">Try adjusting your search or filter criteria.</p>
+            <button
+              type="button"
+              (click)="clearFilters()"
+              class="mt-4 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg transition-colors"
+            >
+              Clear All Filters
+            </button>
+          </div>
+
+          <!-- Grouped Classes by Category -->
+          <div *ngFor="let group of groupedClasses" class="mb-16">
+            <!-- Category Header -->
+            <div class="mb-8">
+              <h3 class="text-3xl font-bold text-indigo-700 mb-2">{{ group.category }}</h3>
+              <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div
+                *ngFor="let gymClass of group.classes; let i = index"
+                class="camp-card bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group flex flex-col"
+              >
+                <!-- Card Header -->
+                <div class="camp-header bg-gradient-to-r from-blue-500 to-purple-600 p-6 text-white relative overflow-hidden">
+                  <div class="absolute top-0 right-0 w-20 h-20 bg-white bg-opacity-20 rounded-full -mr-10 -mt-10"></div>
+                  <div class="relative z-10">
+                    <h3 class="text-xl font-bold mb-1">{{ gymClass.name }}</h3>
+                    <p class="text-blue-100">{{ gymClass.ageRange }}</p>
+                  </div>
                 </div>
 
-                <!-- Learn More Button -->
-                <a 
-                  [routerLink]="gymClass.id" 
-                  class="btn-primary w-full group-hover:scale-105 transition-transform duration-300 mt-auto"
-                >
-                  <span class="btn-text">Learn More</span>
-                </a>
+                <!-- Card Body -->
+                <div class="p-6 flex flex-col flex-grow">
+                  <p class="text-gray-700 mb-6 leading-relaxed">{{ gymClass.description }}</p>
+
+                  <div class="flex justify-between items-center mt-4 text-sm text-gray-600 mb-6">
+                    <p *ngIf="gymClass.ratio">
+                      <span class="font-semibold">Class Ratio:</span> {{ gymClass.ratio }}
+                    </p>
+                    <p>
+                      <span class="font-semibold">Duration:</span> {{ gymClass.duration }}
+                    </p>
+                  </div>
+
+                  <!-- Learn More Button -->
+                  <a
+                    [routerLink]="gymClass.id"
+                    class="btn-primary w-full group-hover:scale-105 transition-transform duration-300 mt-auto"
+                  >
+                    <span class="btn-text">Learn More</span>
+                  </a>
+                </div>
               </div>
             </div>
           </div>

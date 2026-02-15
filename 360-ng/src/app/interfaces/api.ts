@@ -3,6 +3,9 @@
 // Re-export camp interfaces
 export * from './camp';
 
+// Re-export screen image interfaces
+export * from './screen-image';
+
 // Base API response structure
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -410,7 +413,11 @@ export enum ApiEndpoints {
   CONTACT = '/contact',
   
   // Gallery
-  GALLERY = '/gallery'
+  GALLERY = '/gallery',
+
+  // Screen Images
+  SCREEN_IMAGES = '/screen-images',
+  SCREEN_IMAGES_POSITIONS = '/screen-images/positions'
 }
 
 // Class interfaces
@@ -425,6 +432,7 @@ export interface CreateClassRequest {
   duration?: string;
   url?: string;
   featured?: boolean;
+  category?: string;
 }
 
 export interface UpdateClassRequest {
@@ -439,6 +447,7 @@ export interface UpdateClassRequest {
   duration?: string;
   url?: string;
   featured?: boolean;
+  category?: string;
 }
 
 export interface ClassFilters {
@@ -447,6 +456,20 @@ export interface ClassFilters {
   search?: string;
   ageRange?: string;
   featured?: boolean;
+}
+
+// Class Page Settings interfaces
+export interface PricingTier {
+  duration: string;
+  price: string;
+}
+
+export interface ClassPageSettings {
+  id?: number;
+  description: string;
+  pricing_tiers: PricingTier[];
+  registration_fee: string;
+  updated_at?: string;
 }
 
 // Gallery interfaces

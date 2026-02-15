@@ -318,6 +318,19 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // Class Page Settings routes
+    if ($uri === '/class-page-settings') {
+        $controller = new ClassPageSettingsController($db);
+        $controller->index();
+        return;
+    }
+
+    if ($uri === '/class-page-settings/public') {
+        $controller = new ClassPageSettingsController($db);
+        $controller->publicSettings();
+        return;
+    }
+
     // Banner routes
     if ($uri === '/banner') {
         $controller = new HeroBannerController($db);
@@ -549,6 +562,31 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // Screen Images routes
+    if ($uri === '/screen-images') {
+        $controller = new ScreenImagesController($db);
+        $controller->index();
+        return;
+    }
+
+    if ($uri === '/screen-images/positions') {
+        $controller = new ScreenImagesController($db);
+        $controller->positions();
+        return;
+    }
+
+    if (preg_match('/^\/screen-images\/gallery\/(\d+)$/', $uri, $matches)) {
+        $controller = new ScreenImagesController($db);
+        $controller->byGallery($matches[1]);
+        return;
+    }
+
+    if (preg_match('/^\/screen-images\/(\d+)$/', $uri, $matches)) {
+        $controller = new ScreenImagesController($db);
+        $controller->show($matches[1]);
+        return;
+    }
+
     // If no route matches
     ResponseHelper::notFound('Route not found');
 }
@@ -747,6 +785,13 @@ function handlePostRoutes($uri, $db) {
         return;
     }
 
+    // Screen Images routes
+    if ($uri === '/screen-images') {
+        $controller = new ScreenImagesController($db);
+        $controller->assign();
+        return;
+    }
+
     ResponseHelper::notFound('Route not found');
 }
 
@@ -798,6 +843,13 @@ function handlePutRoutes($uri, $db) {
     if (preg_match('/^\/gym-closures\/(\d+)$/', $uri, $matches)) {
         $controller = new GymClosureController($db);
         $controller->update($matches[1]);
+        return;
+    }
+
+    // Class Page Settings routes
+    if ($uri === '/class-page-settings') {
+        $controller = new ClassPageSettingsController($db);
+        $controller->update();
         return;
     }
 
@@ -1040,6 +1092,13 @@ function handleDeleteRoutes($uri, $db) {
     if (preg_match('/^\/faq-categories\/(\d+)$/', $uri, $matches)) {
         $controller = new FaqController($db);
         $controller->deleteCategory($matches[1]);
+        return;
+    }
+
+    // Screen Images routes
+    if (preg_match('/^\/screen-images\/(\d+)$/', $uri, $matches)) {
+        $controller = new ScreenImagesController($db);
+        $controller->remove($matches[1]);
         return;
     }
 

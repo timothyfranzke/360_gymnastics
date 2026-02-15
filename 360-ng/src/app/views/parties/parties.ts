@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Subject, takeUntil } from 'rxjs';
 import { ViewHeader } from '../../components/view-header/view-header';
 import { ApiService } from '../../services/api.service';
+import { ScreenImageData } from '../../interfaces/api';
 
 @Component({
   selector: 'app-parties',
@@ -10,12 +12,17 @@ import { ApiService } from '../../services/api.service';
   styleUrls: ['./parties.scss'],
   imports: [CommonModule, ReactiveFormsModule, ViewHeader]
 })
-export class Parties implements OnInit {
+export class Parties implements OnInit, OnDestroy {
   partyForm!: FormGroup;
-  
+
   isSubmitting = false;
   submitSuccess = false;
   submitError = '';
+
+  // Screen images
+  screenImages: Record<string, ScreenImageData> = {};
+  placeholderUrl = 'images/bday-image.png';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -24,6 +31,46 @@ export class Parties implements OnInit {
 
   ngOnInit(): void {
     this.initializeForm();
+    this.loadScreenImages();
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private loadScreenImages(): void {
+    this.apiService.getScreenImages('parties')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          this.screenImages = response.images || {};
+          if (response.placeholder_url) {
+            this.placeholderUrl = response.placeholder_url;
+          }
+        },
+        error: (error) => {
+          console.error('Failed to load screen images:', error);
+          // Keep default placeholder images on error
+        }
+      });
+  }
+
+  getImageUrl(positionKey: string, fallback: string): string {
+    const image = this.screenImages[positionKey];
+    if (image?.url) {
+      // Prepend the API file base URL if the URL is relative
+      if (image.url.startsWith('/')) {
+        return this.apiService.getFileBaseUrl() + image.url;
+      }
+      return image.url;
+    }
+    return fallback;
+  }
+
+  getImageAlt(positionKey: string, fallback: string): string {
+    const image = this.screenImages[positionKey];
+    return image?.alt_text || fallback;
   }
 
   private initializeForm(): void {

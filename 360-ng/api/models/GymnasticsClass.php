@@ -146,12 +146,12 @@ class GymnasticsClass {
      * Create new class
      */
     public function create($data) {
-        $query = "INSERT INTO {$this->table} 
-                  (id, name, age_range, description, skills, structure, prerequisites, ratio, duration, url, featured, created_at, updated_at) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
-        
+        $query = "INSERT INTO {$this->table}
+                  (id, name, age_range, description, skills, structure, prerequisites, ratio, duration, url, featured, category, created_at, updated_at)
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+
         $stmt = $this->db->getConnection()->prepare($query);
-        
+
         return $stmt->execute([
             $data['id'],
             $data['name'],
@@ -163,7 +163,8 @@ class GymnasticsClass {
             $data['ratio'] ?? null,
             $data['duration'] ?? null,
             $data['url'] ?? null,
-            $this->convertToBoolean($data['featured'] ?? false)
+            $this->convertToBoolean($data['featured'] ?? false),
+            $data['category'] ?? null
         ]);
     }
 
@@ -185,7 +186,8 @@ class GymnasticsClass {
             'ratio' => 'ratio',
             'duration' => 'duration',
             'url' => 'url',
-            'featured' => 'featured'
+            'featured' => 'featured',
+            'category' => 'category'
         ];
         
         foreach ($fieldMapping as $frontendField => $dbField) {
