@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build && rsync -av --exclude='uploads' api/ dist/360-ng/api/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
