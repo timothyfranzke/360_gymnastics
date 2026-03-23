@@ -1,0 +1,8 @@
+.gallery-thumb {
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+
+  &:hover {
+    transform: scale(1.03);
+  }
+}

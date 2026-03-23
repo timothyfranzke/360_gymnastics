@@ -1,0 +1,550 @@
+.calendar-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  
+  &.compact {
+    .calendar-grid {
+      font-size: 0.85rem;
+    }
+    
+    .day-events {
+      max-height: 60px;
+      overflow: hidden;
+    }
+    
+    .event {
+      padding: 2px 4px;
+      margin: 1px 0;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+.calendar-header {
+  padding: 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  .calendar-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 6px;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      
+      &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.05);
+      }
+      
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+      
+      .icon {
+        font-size: 18px;
+        font-weight: bold;
+      }
+    }
+    
+    .month-year h3 {
+      margin: 0;
+      font-size: 1.4rem;
+      font-weight: 600;
+      min-width: 200px;
+      text-align: center;
+    }
+  }
+  
+  .calendar-actions {
+    display: flex;
+    gap: 10px;
+    
+    .btn-today, .btn-refresh {
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      
+      &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.3);
+      }
+      
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+    
+    .btn-refresh {
+      padding: 8px;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      .icon {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.calendar-filter {
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  
+  select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+    
+    &:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+  }
+}
+
+.loading-state, .error-state {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+  
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 15px;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+.error-state {
+  .error-icon {
+    font-size: 2rem;
+    color: #dc3545;
+    margin-bottom: 10px;
+  }
+  
+  .btn-retry {
+    margin-top: 15px;
+    padding: 8px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    
+    &:hover {
+      background: #5a67d8;
+    }
+  }
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 1px;
+  background: #e9ecef;
+  padding: 1px;
+}
+
+.day-header {
+  background: #f8f9fa;
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.calendar-day {
+  background: white;
+  min-height: 100px;
+  padding: 8px;
+  position: relative;
+  cursor: default;
+  transition: background-color 0.2s;
+  
+  &.not-in-month {
+    background: #f8f9fa;
+    
+    .day-number {
+      color: #adb5bd;
+    }
+  }
+  
+  &.today {
+    background: #e3f2fd;
+    
+    .day-number {
+      background: #2196f3;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+  }
+  
+  &.has-events:hover {
+    background: #f8f9fa;
+  }
+  
+  .day-number {
+    font-weight: 500;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: #495057;
+  }
+  
+  .day-events {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    max-height: calc(100% - 30px);
+    overflow: hidden;
+  }
+}
+
+.event {
+  padding: 3px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  
+  &:hover {
+    transform: translateX(2px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .event-time {
+    font-weight: 600;
+    margin-bottom: 1px;
+    font-size: 0.7rem;
+  }
+  
+  .event-title {
+    font-weight: 500;
+    margin-bottom: 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .event-spots {
+    font-size: 0.65rem;
+    opacity: 0.8;
+    font-style: italic;
+  }
+  
+  // Event Type Styles
+  &.event-open-gym {
+    background: #e8f5e8;
+    color: #2e7d32;
+    border-left-color: #4caf50;
+    
+    &:hover {
+      background: #c8e6c9;
+    }
+  }
+  
+  &.event-camp {
+    background: #fff3e0;
+    color: #ef6c00;
+    border-left-color: #ff9800;
+    
+    &:hover {
+      background: #ffe0b2;
+    }
+  }
+  
+  &.event-clinic {
+    background: #f3e5f5;
+    color: #7b1fa2;
+    border-left-color: #9c27b0;
+    
+    &:hover {
+      background: #e1bee7;
+    }
+  }
+  
+  &.event-party {
+    background: #e8eaf6;
+    color: #3f51b5;
+    border-left-color: #3f51b5;
+    
+    &:hover {
+      background: #c5cae9;
+    }
+  }
+  
+  &.event-closed {
+    background: #ffebee;
+    color: #c62828;
+    border-left-color: #f44336;
+    
+    &:hover {
+      background: #ffcdd2;
+    }
+  }
+  
+  &.event-default {
+    background: #f5f5f5;
+    color: #424242;
+    border-left-color: #9e9e9e;
+    
+    &:hover {
+      background: #eeeeee;
+    }
+  }
+  
+  &.full {
+    opacity: 0.7;
+    
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.more-events {
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  color: #6c757d;
+  font-style: italic;
+  text-align: center;
+  background: #f8f9fa;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+.calendar-footer {
+  padding: 15px 20px;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: #6c757d;
+      
+      .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 2px;
+        border-left: 3px solid;
+      }
+      
+      .legend-color.event-open-gym {
+        background: #e8f5e8;
+        border-left-color: #4caf50;
+      }
+      
+      .legend-color.event-camp {
+        background: #fff3e0;
+        border-left-color: #ff9800;
+      }
+      
+      .legend-color.event-clinic {
+        background: #f3e5f5;
+        border-left-color: #9c27b0;
+      }
+      
+      .legend-color.event-closed {
+        background: #ffebee;
+        border-left-color: #f44336;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Mobile List View
+.calendar-mobile-list {
+  display: none;
+  padding: 12px;
+
+  .mobile-day-card {
+    margin-bottom: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+
+    &.today {
+      border-color: #2196f3;
+    }
+
+    .mobile-day-header {
+      padding: 10px 14px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      background: #f8f9fa;
+      color: #495057;
+    }
+
+    &.today .mobile-day-header {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .mobile-day-events {
+      padding: 0;
+    }
+
+    .mobile-event {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-top: 1px solid #f0f0f0;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        filter: brightness(0.97);
+      }
+
+      // Reuse event type colors
+      &.event-open-gym { background: #e8f5e8; color: #2e7d32; }
+      &.event-camp { background: #fff3e0; color: #ef6c00; }
+      &.event-clinic { background: #f3e5f5; color: #7b1fa2; }
+      &.event-party { background: #e8eaf6; color: #3f51b5; }
+      &.event-closed { background: #ffebee; color: #c62828; }
+      &.event-default { background: #f5f5f5; color: #424242; }
+
+      .mobile-event-info {
+        flex: 1;
+        min-width: 0;
+
+        .mobile-event-title {
+          font-weight: 500;
+          font-size: 0.9rem;
+        }
+
+        .mobile-event-time {
+          font-size: 0.8rem;
+          opacity: 0.8;
+          margin-top: 2px;
+        }
+      }
+
+      .mobile-event-spots {
+        flex-shrink: 0;
+        font-size: 0.75rem;
+        font-style: italic;
+        opacity: 0.8;
+        margin-left: 12px;
+      }
+    }
+  }
+
+  .mobile-no-events {
+    text-align: center;
+    padding: 24px;
+    color: #6c757d;
+    font-size: 0.9rem;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .calendar-container {
+    border-radius: 8px;
+
+    &.compact {
+      .calendar-grid {
+        font-size: 0.75rem;
+      }
+    }
+  }
+
+  .calendar-header {
+    padding: 15px;
+    flex-direction: column;
+    gap: 15px;
+
+    .calendar-controls {
+      .month-year h3 {
+        font-size: 1.2rem;
+        min-width: auto;
+      }
+    }
+  }
+
+  .calendar-grid,
+  .day-header {
+    display: none;
+  }
+
+  .calendar-mobile-list {
+    display: block;
+  }
+
+  .calendar-footer {
+    .legend {
+      gap: 10px;
+
+      .legend-item {
+        font-size: 0.75rem;
+      }
+    }
+  }
+}

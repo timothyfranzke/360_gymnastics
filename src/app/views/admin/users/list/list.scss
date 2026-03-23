@@ -1,0 +1,48 @@
+
+// User list specific styles
+.user-list {
+  // Custom styles if needed - most styling is handled by Tailwind classes
+}
+
+// Ensure table is responsive on mobile
+@media (max-width: 768px) {
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// Custom button styles following the app's design system
+.btn-primary {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200;
+}
+
+// Role badge styles
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors duration-150;
+  
+  &.badge-primary {
+    @apply bg-orange-100 text-orange-800;
+  }
+  
+  &.badge-secondary {
+    @apply bg-gray-100 text-gray-800;
+  }
+  
+  &.badge-light {
+    @apply bg-gray-50 text-gray-600;
+  }
+}
+
+// Table row hover effects
+.table-row-hover {
+  @apply transition-colors duration-150;
+}
+
+// Loading spinner animation
+.loading-spinner {
+  @apply animate-spin;
+}

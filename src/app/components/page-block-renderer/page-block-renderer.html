@@ -1,0 +1,58 @@
+@switch (block.type) {
+  @case ('heading') {
+    @switch (headingData.level) {
+      @case (1) { <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ headingData.text }}</h1> }
+      @case (2) { <h2 class="text-3xl font-bold text-gray-900 mb-3">{{ headingData.text }}</h2> }
+      @case (3) { <h3 class="text-2xl font-semibold text-gray-900 mb-3">{{ headingData.text }}</h3> }
+      @case (4) { <h4 class="text-xl font-semibold text-gray-900 mb-2">{{ headingData.text }}</h4> }
+      @case (5) { <h5 class="text-lg font-medium text-gray-900 mb-2">{{ headingData.text }}</h5> }
+      @case (6) { <h6 class="text-base font-medium text-gray-900 mb-2">{{ headingData.text }}</h6> }
+    }
+  }
+
+  @case ('paragraph') {
+    <p class="text-gray-700 leading-relaxed mb-4"
+       [class.font-bold]="paragraphData.bold"
+       [class.italic]="paragraphData.italic">
+      {{ paragraphData.text }}
+    </p>
+  }
+
+  @case ('list') {
+    @if (listData.style === 'numbered') {
+      <ol class="list-decimal list-inside text-gray-700 space-y-1 mb-4 pl-4">
+        @for (item of listData.items; track $index) {
+          <li>{{ item }}</li>
+        }
+      </ol>
+    } @else {
+      <ul class="list-disc list-inside text-gray-700 space-y-1 mb-4 pl-4">
+        @for (item of listData.items; track $index) {
+          <li>{{ item }}</li>
+        }
+      </ul>
+    }
+  }
+
+  @case ('image') {
+    <figure class="mb-4" *ngIf="imageData.url">
+      <img [src]="getImageUrl()" [alt]="imageData.alt"
+           class="w-full rounded-lg shadow-sm" loading="lazy">
+      <figcaption *ngIf="imageData.caption" class="mt-2 text-sm text-gray-500 text-center">
+        {{ imageData.caption }}
+      </figcaption>
+    </figure>
+  }
+
+  @case ('grid') {
+    <div [class]="getGridClasses()" class="mb-4">
+      @for (col of gridData.columns; track $index; let ci = $index) {
+        <div [class]="getColumnClasses(ci)">
+          @for (nestedBlock of col.blocks; track nestedBlock.id) {
+            <app-page-block-renderer [block]="nestedBlock"></app-page-block-renderer>
+          }
+        </div>
+      }
+    </div>
+  }
+}

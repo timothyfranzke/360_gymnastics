@@ -1,0 +1,348 @@
+<div class="space-y-6">
+  <!-- Top Bar -->
+  <div class="bg-white rounded-lg shadow p-6">
+    <div class="flex items-center justify-between mb-4">
+      <a routerLink="/admin/pages" class="text-sm text-gray-500 hover:text-gray-700 flex items-center">
+        <svg class="h-4 w-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Back to Pages
+      </a>
+      <div class="flex items-center space-x-4">
+        <label class="flex items-center cursor-pointer">
+          <input type="checkbox" [(ngModel)]="isPublished"
+                 class="h-4 w-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500">
+          <span class="ml-2 text-sm text-gray-700">Published</span>
+        </label>
+        <button (click)="onSave()" [disabled]="isSaving"
+                class="btn-primary disabled:opacity-50 disabled:cursor-not-allowed">
+          <svg *ngIf="isSaving" class="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+          {{ isSaving ? 'Saving...' : (pageId ? 'Update Page' : 'Create Page') }}
+        </button>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Page Title</label>
+        <input type="text" [(ngModel)]="title" (ngModelChange)="onTitleChange()"
+               placeholder="Enter page title..."
+               class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">URL Slug</label>
+        <div class="flex items-center">
+          <span class="text-sm text-gray-400 mr-1">/</span>
+          <input type="text" [(ngModel)]="slug" (ngModelChange)="onSlugChange()"
+                 placeholder="page-url-slug"
+                 class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 font-mono text-sm">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="isLoading" class="bg-white rounded-lg shadow p-8 text-center">
+    <svg class="animate-spin h-8 w-8 text-orange-500 mx-auto" fill="none" viewBox="0 0 24 24">
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+    </svg>
+    <p class="mt-2 text-gray-500">Loading page...</p>
+  </div>
+
+  <!-- Block Canvas -->
+  <div *ngIf="!isLoading" class="space-y-2">
+    <!-- Add Block at Top -->
+    <div class="add-block-row">
+      <button (click)="toggleBlockPicker(0)" class="add-block-btn">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
+        Add Block
+      </button>
+      <div *ngIf="showBlockPicker === 0" class="block-picker">
+        @for (bt of blockTypes; track bt.type) {
+          <button (click)="addBlock(bt.type, 0)" class="block-picker-item">
+            <span class="block-picker-icon">{{ bt.icon }}</span>
+            <span>{{ bt.label }}</span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Blocks -->
+    <div cdkDropList (cdkDropListDropped)="onBlockDrop($event)">
+      @for (block of blocks; track block.id; let i = $index) {
+        <div class="block-wrapper" cdkDrag>
+          <div class="block-toolbar" cdkDragHandle>
+            <div class="flex items-center space-x-1">
+              <svg class="h-4 w-4 text-gray-400 cursor-grab" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8h16M4 16h16"/>
+              </svg>
+              <span class="text-xs font-medium text-gray-500 uppercase">{{ block.type }}</span>
+            </div>
+            <div class="flex items-center space-x-1">
+              <button (click)="moveBlock(i, i - 1)" [disabled]="i === 0"
+                      class="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30" title="Move up">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                </svg>
+              </button>
+              <button (click)="moveBlock(i, i + 1)" [disabled]="i === blocks.length - 1"
+                      class="p-1 text-gray-400 hover:text-gray-600 disabled:opacity-30" title="Move down">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <button (click)="removeBlock(i)" class="p-1 text-red-400 hover:text-red-600" title="Delete block">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="block-content">
+            <!-- HEADING -->
+            @if (block.type === 'heading') {
+              <div class="flex items-center space-x-3">
+                <select [(ngModel)]="getHeadingData(block).level"
+                        class="border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-orange-500 focus:border-orange-500">
+                  <option [ngValue]="1">H1</option>
+                  <option [ngValue]="2">H2</option>
+                  <option [ngValue]="3">H3</option>
+                  <option [ngValue]="4">H4</option>
+                  <option [ngValue]="5">H5</option>
+                  <option [ngValue]="6">H6</option>
+                </select>
+                <input type="text" [(ngModel)]="getHeadingData(block).text"
+                       placeholder="Heading text..."
+                       class="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500">
+              </div>
+            }
+
+            <!-- PARAGRAPH -->
+            @if (block.type === 'paragraph') {
+              <div>
+                <div class="flex items-center space-x-2 mb-2">
+                  <button (click)="getParagraphData(block).bold = !getParagraphData(block).bold"
+                          [class]="'px-2 py-1 text-sm border rounded ' + (getParagraphData(block).bold ? 'bg-orange-100 border-orange-300 text-orange-700' : 'border-gray-300 text-gray-600 hover:bg-gray-50')">
+                    <strong>B</strong>
+                  </button>
+                  <button (click)="getParagraphData(block).italic = !getParagraphData(block).italic"
+                          [class]="'px-2 py-1 text-sm border rounded ' + (getParagraphData(block).italic ? 'bg-orange-100 border-orange-300 text-orange-700' : 'border-gray-300 text-gray-600 hover:bg-gray-50')">
+                    <em>I</em>
+                  </button>
+                </div>
+                <textarea [(ngModel)]="getParagraphData(block).text"
+                          placeholder="Write paragraph text..."
+                          rows="3"
+                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-orange-500 focus:border-orange-500"></textarea>
+              </div>
+            }
+
+            <!-- LIST -->
+            @if (block.type === 'list') {
+              <div>
+                <div class="flex items-center space-x-3 mb-3">
+                  <select [(ngModel)]="getListData(block).style"
+                          class="border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-orange-500 focus:border-orange-500">
+                    <option value="bulleted">Bulleted</option>
+                    <option value="numbered">Numbered</option>
+                  </select>
+                  <button (click)="addListItem(block)" class="text-sm text-orange-600 hover:text-orange-500">+ Add Item</button>
+                </div>
+                <div class="space-y-2">
+                  @for (item of getListData(block).items; track trackByIndex($index); let j = $index) {
+                    <div class="flex items-center space-x-2">
+                      <span class="text-sm text-gray-400 w-6 text-right">{{ getListData(block).style === 'numbered' ? (j + 1) + '.' : '&bull;' }}</span>
+                      <input type="text" [(ngModel)]="getListData(block).items[j]"
+                             placeholder="List item..."
+                             class="flex-1 px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-orange-500 focus:border-orange-500">
+                      <button (click)="removeListItem(block, j)" *ngIf="getListData(block).items.length > 1"
+                              class="text-red-400 hover:text-red-600">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+
+            <!-- IMAGE -->
+            @if (block.type === 'image') {
+              <div>
+                <div *ngIf="getImageData(block).url" class="mb-3">
+                  <img [src]="getImageData(block).thumbnail_url || getImageData(block).url"
+                       [alt]="getImageData(block).alt"
+                       class="h-32 w-auto rounded border">
+                </div>
+                <div class="flex items-center space-x-2 mb-3">
+                  <label class="btn-secondary text-sm cursor-pointer">
+                    Upload Image
+                    <input type="file" accept="image/*" (change)="onImageUpload($event, i)" class="hidden">
+                  </label>
+                  <button (click)="openGalleryPicker(i)" class="btn-secondary text-sm">
+                    Choose from Gallery
+                  </button>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                    <label class="block text-xs text-gray-500 mb-1">Alt Text</label>
+                    <input type="text" [(ngModel)]="getImageData(block).alt"
+                           placeholder="Image description..."
+                           class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-orange-500 focus:border-orange-500">
+                  </div>
+                  <div>
+                    <label class="block text-xs text-gray-500 mb-1">Caption</label>
+                    <input type="text" [(ngModel)]="getImageData(block).caption"
+                           placeholder="Optional caption..."
+                           class="w-full px-2 py-1.5 border border-gray-300 rounded text-sm focus:ring-orange-500 focus:border-orange-500">
+                  </div>
+                </div>
+              </div>
+            }
+
+            <!-- GRID -->
+            @if (block.type === 'grid') {
+              <div>
+                <div class="mb-3">
+                  <label class="block text-xs text-gray-500 mb-1">Grid Layout</label>
+                  <select [(ngModel)]="getGridData(block).preset" (ngModelChange)="onGridPresetChange(block)"
+                          class="border border-gray-300 rounded px-2 py-1.5 text-sm focus:ring-orange-500 focus:border-orange-500">
+                    <option value="2-equal">2 Equal Columns</option>
+                    <option value="3-equal">3 Equal Columns</option>
+                    <option value="1-3-2-3">1/3 + 2/3</option>
+                    <option value="2-3-1-3">2/3 + 1/3</option>
+                  </select>
+                </div>
+                <div class="grid gap-4" [ngClass]="{
+                  'grid-cols-2': getGridData(block).preset === '2-equal' || getGridData(block).preset === '1-3-2-3' || getGridData(block).preset === '2-3-1-3',
+                  'grid-cols-3': getGridData(block).preset === '3-equal'
+                }">
+                  @for (col of getGridData(block).columns; track $index; let ci = $index) {
+                    <div class="grid-column border-2 border-dashed border-gray-200 rounded-lg p-3 min-h-[80px]"
+                         [ngClass]="{
+                           'col-span-1': getGridData(block).preset === '3-equal' || (getGridData(block).preset === '1-3-2-3' && ci === 0) || (getGridData(block).preset === '2-3-1-3' && ci === 1),
+                           'col-span-2': (getGridData(block).preset === '1-3-2-3' && ci === 1) || (getGridData(block).preset === '2-3-1-3' && ci === 0)
+                         }">
+                      <div class="text-xs text-gray-400 mb-2">Column {{ ci + 1 }}</div>
+
+                      <div cdkDropList (cdkDropListDropped)="onNestedBlockDrop($event, i, ci)">
+                        @for (nested of col.blocks; track nested.id; let ni = $index) {
+                          <div class="nested-block mb-2 bg-gray-50 rounded p-2 relative" cdkDrag>
+                            <div class="flex justify-between items-center mb-1">
+                              <span class="text-xs text-gray-400 uppercase">{{ nested.type }}</span>
+                              <button (click)="removeNestedBlock(i, ci, ni)" class="text-red-400 hover:text-red-600">
+                                <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                              </button>
+                            </div>
+
+                            <!-- Nested block editors (same as top-level minus grid) -->
+                            @if (nested.type === 'heading') {
+                              <div class="flex items-center space-x-2">
+                                <select [(ngModel)]="$any(nested.data).level" class="border border-gray-300 rounded px-1 py-1 text-xs">
+                                  <option [ngValue]="1">H1</option><option [ngValue]="2">H2</option><option [ngValue]="3">H3</option>
+                                  <option [ngValue]="4">H4</option><option [ngValue]="5">H5</option><option [ngValue]="6">H6</option>
+                                </select>
+                                <input type="text" [(ngModel)]="$any(nested.data).text" placeholder="Heading..."
+                                       class="flex-1 px-2 py-1 border border-gray-300 rounded text-sm">
+                              </div>
+                            }
+                            @if (nested.type === 'paragraph') {
+                              <textarea [(ngModel)]="$any(nested.data).text" placeholder="Text..." rows="2"
+                                        class="w-full px-2 py-1 border border-gray-300 rounded text-sm"></textarea>
+                            }
+                            @if (nested.type === 'list') {
+                              <div class="space-y-1">
+                                @for (item of $any(nested.data).items; track trackByIndex($index); let lj = $index) {
+                                  <input type="text" [(ngModel)]="$any(nested.data).items[lj]" placeholder="Item..."
+                                         class="w-full px-2 py-1 border border-gray-300 rounded text-xs">
+                                }
+                                <button (click)="$any(nested.data).items.push('')" class="text-xs text-orange-600">+ Add</button>
+                              </div>
+                            }
+                            @if (nested.type === 'image') {
+                              <div>
+                                <img *ngIf="$any(nested.data).url" [src]="$any(nested.data).thumbnail_url || $any(nested.data).url"
+                                     class="h-20 w-auto rounded border mb-1">
+                                <div class="flex items-center space-x-1">
+                                  <label class="text-xs text-orange-600 cursor-pointer hover:text-orange-500">
+                                    Upload
+                                    <input type="file" accept="image/*" (change)="onGridImageUpload($event, i, ci, ni)" class="hidden">
+                                  </label>
+                                  <span class="text-gray-300">|</span>
+                                  <button (click)="openGalleryPickerForGrid(i, ci, ni)" class="text-xs text-orange-600 hover:text-orange-500">Gallery</button>
+                                </div>
+                              </div>
+                            }
+                          </div>
+                        }
+                      </div>
+
+                      <!-- Add nested block -->
+                      <div class="mt-2">
+                        <div class="flex flex-wrap gap-1">
+                          @for (bt of blockTypes; track bt.type) {
+                            @if (bt.type !== 'grid') {
+                              <button (click)="addNestedBlock(bt.type, i, ci)"
+                                      class="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded hover:bg-gray-200">
+                                + {{ bt.label }}
+                              </button>
+                            }
+                          }
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- Add Block After -->
+        <div class="add-block-row">
+          <button (click)="toggleBlockPicker(i + 1)" class="add-block-btn">
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            Add Block
+          </button>
+          <div *ngIf="showBlockPicker === i + 1" class="block-picker">
+            @for (bt of blockTypes; track bt.type) {
+              <button (click)="addBlock(bt.type, i + 1)" class="block-picker-item">
+                <span class="block-picker-icon">{{ bt.icon }}</span>
+                <span>{{ bt.label }}</span>
+              </button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="blocks.length === 0 && !isLoading" class="bg-white rounded-lg shadow p-12 text-center">
+      <svg class="mx-auto h-12 w-12 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <h3 class="mt-3 text-gray-500">Start building your page</h3>
+      <p class="text-sm text-gray-400 mt-1">Click "Add Block" above to add your first content block</p>
+    </div>
+  </div>
+</div>
+
+<!-- Gallery Picker Modal -->
+<app-gallery-picker
+  *ngIf="showGalleryPicker"
+  (imageSelected)="onGalleryImageSelected($event)"
+  (close)="onGalleryPickerClose()">
+</app-gallery-picker>
