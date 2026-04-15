@@ -36,7 +36,10 @@
         class="gallery-item relative aspect-[9/10] w-44 flex-none overflow-hidden rounded-xl bg-zinc-100 sm:w-72 sm:rounded-2xl cursor-pointer transform transition-all duration-300 hover:scale-105 group"
         [class]="getRotationClass(i)"
         [attr.aria-label]="'View image: ' + (image.alt_text || image.caption || 'Gallery image ' + (i + 1))"
-        tabindex="0">
+        role="button"
+        tabindex="0"
+        (keydown.enter)="openPopup(i)"
+        (keydown.space)="$event.preventDefault(); openPopup(i)">
         
         <img 
           [src]="getImageThumbnailUrl(image)" 

@@ -2,8 +2,8 @@
 // Centralized button styles ensuring consistency across the application
 
 // Brand Colors
-$brand-orange: #fc7900;
-$brand-orange-hover: #e66a00;
+$brand-orange: #c45200;
+$brand-orange-hover: #a34400;
 $brand-blue: #0226ff;
 $brand-blue-hover: #0119b3;
 $brand-blue-light: #3b82f6;
@@ -128,25 +128,25 @@ $brand-gray-hover: #4b5563;
   font-weight: 700;
   letter-spacing: 0.025em;
   box-shadow: 
-    0 4px 15px rgba(252, 121, 0, 0.3),
+    0 4px 15px rgba(196, 82, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   
   &:hover:not(:disabled):not(.disabled) {
     background: $brand-orange-hover !important;
     background-image: none !important;
     box-shadow: 
-      0 6px 20px rgba(252, 121, 0, 0.4),
+      0 6px 20px rgba(196, 82, 0, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-1px) scale(1.01);
   }
   
   &:active {
     transform: translateY(0) scale(0.99);
-    box-shadow: 0 2px 10px rgba(252, 121, 0, 0.4);
+    box-shadow: 0 2px 10px rgba(196, 82, 0, 0.4);
   }
   
   &:focus-visible {
-    outline: 3px solid rgba(252, 121, 0, 0.5);
+    outline: 3px solid rgba(196, 82, 0, 0.5);
     outline-offset: 2px;
   }
   
@@ -292,24 +292,24 @@ $brand-gray-hover: #4b5563;
   letter-spacing: 0.025em;
   border-radius: 0.75rem;
   box-shadow: 
-    0 4px 15px rgba(252, 121, 0, 0.3),
+    0 4px 15px rgba(196, 82, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
   
   &:hover:not(:disabled):not(.disabled) {
     background: $brand-orange-hover;
     box-shadow: 
-      0 6px 20px rgba(252, 121, 0, 0.4),
+      0 6px 20px rgba(196, 82, 0, 0.4),
       inset 0 1px 0 rgba(255, 255, 255, 0.3);
     transform: translateY(-1px);
   }
   
   &:active {
     transform: translateY(0) scale(0.99);
-    box-shadow: 0 2px 10px rgba(252, 121, 0, 0.4);
+    box-shadow: 0 2px 10px rgba(196, 82, 0, 0.4);
   }
   
   &:focus-visible {
-    outline: 3px solid rgba(252, 121, 0, 0.5);
+    outline: 3px solid rgba(196, 82, 0, 0.5);
     outline-offset: 2px;
   }
 }
@@ -322,7 +322,7 @@ $brand-gray-hover: #4b5563;
   border: 2px solid $brand-white;
   
   &:hover:not(:disabled):not(.disabled) {
-    background: rgba(252, 121, 0, 0.2);
+    background: rgba(196, 82, 0, 0.2);
     border-color: $brand-orange;
     transform: translateY(-2px) scale(1.02);
   }
@@ -438,11 +438,11 @@ $brand-gray-hover: #4b5563;
   border-radius: 50%;
   background: $brand-orange;
   color: $brand-white;
-  box-shadow: 0 4px 15px rgba(252, 121, 0, 0.3);
+  box-shadow: 0 4px 15px rgba(196, 82, 0, 0.3);
   
   &:hover:not(:disabled):not(.disabled) {
     background: $brand-orange-hover;
-    box-shadow: 0 6px 20px rgba(252, 121, 0, 0.4);
+    box-shadow: 0 6px 20px rgba(196, 82, 0, 0.4);
     transform: translateY(-2px) scale(1.1);
   }
   
@@ -471,11 +471,11 @@ $brand-gray-hover: #4b5563;
   border-radius: 50%;
   background: $brand-orange;
   color: $brand-white;
-  box-shadow: 0 4px 15px rgba(252, 121, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(196, 82, 0, 0.4);
   
   &:hover:not(:disabled):not(.disabled) {
     background: $brand-orange-hover;
-    box-shadow: 0 6px 20px rgba(252, 121, 0, 0.5);
+    box-shadow: 0 6px 20px rgba(196, 82, 0, 0.5);
     transform: translateY(-2px) scale(1.1);
   }
   
@@ -557,12 +557,12 @@ $brand-gray-hover: #4b5563;
   border-radius: 50%;
   background: $brand-orange;
   color: $brand-white;
-  box-shadow: 0 8px 25px rgba(252, 121, 0, 0.3);
+  box-shadow: 0 8px 25px rgba(196, 82, 0, 0.3);
   z-index: 1000;
   
   &:hover:not(:disabled):not(.disabled) {
     background: $brand-orange-hover;
-    box-shadow: 0 12px 35px rgba(252, 121, 0, 0.4);
+    box-shadow: 0 12px 35px rgba(196, 82, 0, 0.4);
     transform: translateY(-3px) scale(1.1);
   }
   

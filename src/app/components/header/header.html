@@ -69,6 +69,7 @@
           [class.border-b-0]="last"
           (click)="onMobileNavClick()"
           [attr.aria-label]="item.name"
+          [attr.tabindex]="isMobileMenuOpen ? 0 : -1"
         >
           {{ item.name }}
         </a>
@@ -80,6 +81,7 @@
           class="btn-primary btn-lg w-full justify-center text-xl"
           (click)="onMobileNavClick()"
           aria-label="Enroll now"
+          [attr.tabindex]="isMobileMenuOpen ? 0 : -1"
         >
           <span class="btn-text">Enroll Now</span>
         </a>
