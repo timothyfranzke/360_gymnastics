@@ -78,7 +78,7 @@ section {
   }
   
   // Today indicator badge - brand orange
-  [style*="background-color: #c45200"].text-white.text-xs {
+  [style*="background-color: #b34700"].text-white.text-xs {
     animation: pulse 2s infinite;
   }
   
@@ -103,7 +103,7 @@ section {
       transform: translateX(-50%);
       width: 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, #c45200, transparent);
+      background: linear-gradient(90deg, transparent, #b34700, transparent);
       transition: width 0.3s ease;
     }
     
@@ -204,7 +204,7 @@ section {
       }
     }
     
-    [style*="background-color: #c45200"].text-white.text-xs {
+    [style*="background-color: #b34700"].text-white.text-xs {
       animation: none;
     }
     

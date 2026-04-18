@@ -2,8 +2,8 @@
 // Only the most essential button styles to reduce initial CSS bundle size
 
 // Brand Colors
-$brand-orange: #fc7900;
-$brand-orange-hover: #e66a00;
+$brand-orange: #b34700;
+$brand-orange-hover: #943c00;
 $brand-blue: #0226ff;
 $brand-blue-hover: #0119b3;
 $brand-white: #ffffff;
@@ -66,7 +66,7 @@ $brand-white: #ffffff;
   font-size: 1rem;
   
   &:hover:not(:disabled):not(.disabled) {
-    background: rgba(252, 121, 0, 0.2);
+    background: rgba(179, 71, 0, 0.2);
     border-color: $brand-orange;
   }
   
