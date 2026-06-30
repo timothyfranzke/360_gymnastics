@@ -41,7 +41,8 @@ import {
   ScreenImage,
   AssignScreenImageRequest,
   ScreenPositionsResponse,
-  GalleryAssignmentsResponse
+  GalleryAssignmentsResponse,
+  PartyPageSettings
 } from '../interfaces/api';
 
 @Injectable({
@@ -784,6 +785,45 @@ export class ApiService {
   getPartyStats(): Observable<any> {
     return this.http.get<ApiResponse<any>>(
       `${this.API_BASE}/parties/stats`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  // ========== PARTY PAGE SETTINGS METHODS ==========
+
+  /**
+   * Get party page settings (public)
+   */
+  getPartyPageSettingsPublic(): Observable<PartyPageSettings> {
+    return this.http.get<ApiResponse<PartyPageSettings>>(
+      `${this.API_BASE}/party-page-settings/public`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Get party page settings (admin)
+   */
+  getPartyPageSettingsAdmin(): Observable<PartyPageSettings> {
+    return this.http.get<ApiResponse<PartyPageSettings>>(
+      `${this.API_BASE}/party-page-settings`
+    ).pipe(
+      map(response => this.handleResponse(response)),
+      catchError(this.handleError)
+    );
+  }
+
+  /**
+   * Update party page settings (admin)
+   */
+  updatePartyPageSettings(settings: Partial<PartyPageSettings>): Observable<PartyPageSettings> {
+    return this.http.put<ApiResponse<PartyPageSettings>>(
+      `${this.API_BASE}/party-page-settings`,
+      settings
     ).pipe(
       map(response => this.handleResponse(response)),
       catchError(this.handleError)

@@ -45,6 +45,10 @@ export const routes: Routes = [
         loadChildren: () => import('./views/faq/faq.routes').then(m => m.faqRoutes)
     },
     {
+        path: 'privacy-policy',
+        loadChildren: () => import('./views/privacy-policy/privacy-policy.routes').then(m => m.privacyPolicyRoutes)
+    },
+    {
         path: 'staff',
         component: StaffView
     },

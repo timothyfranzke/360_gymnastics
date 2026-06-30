@@ -45,7 +45,8 @@ export class Footer implements OnInit {
     { name: 'Classes', href: '/classes' },
     { name: 'Events & Clinics', href: '/events' },
     { name: 'Open Gym', href: '/open-gym' },
-    { name: 'Birthday Parties', href: '/parties' }
+    { name: 'Birthday Parties', href: '/parties' },
+    { name: 'Privacy Policy', href: '/privacy-policy' }
   ];
 
   programLinks: NavigationLink[] = [

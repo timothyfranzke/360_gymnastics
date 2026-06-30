@@ -331,6 +331,19 @@ function handleGetRoutes($uri, $db) {
         return;
     }
 
+    // Party Page Settings routes
+    if ($uri === '/party-page-settings') {
+        $controller = new PartyPageSettingsController($db);
+        $controller->index();
+        return;
+    }
+
+    if ($uri === '/party-page-settings/public') {
+        $controller = new PartyPageSettingsController($db);
+        $controller->publicSettings();
+        return;
+    }
+
     // Banner routes
     if ($uri === '/banner') {
         $controller = new HeroBannerController($db);
@@ -904,6 +917,13 @@ function handlePutRoutes($uri, $db) {
     // Class Page Settings routes
     if ($uri === '/class-page-settings') {
         $controller = new ClassPageSettingsController($db);
+        $controller->update();
+        return;
+    }
+
+    // Party Page Settings routes
+    if ($uri === '/party-page-settings') {
+        $controller = new PartyPageSettingsController($db);
         $controller->update();
         return;
     }

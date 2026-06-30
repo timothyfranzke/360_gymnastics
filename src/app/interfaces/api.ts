@@ -474,6 +474,25 @@ export interface ClassPageSettings {
   updated_at?: string;
 }
 
+// Party Page Settings interfaces
+export interface PartyPackage {
+  id?: number;
+  name: string;
+  price: string;
+  description: string;
+  bullets: string[];
+  display_order: number;
+  active: boolean;
+}
+
+export interface PartyPageSettings {
+  id?: number;
+  intro: string;
+  footer_note: string;
+  packages: PartyPackage[];
+  updated_at?: string;
+}
+
 // Gallery interfaces
 export interface GalleryImage {
   id: number;

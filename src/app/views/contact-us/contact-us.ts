@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { ContactService } from '../../services/contact.service';
 import { ContactFormRequest } from '../../interfaces/api';
 import { ViewHeader } from '../../components/view-header/view-header';
 
 @Component({
   selector: 'app-contact-us',
-  imports: [CommonModule, ReactiveFormsModule, ViewHeader],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ViewHeader],
   templateUrl: './contact-us.html',
   styleUrl: './contact-us.scss'
 })

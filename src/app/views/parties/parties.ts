@@ -1,16 +1,17 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ViewHeader } from '../../components/view-header/view-header';
 import { ApiService } from '../../services/api.service';
-import { ScreenImageData } from '../../interfaces/api';
+import { ScreenImageData, PartyPageSettings, PartyPackage } from '../../interfaces/api';
 
 @Component({
   selector: 'app-parties',
   templateUrl: './parties.html',
   styleUrls: ['./parties.scss'],
-  imports: [CommonModule, ReactiveFormsModule, ViewHeader]
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, ViewHeader]
 })
 export class Parties implements OnInit, OnDestroy {
   partyForm!: FormGroup;
@@ -22,6 +23,19 @@ export class Parties implements OnInit, OnDestroy {
   // Screen images
   screenImages: Record<string, ScreenImageData> = {};
   placeholderUrl = 'images/bday-image.png';
+
+  // Page settings (intro, packages, footer note) — loaded from API
+  pageSettings: PartyPageSettings | null = null;
+  isLoadingSettings = true;
+
+  // Highlight palette used to alternate package card accent colors
+  private readonly cardAccents = [
+    { wrapper: 'bg-blue-50', priceText: 'text-blue-900', meta: 'text-blue-700' },
+    { wrapper: 'bg-green-50', priceText: 'text-green-900', meta: 'text-green-700' },
+    { wrapper: 'bg-orange-50', priceText: 'text-orange-900', meta: 'text-orange-700' },
+    { wrapper: 'bg-purple-50', priceText: 'text-purple-900', meta: 'text-purple-700' }
+  ];
+
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -32,6 +46,47 @@ export class Parties implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeForm();
     this.loadScreenImages();
+    this.loadPageSettings();
+  }
+
+  private loadPageSettings(): void {
+    this.apiService.getPartyPageSettingsPublic()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (settings) => {
+          this.pageSettings = settings;
+          this.isLoadingSettings = false;
+        },
+        error: (error) => {
+          console.error('Failed to load party page settings:', error);
+          this.pageSettings = { intro: '', footer_note: '', packages: [] };
+          this.isLoadingSettings = false;
+        }
+      });
+  }
+
+  getPackageImagePositionKey(index: number): string | null {
+    return index === 0 ? 'parties-1' : index === 1 ? 'parties-2' : null;
+  }
+
+  getPackageImageFallback(index: number): string {
+    return index === 0 ? 'images/bday-image.png' : 'images/bday-image-2.png';
+  }
+
+  packageHasImage(index: number): boolean {
+    return index === 0 || index === 1;
+  }
+
+  isImageRight(index: number): boolean {
+    return index % 2 === 1;
+  }
+
+  getCardAccent(index: number) {
+    return this.cardAccents[index % this.cardAccents.length];
+  }
+
+  trackPackage(_index: number, pkg: PartyPackage): number | string {
+    return pkg.id ?? pkg.name;
   }
 
   ngOnDestroy(): void {

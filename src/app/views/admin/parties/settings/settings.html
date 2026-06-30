@@ -1,0 +1,267 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Parties Page Settings</h1>
+      <p class="mt-1 text-sm text-gray-500">Manage the intro, party packages, and footer note shown on the public parties page</p>
+    </div>
+    <button
+      type="button"
+      (click)="cancel()"
+      class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-2 px-4 rounded-md transition-colors"
+    >
+      Back to Parties
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="isLoadingSettings" class="bg-white rounded-lg shadow p-12 text-center">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
+    <p class="mt-4 text-gray-600">Loading settings...</p>
+  </div>
+
+  <!-- Success Display -->
+  <div *ngIf="successMessage" class="bg-green-50 border border-green-200 rounded-lg p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-green-800">Success</h3>
+        <p class="mt-1 text-sm text-green-700">{{ successMessage }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error Display -->
+  <div *ngIf="error" class="bg-red-50 border border-red-200 rounded-lg p-4">
+    <div class="flex">
+      <div class="flex-shrink-0">
+        <svg class="h-5 w-5 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <div class="ml-3">
+        <h3 class="text-sm font-medium text-red-800">Error</h3>
+        <p class="mt-1 text-sm text-red-700">{{ error }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form *ngIf="!isLoadingSettings" [formGroup]="settingsForm" (ngSubmit)="onSubmit()" class="space-y-6">
+    <!-- Intro Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-6">Page Intro</h2>
+
+      <div>
+        <label for="intro" class="block text-sm font-medium text-gray-700 mb-1">Intro paragraph</label>
+        <textarea
+          id="intro"
+          formControlName="intro"
+          rows="3"
+          placeholder="Enter the intro paragraph that appears above the party packages..."
+          [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' +
+                  (isFieldInvalid('intro') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+        ></textarea>
+        <p *ngIf="isFieldInvalid('intro')" class="mt-1 text-sm text-red-600">{{ getFieldError('intro') }}</p>
+        <p class="mt-1 text-sm text-gray-500">Appears below the page title on the public parties page.</p>
+      </div>
+    </div>
+
+    <!-- Packages Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <h2 class="text-lg font-medium text-gray-900">Party Packages</h2>
+          <p class="text-sm text-gray-500">Add, edit, reorder, or hide the packages shown on the parties page</p>
+        </div>
+        <button
+          type="button"
+          (click)="addPackage()"
+          class="bg-orange-50 hover:bg-orange-100 text-orange-600 font-medium py-2 px-4 rounded-md transition-colors"
+        >
+          Add Package
+        </button>
+      </div>
+
+      <div formArrayName="packages" class="space-y-6">
+        <div *ngFor="let pkgGroup of packages.controls; let i = index" [formGroupName]="i"
+             class="border border-gray-200 rounded-lg p-5 bg-gray-50">
+
+          <!-- Card header: reorder + active toggle + remove -->
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center space-x-2">
+              <button
+                type="button"
+                (click)="movePackageUp(i)"
+                [disabled]="i === 0"
+                class="p-1.5 text-gray-600 hover:text-gray-900 disabled:text-gray-300 disabled:cursor-not-allowed"
+                title="Move up"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+                </svg>
+              </button>
+              <button
+                type="button"
+                (click)="movePackageDown(i)"
+                [disabled]="i === packages.length - 1"
+                class="p-1.5 text-gray-600 hover:text-gray-900 disabled:text-gray-300 disabled:cursor-not-allowed"
+                title="Move down"
+              >
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+              </button>
+              <span class="text-sm font-medium text-gray-500 ml-2">Package {{ i + 1 }}</span>
+            </div>
+            <div class="flex items-center space-x-4">
+              <label class="flex items-center cursor-pointer">
+                <input type="checkbox" formControlName="active" class="h-4 w-4 text-orange-600 rounded border-gray-300 focus:ring-orange-500">
+                <span class="ml-2 text-sm text-gray-700">Show on public page</span>
+              </label>
+              <button
+                type="button"
+                (click)="removePackage(i)"
+                [disabled]="packages.length <= 1"
+                class="p-1.5 text-red-600 hover:text-red-800 disabled:text-gray-400 disabled:cursor-not-allowed"
+                title="Remove package"
+              >
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Name + Price -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label [for]="'pkg-name-' + i" class="block text-sm font-medium text-gray-700 mb-1">
+                Name <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                [id]="'pkg-name-' + i"
+                formControlName="name"
+                placeholder="e.g., Private Party"
+                [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' +
+                        (isPackageFieldInvalid(i, 'name') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+              />
+            </div>
+            <div>
+              <label [for]="'pkg-price-' + i" class="block text-sm font-medium text-gray-700 mb-1">
+                Price <span class="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                [id]="'pkg-price-' + i"
+                formControlName="price"
+                placeholder="e.g., $200 (for 15 kids) or Contact for pricing"
+                [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' +
+                        (isPackageFieldInvalid(i, 'price') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+              />
+            </div>
+          </div>
+
+          <!-- Description -->
+          <div class="mb-4">
+            <label [for]="'pkg-desc-' + i" class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+            <textarea
+              [id]="'pkg-desc-' + i"
+              formControlName="description"
+              rows="3"
+              placeholder="What the package includes, who it's for, etc."
+              class="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            ></textarea>
+          </div>
+
+          <!-- Bullets -->
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="block text-sm font-medium text-gray-700">Bullet points</label>
+              <button
+                type="button"
+                (click)="addBullet(i)"
+                class="text-sm text-orange-600 hover:text-orange-700 font-medium"
+              >
+                + Add bullet
+              </button>
+            </div>
+
+            <div [formArrayName]="'bullets'" class="space-y-2">
+              <div *ngFor="let bullet of bulletsAt(i).controls; let j = index"
+                   class="flex items-center space-x-2">
+                <input
+                  type="text"
+                  [formControlName]="j"
+                  placeholder="e.g., 30 minutes in the party room"
+                  [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' +
+                          (isBulletInvalid(i, j) ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+                />
+                <button
+                  type="button"
+                  (click)="removeBullet(i, j)"
+                  class="p-2 text-red-600 hover:text-red-800"
+                  title="Remove bullet"
+                >
+                  <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
+              </div>
+
+              <p *ngIf="bulletsAt(i).controls.length === 0" class="text-sm text-gray-500 italic">
+                No bullets yet. Click "Add bullet" to add one.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Note Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-medium text-gray-900 mb-6">Footer Note</h2>
+
+      <div>
+        <label for="footer_note" class="block text-sm font-medium text-gray-700 mb-1">Note shown below packages</label>
+        <textarea
+          id="footer_note"
+          formControlName="footer_note"
+          rows="2"
+          placeholder="e.g., A 50% deposit is required to reserve your date. Please book at least 2 weeks in advance."
+          [class]="'block w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ' +
+                  (isFieldInvalid('footer_note') ? 'border-red-300 bg-red-50' : 'border-gray-300')"
+        ></textarea>
+        <p *ngIf="isFieldInvalid('footer_note')" class="mt-1 text-sm text-red-600">{{ getFieldError('footer_note') }}</p>
+        <p class="mt-1 text-sm text-gray-500">Optional fine print (deposits, booking lead time, cancellation, etc.).</p>
+      </div>
+    </div>
+
+    <!-- Submit Buttons -->
+    <div class="flex justify-end space-x-3">
+      <button
+        type="button"
+        (click)="cancel()"
+        class="px-6 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        [disabled]="isLoading"
+        class="px-6 py-2 border border-transparent text-sm font-medium rounded-lg text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+      >
+        <svg *ngIf="isLoading" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        {{ isLoading ? 'Saving...' : 'Save Settings' }}
+      </button>
+    </div>
+  </form>
+</div>
